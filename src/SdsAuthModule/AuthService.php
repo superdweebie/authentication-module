@@ -43,7 +43,7 @@ class AuthService
     
     public function login($username, $password)
     {
-        $this->adapter->setIdentity($username)->setCredential($password);
+        $this->adapter->setIdentityValue($username)->setCredentialValue($password);
         $result  = $this->authenticationService->authenticate($this->adapter);
         return $result;
     }
