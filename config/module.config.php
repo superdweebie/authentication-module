@@ -17,14 +17,7 @@ return array(
         'instance' => array(
             'alias' => array(            
                 'active_user' => 'SdsAuthModule\ActiveUserFactory',
-                'guest_user' => 'Application\Model\User',
                 'auth_service' => 'SdsAuthModule\AuthService',
-            ),
-
-            'guest_user' => array(
-                'parameters' => array(
-                    'isGuest' => true
-                )
             ),
             
             'auth_service' => array(
@@ -39,7 +32,42 @@ return array(
                 'parameters' => array(
                     'authService' => 'auth_service'
                 )
-            ),           
+            ), 
+            
+            'SdsAuthModule\Controller\AuthController' => array(
+                'parameters' => array(
+                    'authService' => 'auth_service',                        
+                    'activeUser' => 'active_user',                     
+                )
+            ),  
+            
+            // Setup for router and routes
+            'Zend\Mvc\Router\RouteStack' => array(
+                'parameters' => array(
+                    'routes' => array(                    
+                        'login' => array(
+                            'type'    => 'Literal',
+                            'options' => array(
+                                'route' => '/login',
+                                'defaults' => array(
+                                    'controller' => 'SdsAuthModule\Controller\AuthController',
+                                    'action'     => 'login',
+                                ),
+                            ),
+                        ),
+                        'logout' => array(
+                            'type'    => 'Literal',
+                            'options' => array(
+                                'route' => '/logout',
+                                'defaults' => array(
+                                    'controller' => 'SdsAuthModule\Controller\AuthController',
+                                    'action'     => 'logout',
+                                ),
+                            ),
+                        ),                       
+                    ),
+                ),
+            ),            
         ),
     ),
 );

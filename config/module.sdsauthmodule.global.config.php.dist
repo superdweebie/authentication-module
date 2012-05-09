@@ -1,0 +1,25 @@
+<?php
+return array(
+    'di' => array(
+        'instance' => array(
+
+            'alias' => array(            
+                'guest_user' => 'Application\Model\User',
+            ),            
+
+            'guest_user' => array(
+                'parameters' => array(
+                    'isGuest' => true
+                )
+            ),
+            
+            'auth_service' => array(
+                'parameters' => array(                
+                    'adapter' => 'DoctrineModule\Authentication\Adapter\DoctrineObject',  
+                    'adapterUsernameMethod' => 'setIdentityValue',
+                    'adapterPasswordMethod' => 'setCredentialValue'
+                )
+            ), 
+        ),
+    ),
+);

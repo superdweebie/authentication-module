@@ -10,7 +10,9 @@ class AuthService
     protected $authenticationService;
     protected $adapter;
     protected $guestUser;
-
+    protected $adapterUsernameMethod;
+    protected $adapterPasswordMethod;
+    
     public function setAuthenticationService(ZfAuthService $authenticationService)
     {
         $this->authenticationService = $authenticationService;
@@ -21,9 +23,33 @@ class AuthService
         $this->adapter = $adapter;   
     }
     
-    public function setGuestUser(Identity $guestUser)
+    public function getAdapter() {
+        return $this->adapter;
+    }
+    
+    public function setGuestUser($guestUser)
     {
         $this->guestUser = $guestUser;
+    }
+    
+    public function getGuestUser() {
+        return $this->guestUser;
+    }
+    
+    public function getAdapterUsernameMethod() {
+        return $this->adapterUsernameMethod;
+    }
+
+    public function setAdapterUsernameMethod($adapterUsernameMethod) {
+        $this->adapterUsernameMethod = $adapterUsernameMethod;
+    }
+
+    public function getAdapterPasswordMethod() {
+        return $this->adapterPasswordMethod;
+    }
+
+    public function setAdapterPasswordMethod($adapterPasswordMethod) {
+        $this->adapterPasswordMethod = $adapterPasswordMethod;
     }
     
     public function hasIdentity()
@@ -43,7 +69,9 @@ class AuthService
     
     public function login($username, $password)
     {
-        $this->adapter->setIdentityValue($username)->setCredentialValue($password);
+        $adapter = $this->adapter;
+        $adapter->{$this->adapterUsernameMethod}($username);
+        $adapter->{$this->adapterPasswordMethod}($password);
         $result  = $this->authenticationService->authenticate($this->adapter);
         return $result;
     }
