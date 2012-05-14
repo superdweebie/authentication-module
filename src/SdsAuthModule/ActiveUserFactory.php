@@ -4,8 +4,8 @@ namespace SdsAuthModule;
 
 class ActiveUserFactory
 {
-    public static function get(AuthService $authService)
+    public static function get(AuthServiceBase $authServiceBase)
     {
-        return $authService->getIdentity();
+        return $authServiceBase->getIdentity();
     }
 }

@@ -7,7 +7,7 @@ return array(
                     'instantiator' => array('SdsAuthModule\ActiveUserFactory', 'get'),
                     'methods' => array(
                         'get' => array(
-                            'authService' => array('type' => 'SdsAuthModule\AuthService', 'required' => true)
+                            'authServiceBase' => array('type' => 'SdsAuthModule\AuthServiceBase', 'required' => true)
                         ),
                     ),
                 ),            
@@ -17,7 +17,15 @@ return array(
         'instance' => array(
             'alias' => array(            
                 'active_user' => 'SdsAuthModule\ActiveUserFactory',
+                'auth_service_base' => 'SdsAuthModule\AuthServiceBase',                
                 'auth_service' => 'SdsAuthModule\AuthService',
+            ),
+            
+            'auth_service_base' => array(
+                'parameters' => array(                
+                    'authenticationService' => 'Zend\Authentication\AuthenticationService',               
+                    'guestUser' => 'guest_user'
+                )
             ),
             
             'auth_service' => array(
@@ -30,7 +38,7 @@ return array(
             
             'active_user' => array(
                 'parameters' => array(
-                    'authService' => 'auth_service'
+                    'authServiceBase' => 'auth_service_base'
                 )
             ), 
             
