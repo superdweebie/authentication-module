@@ -1,5 +1,5 @@
 {
-    "name": "superdweebie/SdsDoctrineExtensionsModule",
+    "name": "superdweebie/SdsAuthModule",
     "description": "Zend Framework 2 Module that provides authentication functionality",
     "type": "library",
     "keywords": [
@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.3",
         "ocramius/OcraComposer": "dev-master"
     },
 
