@@ -2,40 +2,18 @@
 
 namespace SdsAuthModule;
 
-use Zend\Module\Manager,
-    Zend\EventManager\StaticEventManager,
-    Zend\Module\Consumer\AutoloaderProvider;
+use Zend\ModuleManager\ModuleManager,
+    Zend\ModuleManager\Feature\ConfigProviderInterface,
+    Zend\ModuleManager\Feature\BootstrapListenerInterface,
+    Zend\EventManager\Event;
 
-class Module implements AutoloaderProvider
+class Module implements ConfigProviderInterface, BootstrapListenerInterface
 {
-    public function init(Manager $moduleManager)
-    {
-        $events = $moduleManager->events();
-        $sharedEvents = $events->getSharedManager();
-        $sharedEvents->attach('bootstrap', 'bootstrap', array($this, 'initializeView'), 100);
-    }
-    
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
-
-    public function getConfig()
-    {
+    public function getConfig(){
         return include __DIR__ . '/config/module.config.php';
     }
     
-    public function initializeView($e)
-    {
+    public function onBootstrap(Event $e){
         $app = $e->getParam('application');
         $locator = $app->getLocator();
         

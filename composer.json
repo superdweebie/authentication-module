@@ -1,0 +1,29 @@
+{
+    "name": "superdweebie/SdsDoctrineExtensionsModule",
+    "description": "Zend Framework 2 Module that provides authentication functionality",
+    "type": "library",
+    "keywords": [
+        "doctrine",
+        "zf2"
+    ],
+    "homepage": "http://github.com/superdweebie/SdsAuthModule",
+    "authors": [
+        {
+            "name": "Tim Roediger",
+            "email": "superdweebie@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ocramius/OcraComposer": "dev-master"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "SdsAuthModule": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
