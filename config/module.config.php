@@ -1,5 +1,9 @@
 <?php
 return array(
+    'sds_auth_config' => array(
+        'auth_service' => 'Zend\Authentication\AuthenticationService',
+        'guest_user' => 'guest_user'
+    ),
     'di' => array(
         'definition' => array(
             'class' => array(
