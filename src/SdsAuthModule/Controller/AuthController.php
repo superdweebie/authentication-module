@@ -1,36 +1,25 @@
 <?php
 namespace SdsAuthModule\Controller;
 
-use Zend\Mvc\Controller\ActionController,
-    SdsAuthModule\AuthService,   
-    Zend\View\Model\JsonModel;
+use Zend\Mvc\Controller\ActionController;
+use SdsAuthModule\Controller\Behaviour\ActiveUser;
+use SdsAuthModule\Controller\Behaviour\AuthService;
+use Zend\View\Model\JsonModel;
 
 
 class AuthController extends ActionController
 {
-    protected $authService;
-    protected $activeUser;
-    
-    public function setAuthService(AuthService $authService)
-    {
-        $this->authService = $authService;
-        return $this;
-    }
-    
-    public function setActiveUser($activeUser)
-    {
-        $this->activeUser = $activeUser;
-        return $this;
-    }  
+    use ActiveUser;
+    use AuthService;
     
     public function loginAction()
     {
         $post = $this->getRequest()->post()->toArray();
         $username = $post['username'];
         $password = $post['password'];
-        if($this->activeUser == $this->authService->getGuestUser())
+        if($this->getActiveUser() == $this->getAuthService()->getGuestUser())
         {
-            $result = $this->authService->login($username, $password);
+            $result = $this->getAuthService()->login($username, $password);
             if ($result->isValid())
             {
                 return new JsonModel(array(
@@ -49,7 +38,7 @@ class AuthController extends ActionController
     
     public function logoutAction()
     {
-        $this->authService->logout();
+        $this->getAuthService()->logout();
         return new JsonModel(array(
             'user' => '', 
             'url' => '',

@@ -29,6 +29,7 @@ class Module
             'factories' => array(
                 'active_user'                 => 'SdsAuthModule\Service\ActiveUserFactory',
                 'SdsAuthModule\AuthServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
+                'SdsAuthModule\AuthService' => 'SdsAuthModule\Service\AuthServiceFactory',                
             )
         );
     }     
