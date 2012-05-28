@@ -7,13 +7,12 @@ A simple zend framework 2 authentication module. This module is targeted at AJAX
 
     -Place the module in your vendor directory.
     -Edit application.config.php and add an entry for `SdsAuthModule`
-    -Copy the `module.sdsauthmodule.global.config.php.dist` file to your `config\autoload` directory and edit it with your own Auth Adapter settings. It is preconfigured to use DoctrineMongoDBModule.
 
 #Use
 
-Configure the guest user in module.sdsauthmodule.global.config.php. This object will be the active_user when there is no authenticated identity.
+Override values in `module.config.php` to match your system.
 
-The active_user alias is created in the DI config. It can be used to inject the active user into your objects.
+Get the active user with `$serviceManager->get('activeUser');`.
 
 Two routes are configured:
 

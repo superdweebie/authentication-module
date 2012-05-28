@@ -11,6 +11,16 @@ class AuthService extends AuthServiceBase
     protected $adapterUsernameMethod;
     protected $adapterPasswordMethod;
 
+    /**
+     * @var object
+     */       
+    protected $returnDataObject;
+
+    /**
+     * @var string
+     */       
+    protected $returnDataMethod;
+    
     public function setAdapter(Adapter $adapter)
     {       
         $this->adapter = $adapter;   
@@ -34,6 +44,22 @@ class AuthService extends AuthServiceBase
 
     public function setAdapterPasswordMethod($adapterPasswordMethod) {
         $this->adapterPasswordMethod = $adapterPasswordMethod;
+    }
+    
+    public function getReturnDataObject() {
+        return $this->returnDataObject;
+    }
+
+    public function getReturnDataMethod() {
+        return $this->returnDataMethod;
+    }
+    
+    public function setReturnDataObject($returnDataObject) {
+        $this->returnDataObject = $returnDataObject;
+    }
+
+    public function setReturnDataMethod($returnDataMethod) {
+        $this->returnDataMethod = $returnDataMethod;
     }
     
     public function login($username, $password)

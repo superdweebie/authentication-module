@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @package    SdsAuthModule
+ * @license    MIT
+ */
 namespace SdsAuthModule;
 
 use Zend\EventManager\Event;
@@ -27,7 +30,7 @@ class Module
                 'zendauthenticationauthenticationservice' => 'Zend\Authentication\AuthenticationService'
             ),
             'factories' => array(
-                'active_user'                 => 'SdsAuthModule\Service\ActiveUserFactory',
+                'activeUser'                 => 'SdsAuthModule\Service\ActiveUserFactory',
                 'SdsAuthModule\AuthServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
                 'SdsAuthModule\AuthService' => 'SdsAuthModule\Service\AuthServiceFactory',                
             )
