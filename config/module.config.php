@@ -2,7 +2,7 @@
 return array(
     'sds_auth_config' => array(
         'auth_service' => 'Zend\Authentication\AuthenticationService',
-        'guest_user' => 'guest_user',
+        'guestUser' => 'guestUser',
         'adapter' => 'DoctrineModule\Authentication\Adapter\DoctrineObject',  
         'adapterUsernameMethod' => 'setIdentityValue',
         'adapterPasswordMethod' => 'setCredentialValue'        
@@ -36,4 +36,26 @@ return array(
             'auth' => 'SdsAuthModule\Controller\AuthController'
         ),              
     ),  
+    'accessControl' => array(
+        'controllers' => array(
+            'auth' => array(
+                'actions' => array(
+                    'login' => array(
+                        'roles' => array(
+                            array(
+                                'name' => 'guest'
+                            ),
+                        ), 
+                     ),
+                    'logout' => array(
+                        'roles' => array(
+                            array(
+                                'name' => 'authenticated'
+                            ),
+                        ), 
+                     ),                    
+                ),
+            ),
+        ),
+    ),    
 );
