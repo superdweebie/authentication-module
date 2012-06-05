@@ -21,6 +21,19 @@ class AuthService extends AuthServiceBase
      */       
     protected $returnDataMethod;
     
+    public function __construct(
+        ZfAuthService $authenticationService, 
+        $guestUser,
+        Adapter $adapter,
+        $adapterUsernameMethod,
+        $adapterPasswordMethod
+    ){
+        parent::__construct($authenticationService, $guestUser);
+        $this->setAdapter($adapter);
+        $this->setAdapterUsernameMethod($adapterUsernameMethod);
+        $this->setAdapterPasswordMethod($adapterPasswordMethod);
+    }
+    
     public function setAdapter(Adapter $adapter)
     {       
         $this->adapter = $adapter;   
@@ -35,7 +48,7 @@ class AuthService extends AuthServiceBase
     }
 
     public function setAdapterUsernameMethod($adapterUsernameMethod) {
-        $this->adapterUsernameMethod = $adapterUsernameMethod;
+        $this->adapterUsernameMethod = (string) $adapterUsernameMethod;
     }
 
     public function getAdapterPasswordMethod() {
@@ -43,7 +56,7 @@ class AuthService extends AuthServiceBase
     }
 
     public function setAdapterPasswordMethod($adapterPasswordMethod) {
-        $this->adapterPasswordMethod = $adapterPasswordMethod;
+        $this->adapterPasswordMethod = (string) $adapterPasswordMethod;
     }
     
     public function getReturnDataObject() {

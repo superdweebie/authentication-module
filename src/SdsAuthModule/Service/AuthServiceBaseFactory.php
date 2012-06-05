@@ -10,10 +10,12 @@ class AuthServiceBaseFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Configuration')['sdsAuthConfig'];         
-        $instance = new AuthServiceBase();
-        $instance->setAuthenticationService($serviceLocator->get($config['authService']));
-        $instance->setGuestUser($serviceLocator->get($config['guestUser']));
+        $config = $serviceLocator->get('Configuration');
+        $config = $config['sdsAuthConfig'];         
+        $instance = new AuthServiceBase(
+            $serviceLocator->get($config['authService']),
+            $serviceLocator->get($config['guestUser'])            
+        );
         return $instance;        
     }
 }

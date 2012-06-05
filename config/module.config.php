@@ -9,7 +9,7 @@ return array(
         'guestUser' => 'guestUser',
         
         //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
-        'adapter' => 'DoctrineModule\Authentication\Adapter\DoctrineObject',  
+        'adapter' => 'doctrine_auth_adapter',  
         
         //The method on the adapter to inject the identity/username value
         'adapterUsernameMethod' => 'setIdentityValue',

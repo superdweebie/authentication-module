@@ -9,6 +9,11 @@ class AuthServiceBase
     protected $authenticationService;
     protected $guestUser;
     
+    public function __construct(ZfAuthService $authenticationService, $guestUser){
+        $this->setAuthenticationService($authenticationService);
+        $this->setGuestUser($guestUser);
+    }
+    
     public function setAuthenticationService(ZfAuthService $authenticationService)
     {
         $this->authenticationService = $authenticationService;
