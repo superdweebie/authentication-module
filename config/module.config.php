@@ -26,27 +26,20 @@ return array(
     
     //Set up routes
     'router' => array(
-        'routes' => array(
-            'login' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+        'routes' => array(            
+            'auth' => array(
+                'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route' => '/login',
+                    'route' => '/auth[/:action]',
+                    'constraints' => array(
+                        'method' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
                     'defaults' => array(
                         'controller' => 'auth',
-                        'action' => 'login',
-                    ),
+                        'action' => 'serviceMap'
+                    ),                    
                 ),
-            ),
-            'logout' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route' => '/logout',
-                    'defaults' => array(
-                        'controller' => 'auth',
-                        'action' => 'logout',
-                    ),
-                ),
-            ),            
+            ),                     
         ),
     ),    
     'controller' => array(
@@ -59,8 +52,15 @@ return array(
     //this part of the config is ignored.
     'accessControl' => array(
         'controllers' => array(
-            'auth' => array(
+            'auth' => array(                
                 'actions' => array(
+                    'serviceMap' => array(
+                        'roles' => array(
+                            array(
+                                'name' => 'guest'
+                            ),
+                        ),                         
+                    ),
                     'login' => array(
                         'roles' => array(
                             array(

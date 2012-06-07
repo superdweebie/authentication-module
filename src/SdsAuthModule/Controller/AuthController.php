@@ -5,7 +5,7 @@
  */
 namespace SdsAuthModule\Controller;
 
-use Zend\Mvc\Controller\ActionController;
+use SdsJsonRpcModule\Controller\JsonRpcController;
 use SdsAuthModule\Controller\Behaviour\ActiveUser;
 use SdsAuthModule\Controller\Behaviour\AuthService;
 use Zend\View\Model\JsonModel;
@@ -17,19 +17,20 @@ use Zend\View\Model\JsonModel;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthController extends ActionController
+class AuthController extends JsonRpcController
 {
+    
     use ActiveUser;
     use AuthService;
-        
+    
     /**
      * Checks the provided username and password against the authService and 
      * returns the active user
      *
-     * @param string $theme
      * @return \Zend\View\Model\JsonModel
+     * @rpc
      */      
-    public function loginAction()
+    public function login()
     {
         $request = $this->getRequest();
         $post = $request->post()->toArray();
@@ -61,10 +62,10 @@ class AuthController extends ActionController
     /**
      * Clears the active user
      *
-     * @param string $theme
      * @return \Zend\View\Model\JsonModel
+     * @rpc
      */     
-    public function logoutAction()
+    public function logout()
     {
         $this->getAuthService()->logout();
         return new JsonModel(array(
