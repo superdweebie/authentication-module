@@ -7,11 +7,11 @@ use Zend\Authentication\AuthenticationService as ZfAuthService;
 class AuthServiceBase
 {
     protected $authenticationService;
-    protected $guestUser;
+    protected $defaultUser;
     
-    public function __construct(ZfAuthService $authenticationService, $guestUser){
+    public function __construct(ZfAuthService $authenticationService, $defaultUser){
         $this->setAuthenticationService($authenticationService);
-        $this->setGuestUser($guestUser);
+        $this->setDefaultUser($defaultUser);
     }
     
     public function setAuthenticationService(ZfAuthService $authenticationService)
@@ -19,13 +19,13 @@ class AuthServiceBase
         $this->authenticationService = $authenticationService;
     }
     
-    public function setGuestUser($guestUser)
+    public function setDefaultUser($defaultUser)
     {
-        $this->guestUser = $guestUser;
+        $this->defaultUser = $defaultUser;
     }
     
-    public function getGuestUser() {
-        return $this->guestUser;
+    public function getDefaultUser() {
+        return $this->defaultUser;
     }    
     
     public function hasIdentity()
@@ -37,7 +37,7 @@ class AuthServiceBase
     {   
         if(!($identity = $this->authenticationService->getIdentity()))
         {
-            return $this->guestUser;
+            return $this->defaultUser;
         } else {
             return $identity;
         }

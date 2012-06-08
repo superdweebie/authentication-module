@@ -15,7 +15,10 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": ">=5.4",
+		"superdweebie/SdsJsonRpcModule": "dev-master",
+		"superdweebie/SdsCommon": "dev-master",
+		"superdweebie/SdsInitalizerModule": "dev-master"        
     },
 
     "autoload": {

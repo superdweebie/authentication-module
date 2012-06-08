@@ -6,7 +6,7 @@ return array(
         'authService' => 'Zend\Authentication\AuthenticationService',
         
         //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
-        'guestUser' => 'guestUser',
+        'defaultUser' => 'SdsUserModule\DefaultUser',
         
         //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
         'adapter' => 'doctrine_auth_adapter',  
@@ -23,25 +23,7 @@ return array(
         //Method to be called on an object to retrieve extra json data to be returned with a successful login
         'returnDataMethod' => null
     ),
-    
-    //Set up routes
-    'router' => array(
-        'routes' => array(            
-            'auth' => array(
-                'type' => 'Zend\Mvc\Router\Http\Segment',
-                'options' => array(
-                    'route' => '/auth[/:action]',
-                    'constraints' => array(
-                        'method' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'auth',
-                        'action' => 'serviceMap'
-                    ),                    
-                ),
-            ),                     
-        ),
-    ),    
+     
     'controller' => array(
         'classes' => array(
             'auth' => 'SdsAuthModule\Controller\AuthController'

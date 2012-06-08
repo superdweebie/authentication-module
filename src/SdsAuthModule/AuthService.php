@@ -2,8 +2,8 @@
 
 namespace SdsAuthModule;
 
-use Zend\Authentication\AuthenticationService as ZfAuthService,
-    Zend\Authentication\Adapter\AdapterInterface as Adapter;
+use Zend\Authentication\AuthenticationService as ZfAuthService;
+use Zend\Authentication\Adapter\AdapterInterface as Adapter;
 
 class AuthService extends AuthServiceBase
 {
