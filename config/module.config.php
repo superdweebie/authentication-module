@@ -32,21 +32,21 @@ return array(
     
     //Used by SdsAccessControlModule. If you are not using SdsAccessControlModule,
     //this part of the config is ignored.
-    'accessControl' => array(
+    'sdsAccessControl' => array(
         'controllers' => array(
             'auth' => array(                
                 'actions' => array(
                     'serviceMap' => array(
                         'roles' => array(
                             array(
-                                'name' => 'guest'
+                                'name' => 'default'
                             ),
                         ),                         
                     ),
                     'login' => array(
                         'roles' => array(
                             array(
-                                'name' => 'guest'
+                                'name' => 'default'
                             ),
                         ), 
                      ),

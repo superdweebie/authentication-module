@@ -35,7 +35,7 @@ class AuthController extends JsonRpcController implements ActiveUserAwareInterfa
      *
      * @param string $username
      * @param string $password
-     * @return \Zend\View\Model\JsonModel
+     * @return object
      */      
     public function login($username, $password)
     {
@@ -69,7 +69,7 @@ class AuthController extends JsonRpcController implements ActiveUserAwareInterfa
     /**
      * Clears the active user
      *
-     * @return \Zend\View\Model\JsonModel
+     * @return object
      */     
     public function logout()
     {
