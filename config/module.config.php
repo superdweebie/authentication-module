@@ -15,18 +15,12 @@ return array(
         'adapterUsernameMethod' => 'setIdentityValue',
         
         //The method of the adapter to inject the credential/password value
-        'adapterPasswordMethod' => 'setCredentialValue',
-        
-        //Object that can be called to retrieve extra json data to be returned with a successful login
-        'returnDataObject' => null,
-        
-        //Method to be called on an object to retrieve extra json data to be returned with a successful login
-        'returnDataMethod' => null
+        'adapterPasswordMethod' => 'setCredentialValue',        
     ),
      
     'controller' => array(
-        'classes' => array(
-            'auth' => 'SdsAuthModule\Controller\AuthController'
+        'factories' => array(
+            'auth' => 'SdsAuthModule\Service\AuthControllerFactory'
         ),              
     ),  
     

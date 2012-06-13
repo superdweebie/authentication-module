@@ -9,6 +9,9 @@ use Zend\EventManager\Event;
 use SdsInitalizerModule\Service\Events as InitalizerEvents;
 use Zend\ModuleManager\ModuleManager;
 use SdsCommon\ActiveUser\ActiveUserAwareInterface;
+use SdsCommon\User\UserInterface;
+use Zend\View\Strategy\JsonStrategy;
+use Zend\View\Renderer\JsonRenderer;
 
 class Module
 {
@@ -29,9 +32,9 @@ class Module
     public function loadInitalizers(Event $e){
         $serviceLocator = $e->getTarget();        
         return array(
-            'ActiveUserAwareInterface' =>
+            'Auth\ActiveUserAwareInterface' =>
             function ($instance) use ($serviceLocator) {
-                if ($instance instanceof ActiveUserAwareInterface) {
+                if ($instance instanceof ActiveUserAwareInterface){             
                     $instance->setActiveUser($serviceLocator->get('SdsAuthModule\ActiveUser'));
                 }
             }             
@@ -47,21 +50,19 @@ class Module
         $serviceManager = $app->getServiceManager();
         
         $view = $serviceManager->get('Zend\View\View');
-        $jsonStrategy = $serviceManager->get('di')->get('Zend\View\Strategy\JsonStrategy');
-        $view->events()->attach($jsonStrategy, 100);                  
+        $view->events()->attach(new JsonStrategy(new JsonRenderer), 100);                  
     } 
     
     public function getServiceConfiguration()
     {
         return array(
             'invokables' => array(
-                //TODO:: Remove these when sm mvc integration is complete
-                'zendauthenticationauthenticationservice' => 'Zend\Authentication\AuthenticationService'
+                'Zend\Authentication\AuthenticationService' => 'Zend\Authentication\AuthenticationService'
             ),
             'factories' => array(
-                'SdsAuthModule\ActiveUser'                 => 'SdsAuthModule\Service\ActiveUserFactory',
+                'SdsAuthModule\ActiveUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
                 'SdsAuthModule\AuthServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
-                'SdsAuthModule\AuthService' => 'SdsAuthModule\Service\AuthServiceFactory',                
+                'SdsAuthModule\AuthService'     => 'SdsAuthModule\Service\AuthServiceFactory',
             )
         );
     }     

@@ -10,6 +10,7 @@ use SdsCommon\ActiveUser\ActiveUserAwareInterface;
 use SdsCommon\ActiveUser\ActiveUserAwareTrait;
 use SdsAuthModule\AuthServiceAwareInterface;
 use SdsAuthModule\AuthServiceAwareTrait;
+use SdsAuthModule\Events;
 use Zend\View\Model\JsonModel;
 
 /**
@@ -26,9 +27,14 @@ class AuthController extends JsonRpcController implements ActiveUserAwareInterfa
     use AuthServiceAwareTrait;
     
     public function registerRpcMethods(){
-        return array('login', 'logout');
+        return array(
+            'login', 
+            'logout', 
+            'recoverPassword', 
+            'register'
+        );
     }
-    
+
     /**
      * Checks the provided username and password against the authService and 
      * returns the active user
@@ -39,31 +45,28 @@ class AuthController extends JsonRpcController implements ActiveUserAwareInterfa
      */      
     public function login($username, $password)
     {
-        $request = $this->getRequest();
-        $post = $request->post()->toArray();
-        
-        $username = $post['username'];
-        $password = $post['password'];
-        if($this->getActiveUser() == $this->getAuthService()->getGuestUser())
-        {
-            $result = $this->getAuthService()->login($username, $password);
-            if ($result->isValid())
-            {
-                $data = null;
-                if (isset($this->returnDataObject)){
-                    $data = $this->returnDataObject->{$this->returnDataMethod}();
-                }
-                return new JsonModel(array(
-                    'user' => $result->getIdentity()->jsonSerialize(),                    
-                    'data' => $data
-                ));
-            } else {
-                $this->getResponse()->setStatusCode(500);
-                return new JsonModel(array('message' => implode('. ', $result->getMessages())));                
-            }
+        if($this->activeUser != $this->authService->getDefaultUser()){
+            $this->getResponse()->setStatusCode(500);
+            return array('message' => 'You are aready logged in');
         }
-        $this->getResponse()->setStatusCode(500);
-        return new JsonModel(array('message' => 'You are aready logged in'));
+        $result = $this->authService->login($username, $password);
+        if (!$result->isValid()){
+            $this->getResponse()->setStatusCode(500);
+            return array('message' => implode('. ', $result->getMessages()));                
+        }            
+
+        $activeUser = $result->getIdentity();
+        $this->events->addIdentifiers(array(Events::IDENTIFIER));
+        $collection = $this->events->trigger(Events::LOGIN, $activeUser);
+        $data = array();
+        foreach($collection as $response){
+            $data = array_merge($data, $response);            
+        }
+        
+        return array(
+            'user' => $activeUser->jsonSerialize(),                    
+            'data' => json_encode($data)
+        );
     }
     
     /**
@@ -73,10 +76,30 @@ class AuthController extends JsonRpcController implements ActiveUserAwareInterfa
      */     
     public function logout()
     {
-        $this->getAuthService()->logout();
-        return new JsonModel(array(
+        $this->authService->logout();
+        return array(
             'user' => '', 
             'url' => '',
-        ));  
+        );  
+    }  
+    
+    /**
+     *
+     * @param string $username
+     * @param string $email
+     * @return object
+     */       
+    public function recoverPassword($username = null, $email = null){
+
+    }
+    
+    /**
+     *
+     * @param string $username
+     * @param array $details
+     * @return object
+     */       
+    public function register($username, array $details){
+        
     }    
 }

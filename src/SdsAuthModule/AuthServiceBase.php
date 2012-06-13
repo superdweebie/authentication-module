@@ -14,13 +14,11 @@ class AuthServiceBase
         $this->setDefaultUser($defaultUser);
     }
     
-    public function setAuthenticationService(ZfAuthService $authenticationService)
-    {
+    public function setAuthenticationService(ZfAuthService $authenticationService){
         $this->authenticationService = $authenticationService;
     }
     
-    public function setDefaultUser($defaultUser)
-    {
+    public function setDefaultUser($defaultUser) {
         $this->defaultUser = $defaultUser;
     }
     
