@@ -23,12 +23,12 @@ class AuthService extends AuthServiceBase
     
     public function __construct(
         ZfAuthService $authenticationService, 
-        $guestUser,
+        $defaultUser,
         Adapter $adapter,
         $adapterUsernameMethod,
         $adapterPasswordMethod
     ){
-        parent::__construct($authenticationService, $guestUser);
+        parent::__construct($authenticationService, $defaultUser);
         $this->setAdapter($adapter);
         $this->setAdapterUsernameMethod($adapterUsernameMethod);
         $this->setAdapterPasswordMethod($adapterPasswordMethod);
