@@ -1,0 +1,7 @@
+{
+    "require": {
+        "doctrine/DoctrineMongoODMModule": "dev-master",
+        "superdweebie/SdsAuthModule": "dev-master",
+        "zendframework/zendframework": "dev-master"
+    }
+}

@@ -6,64 +6,61 @@
 namespace SdsAuthModule;
 
 use Zend\EventManager\Event;
-use SdsInitalizerModule\Service\Events as InitalizerEvents;
-use Zend\ModuleManager\ModuleManager;
 use SdsCommon\ActiveUser\ActiveUserAwareInterface;
-use SdsCommon\User\UserInterface;
-use Zend\View\Strategy\JsonStrategy;
-use Zend\View\Renderer\JsonRenderer;
 
+/**
+ *
+ * @license MIT
+ * @link    http://www.doctrine-project.org/
+ * @since   0.1.0
+ * @author  Tim Roediger <superdweebie@gmail.com>
+ */
 class Module
 {
-    public function init(ModuleManager $moduleManager){
-        $sharedEvents = $moduleManager->events()->getSharedManager();
-        $sharedEvents->attach(
-            InitalizerEvents::IDENTIFIER, 
-            InitalizerEvents::LOAD_CONTROLLER_LOADER_INITALIZERS, 
-            array($this, 'loadInitalizers')
-        );
-        $sharedEvents->attach(
-            InitalizerEvents::IDENTIFIER, 
-            InitalizerEvents::LOAD_SERVICE_MANAGER_INITALIZERS, 
-            array($this, 'loadInitalizers')
-        );        
-    }
-    
-    public function loadInitalizers(Event $e){
-        $serviceLocator = $e->getTarget();        
-        return array(
-            'Auth\ActiveUserAwareInterface' =>
-            function ($instance) use ($serviceLocator) {
-                if ($instance instanceof ActiveUserAwareInterface){             
-                    $instance->setActiveUser($serviceLocator->get('SdsAuthModule\ActiveUser'));
-                }
-            }             
-        );
-    }
-    
+    /**
+     *
+     * @return array
+     */
     public function getConfig(){
         return include __DIR__ . '/../../config/module.config.php';
     }
-    
-    public function onBootstrap(Event $e){
-        $app = $e->getParam('application');
+
+    /**
+     *
+     * @param \Zend\EventManager\Event $event
+     */
+    public function onBootstrap(Event $event){
+        $app = $event->getTarget();
         $serviceManager = $app->getServiceManager();
-        
-        $view = $serviceManager->get('Zend\View\View');
-        $view->events()->attach(new JsonStrategy(new JsonRenderer), 100);                  
-    } 
-    
+
+        $activeUserInitalizer =
+            function ($instance) use ($serviceManager) {
+                if ($instance instanceof ActiveUserAwareInterface){
+                    $instance->setActiveUser($serviceManager->get('sdsAuthModule.activeUser'));
+                }
+            }
+        ;
+
+        $serviceManager->addInitalizer($activeUserInitalizer);
+    }
+
+    /**
+     *
+     * @return array
+     */
     public function getServiceConfiguration()
     {
         return array(
             'invokables' => array(
-                'Zend\Authentication\AuthenticationService' => 'Zend\Authentication\AuthenticationService'
+                'doctrine.auth.adapter' => 'DoctrineModule\Authentication\Adapter\DoctrineObjectRepository',
+                'sdsAuthModule.defaultUser' => 'SdsAuthModule\Model\DefaultUser',
+                'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
             ),
             'factories' => array(
-                'SdsAuthModule\ActiveUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
-                'SdsAuthModule\AuthServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
-                'SdsAuthModule\AuthService'     => 'SdsAuthModule\Service\AuthServiceFactory',
+                'sdsAuthModule.activeUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
+                'sdsAuthModule.authServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
+                'sdsAuthModule.authService'     => 'SdsAuthModule\Service\AuthServiceFactory',
             )
         );
-    }     
+    }
 }

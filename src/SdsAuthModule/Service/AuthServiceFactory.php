@@ -1,28 +1,41 @@
 <?php
-
+/**
+ * @package    SdsAuthModule
+ * @license    MIT
+ */
 namespace SdsAuthModule\Service;
 
+use SdsAuthModule\AuthService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use SdsAuthModule\AuthService;
 
+/**
+ *
+ * @since   1.0
+ * @version $Revision$
+ * @author  Tim Roediger <superdweebie@gmail.com>
+ */
 class AuthServiceFactory implements FactoryInterface
 {
+    /**
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
+     * @return \SdsAuthModule\AuthService
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Configuration');
-        $config = $config['sdsAuthConfig'];         
+        $config = $serviceLocator->get('Configuration')['sdsAuth'];
         $instance = new AuthService(
             $serviceLocator->get($config['authService']),
             $serviceLocator->get($config['defaultUser']),
             $serviceLocator->get($config['adapter']),
             $config['adapterUsernameMethod'],
-            $config['adapterPasswordMethod']            
+            $config['adapterPasswordMethod']
         );
         if(isset($config['returnDataObject'])){
             $instance->setReturnDataObject($serviceLocator->get($config['returnDataObject']));
-            $instance->setReturnDataMethod($config['returnDataMethod']);        
+            $instance->setReturnDataMethod($config['returnDataMethod']);
         }
-        return $instance;        
+        return $instance;
     }
 }
