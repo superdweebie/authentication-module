@@ -1,6 +1,6 @@
 <?php
 
-namespace SdsAuthModuleTest;
+namespace Sds\AuthModule\Test;
 
 use PHPUnit_Framework_TestCase;
 use Zend\Mvc\Service\ServiceManagerConfiguration;

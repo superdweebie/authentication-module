@@ -3,7 +3,7 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule;
+namespace Sds\AuthModule;
 
 /**
  * Event name strings

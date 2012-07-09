@@ -3,7 +3,7 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule\Service;
+namespace Sds\AuthModule\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -25,7 +25,7 @@ class AuthControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $authController = new AuthController;
-        $authController->setAuthService($serviceLocator->get('SdsAuthModule\AuthService'));
+        $authController->setAuthService($serviceLocator->get('sds.authModule.authService'));
         return $authController;
     }
 }

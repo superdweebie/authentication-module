@@ -3,10 +3,10 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule;
+namespace Sds\AuthModule;
 
 use Zend\EventManager\Event;
-use SdsCommon\ActiveUser\ActiveUserAwareInterface;
+use Sds\Common\ActiveUser\ActiveUserAwareInterface;
 
 /**
  *
@@ -22,7 +22,7 @@ class Module
      * @return array
      */
     public function getConfig(){
-        return include __DIR__ . '/../../config/module.config.php';
+        return include __DIR__ . '/../../../config/module.config.php';
     }
 
     /**
@@ -57,9 +57,9 @@ class Module
                 'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
             ),
             'factories' => array(
-                'sdsAuthModule.activeUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
-                'sdsAuthModule.authServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
-                'sdsAuthModule.authService'     => 'SdsAuthModule\Service\AuthServiceFactory',
+                'sds.authModule.activeUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
+                'sds.authModule.authServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
+                'sds.authModule.authService'     => 'SdsAuthModule\Service\AuthServiceFactory',
             )
         );
     }

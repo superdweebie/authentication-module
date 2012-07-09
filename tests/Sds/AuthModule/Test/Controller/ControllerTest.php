@@ -1,9 +1,9 @@
 <?php
 
-namespace SdsAuthModuleTest\Controller;
+namespace Sds\AuthModule\Test\Controller;
 
-use SdsAuthModule\Controller\AuthController;
-use SdsAuthModuleTest\BaseTest;
+use Sds\AuthModule\Controller\AuthController;
+use Sds\AuthModule\Test\BaseTest;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;

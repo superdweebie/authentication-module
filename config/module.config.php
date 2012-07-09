@@ -46,27 +46,27 @@ return array(
                 'actions' => array(
                     'serviceMap' => array(
                         'roles' => array(
-                            'name' => \SdsCommon\AccessControl\Constant\Role::guest
+                            'name' => \Sds\Common\AccessControl\Constant\Role::guest
                         ),
                     ),
                     'login' => array(
                         'roles' => array(
-                            'name' => \SdsCommon\AccessControl\Constant\Role::guest
+                            'name' => \Sds\Common\AccessControl\Constant\Role::guest
                         ),
                      ),
                     'logout' => array(
                         'roles' => array(
-                            'name' => \SdsCommon\AccessControl\Constant\Role::user
+                            'name' => \Sds\Common\AccessControl\Constant\Role::user
                         ),
                     ),
                     'recoverPassword' => array(
                         'roles' => array(
-                            'name' => \SdsCommon\AccessControl\Constant\Role::user
+                            'name' => \Sds\Common\AccessControl\Constant\Role::user
                         ),
                     ),
                     'register' => array(
                         'roles' => array(
-                            'name' => \SdsCommon\AccessControl\Constant\Role::user
+                            'name' => \Sds\Common\AccessControl\Constant\Role::user
                         ),
                     ),
                 ),

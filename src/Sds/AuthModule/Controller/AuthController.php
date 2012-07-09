@@ -3,13 +3,13 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule\Controller;
+namespace Sds\AuthModule\Controller;
 
-use SdsAuthModule\Events;
-use SdsAuthModule\AuthService;
-use SdsCommon\ActiveUser\ActiveUserAwareInterface;
-use SdsCommon\ActiveUser\ActiveUserAwareTrait;
-use SdsJsonRpc\Controller\AbstractJsonRpcController;
+use Sds\AuthModule\Events;
+use Sds\AuthModule\AuthService;
+use Sds\Common\User\ActiveUserAwareInterface;
+use Sds\Common\User\ActiveUserAwareTrait;
+use Sds\JsonRpc\Controller\AbstractJsonRpcController;
 
 /**
  * Controller to handle login and logout actions via json rpc

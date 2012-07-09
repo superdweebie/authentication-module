@@ -15,7 +15,7 @@ while (!file_exists('config/application.config.php')) {
 }
 
 $loader = require_once('vendor/autoload.php');
-$loader->add('SdsAuthModuleTest', __DIR__);
+$loader->add('Sds\\AuthModule\\Test', __DIR__);
 
 if (is_readable(__DIR__ . '/TestConfiguration.php')) {
     require_once __DIR__ . '/TestConfiguration.php';
@@ -23,4 +23,4 @@ if (is_readable(__DIR__ . '/TestConfiguration.php')) {
     require_once __DIR__ . '/TestConfiguration.php.dist';
 }
 
-\SdsAuthModuleTest\BaseTest::setMvcConfig($configuration);
+\Sds\AuthModule\Test\BaseTest::setMvcConfig($configuration);

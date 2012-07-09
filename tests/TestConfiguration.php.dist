@@ -3,7 +3,7 @@ $configuration = array(
     'modules' => array(
         //'DoctrineModule',
         //'DoctrineMongoODMModule',
-        'SdsAuthModule'
+        'Sds\AuthModule'
     ),
     'module_listener_options' => array(
         'config_cache_enabled' => false,

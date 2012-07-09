@@ -3,9 +3,9 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule\Service;
+namespace Sds\AuthModule\Service;
 
-use SdsAuthModule\AuthService;
+use Sds\AuthModule\AuthService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

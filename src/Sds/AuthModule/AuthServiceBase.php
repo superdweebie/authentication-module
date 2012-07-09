@@ -3,9 +3,9 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule;
+namespace Sds\AuthModule;
 
-use SdsCommon\User\UserInterface;
+use Sds\Common\User\UserInterface;
 use Zend\Authentication\AuthenticationService as ZfAuthService;
 
 /**

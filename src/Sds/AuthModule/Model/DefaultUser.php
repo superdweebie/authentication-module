@@ -3,9 +3,9 @@
  * @package    SdsAuthModule
  * @license    MIT
  */
-namespace SdsAuthModule\Model;
+namespace Sds\AuthModule\Model;
 
-use SdsCommon\User\RoleAwareUserInterface;
+use Sds\Common\User\RoleAwareUserInterface;
 
 /**
  *
