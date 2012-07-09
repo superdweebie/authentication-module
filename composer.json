@@ -1,5 +1,5 @@
 {
-    "name": "superdweebie/SdsAuthModule",
+    "name": "superdweebie/authModule",
     "description": "Zend Framework 2 Module that provides authentication functionality",
     "type": "library",
     "license": "MIT",
@@ -7,7 +7,7 @@
         "doctrine",
         "zf2"
     ],
-    "homepage": "http://github.com/superdweebie/SdsAuthModule",
+    "homepage": "http://github.com/superdweebie/authModule",
     "authors": [
         {
             "name": "Tim Roediger",
@@ -16,13 +16,13 @@
     ],
     "require": {
         "php": ">=5.4",
-		"superdweebie/SdsJsonRpc": "dev-master",
-		"superdweebie/SdsCommon": "dev-master",
+		"superdweebie/jsonRpc": "dev-master",
+		"superdweebie/common": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "autoload": {
         "psr-0": {
-            "SdsAuthModule": "src/"
+            "Sds\\AuthModule": "src/"
         }
     }
 }
