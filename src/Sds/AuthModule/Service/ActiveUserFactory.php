@@ -24,6 +24,6 @@ class ActiveUserFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $serviceLocator->get('SdsAuthModule\AuthServiceBase')->getIdentity();
+        return $serviceLocator->get('sds.auth.authServiceBase')->getIdentity();
     }
 }

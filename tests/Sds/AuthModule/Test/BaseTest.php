@@ -3,6 +3,7 @@
 namespace Sds\AuthModule\Test;
 
 use PHPUnit_Framework_TestCase;
+use Zend\ModuleManager\ModuleEvent;
 use Zend\Mvc\Service\ServiceManagerConfiguration;
 use Zend\ServiceManager\ServiceManager;
 
@@ -11,15 +12,15 @@ abstract class BaseTest extends PHPUnit_Framework_TestCase
 
     protected $serviceManager;
 
-    protected static $mvcConfig;
+    protected static $serviceConfig;
 
     public function setup(){
 
-        $mvcConfig = $this->getMvcConfig();
+        $serviceConfig = $this->getServiceConfig();
 
         // $configuration is loaded from TestConfiguration.php (or .dist)
-        $serviceManager = new ServiceManager(new ServiceManagerConfiguration($mvcConfig['service_manager']));
-        $serviceManager->setService('ApplicationConfiguration', $mvcConfig);
+        $serviceManager = new ServiceManager(new ServiceManagerConfiguration($serviceConfig['service_manager']));
+        $serviceManager->setService('ApplicationConfiguration', $serviceConfig);
         $serviceManager->setAllowOverride(true);
 
 
@@ -27,9 +28,18 @@ abstract class BaseTest extends PHPUnit_Framework_TestCase
 
         /** @var $moduleManager \Zend\ModuleManager\ModuleManager */
         $moduleManager = $serviceManager->get('ModuleManager');
+        $eventManager = $moduleManager->getEventManager();
+        $eventManager->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'onLoadModulesPost'));
+
         $moduleManager->loadModules();
 
-        $serviceManager->setService('Configuration', $this->alterConfig($serviceManager->get('Configuration')));
+        $serviceManager->get('Application')->bootstrap();
+    }
+
+    public function onLoadModulesPost(ModuleEvent $event){
+        $serviceLocator = $event->getParam('ServiceManager');
+        $config = $serviceLocator->get('Configuration');
+        $serviceLocator->setService('Configuration', $this->alterConfig($config));
     }
 
     /**
@@ -38,16 +48,16 @@ abstract class BaseTest extends PHPUnit_Framework_TestCase
      */
     abstract protected function alterConfig(array $config);
 
-    public static function setMvcConfig(array $mvcConfig)
+    public static function setServiceConfig(array $serviceConfig)
     {
-        self::$mvcConfig = $mvcConfig;
+        self::$serviceConfig = $serviceConfig;
     }
 
     /**
      * @return ServiceManager
      */
-    public function getMvcConfig()
+    public function getServiceConfig()
     {
-    	return self::$mvcConfig;
+    	return self::$serviceConfig;
     }
 }

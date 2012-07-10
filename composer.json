@@ -20,6 +20,10 @@
 		"superdweebie/common": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
+    "suggest": {
+        "doctrine/DoctrineModule": "The auth adapter in DoctrineModule is the default configured auth adapter",
+        "superdweebie/userModule": "The user model from Sds\\UserModule is the default configured user object"
+    },    
     "autoload": {
         "psr-0": {
             "Sds\\AuthModule": "src/"

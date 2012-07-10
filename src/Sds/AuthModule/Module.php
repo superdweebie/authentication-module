@@ -6,7 +6,7 @@
 namespace Sds\AuthModule;
 
 use Zend\EventManager\Event;
-use Sds\Common\ActiveUser\ActiveUserAwareInterface;
+use Sds\Common\User\ActiveUserAwareInterface;
 
 /**
  *
@@ -36,12 +36,13 @@ class Module
         $activeUserInitalizer =
             function ($instance) use ($serviceManager) {
                 if ($instance instanceof ActiveUserAwareInterface){
-                    $instance->setActiveUser($serviceManager->get('sdsAuthModule.activeUser'));
+                    $instance->setActiveUser($serviceManager->get('sds.auth.activeUser'));
                 }
             }
         ;
 
-        $serviceManager->addInitalizer($activeUserInitalizer);
+        $serviceManager->addInitializer($activeUserInitalizer);
+        $serviceManager->get('ControllerLoader')->addInitializer($activeUserInitalizer);
     }
 
     /**
@@ -52,14 +53,14 @@ class Module
     {
         return array(
             'invokables' => array(
-                'doctrine.auth.adapter' => 'DoctrineModule\Authentication\Adapter\DoctrineObjectRepository',
-                'sdsAuthModule.defaultUser' => 'SdsAuthModule\Model\DefaultUser',
+                'sds.auth.defaultUser'                      => 'Sds\AuthModule\Model\DefaultUser',
                 'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
             ),
             'factories' => array(
-                'sds.authModule.activeUser'      => 'SdsAuthModule\Service\ActiveUserFactory',
-                'sds.authModule.authServiceBase' => 'SdsAuthModule\Service\AuthServiceBaseFactory',
-                'sds.authModule.authService'     => 'SdsAuthModule\Service\AuthServiceFactory',
+                'doctrine.odm.auth.adapter' => 'Sds\AuthModule\Service\DoctrineODMAuthAdapterFactory',
+                'sds.auth.activeUser'       => 'Sds\AuthModule\Service\ActiveUserFactory',
+                'sds.auth.authServiceBase'  => 'Sds\AuthModule\Service\AuthServiceBaseFactory',
+                'sds.auth.authService'      => 'Sds\AuthModule\Service\AuthServiceFactory',
             )
         );
     }

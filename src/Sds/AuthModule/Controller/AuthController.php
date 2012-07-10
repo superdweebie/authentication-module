@@ -108,8 +108,8 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
         $this->events->trigger(Events::logout);
 
         return array(
-            'user' => '',
-            'url' => '',
+            'user' => null,
+            'url' => null,
         );
     }
 

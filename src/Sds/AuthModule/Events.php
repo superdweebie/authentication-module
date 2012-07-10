@@ -15,13 +15,9 @@ namespace Sds\AuthModule;
  */
 class Events
 {
-    const identifier = 'SdsAuthModule';
+    const identifier = 'sds.auth';
 
     const login = 'login';
 
     const logout = 'logout';
-
-    const register = 'register';
-
-    const recoverPassword = 'recoverPassword';
 }

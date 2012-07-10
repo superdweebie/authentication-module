@@ -1,9 +1,11 @@
 <?php
 $configuration = array(
     'modules' => array(
-        //'DoctrineModule',
-        //'DoctrineMongoODMModule',
-        'Sds\AuthModule'
+        'DoctrineModule',
+        'DoctrineMongoODMModule',
+        'Sds\AuthModule',
+        'Sds\UserModule',
+        'Sds\DoctrineExtensionsModule'
     ),
     'module_listener_options' => array(
         'config_cache_enabled' => false,

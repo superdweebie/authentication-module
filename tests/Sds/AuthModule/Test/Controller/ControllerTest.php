@@ -2,7 +2,6 @@
 
 namespace Sds\AuthModule\Test\Controller;
 
-use Sds\AuthModule\Controller\AuthController;
 use Sds\AuthModule\Test\BaseTest;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
@@ -21,11 +20,14 @@ class ControllerTest extends BaseTest{
 
         parent::setUp();
 
-        $this->controller = new AuthController();
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'auth'));
         $this->event      = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
+
+        $controllerLoader = $this->serviceManager->get('ControllerLoader');
+        $this->controller = $controllerLoader->get('auth');
+
         $this->controller->setEvent($this->event);
     }
 
@@ -33,13 +35,52 @@ class ControllerTest extends BaseTest{
         return $config;
     }
 
-    public function testLoginSuccess(){
-
-
+    public function testLogout(){
         $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": null}');
+        $this->request->setContent('{"method": "logout", "id": 1}');
         $result = $this->controller->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
+        $this->assertEquals(
+            array(
+                'id' => 1,
+                'result' => array(
+                    'url' => null,
+                    'user' => null
+                ),
+                'error' => null
+           ),
+           $returnArray
+        );
+    }
+
+    public function testLoginFail(){
+        $this->request->setMethod(Request::METHOD_POST);
+        $this->request->setContent('{"method": "login", "params": ["toby", "wrong password"], "id": 1}');
+        $result = $this->controller->dispatch($this->request, $this->response);
+        $returnArray = $result->getVariables();
+        $this->assertEquals(
+            array(
+                'id' => 1,
+                'result' => array(),
+                'error' => null
+           ),
+           $returnArray
+        );
+    }
+
+    public function testLoginSuccess(){
+        $this->request->setMethod(Request::METHOD_POST);
+        $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
+        $result = $this->controller->dispatch($this->request, $this->response);
+        $returnArray = $result->getVariables();
+        $this->assertEquals(
+            array(
+                'id' => 1,
+                'result' => array(),
+                'error' => null
+           ),
+           $returnArray
+        );
     }
 }
 

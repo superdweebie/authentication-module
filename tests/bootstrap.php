@@ -7,7 +7,7 @@ while (!file_exists('config/application.config.php')) {
     if($previousDir === $dir) {
         throw new RuntimeException(
             'Unable to locate "config/application.config.php": ' .
-            'is SdsAuthModule in a subdir of your application skeleton?'
+            'is authModule in a subdir of your application skeleton?'
         );
     }
     $previousDir = $dir;
@@ -23,4 +23,4 @@ if (is_readable(__DIR__ . '/TestConfiguration.php')) {
     require_once __DIR__ . '/TestConfiguration.php.dist';
 }
 
-\Sds\AuthModule\Test\BaseTest::setMvcConfig($configuration);
+\Sds\AuthModule\Test\BaseTest::setServiceConfig($configuration);

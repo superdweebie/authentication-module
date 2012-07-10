@@ -26,7 +26,7 @@ class DefaultUser implements RoleAwareUserInterface
      *
      * @var array
      */
-    protected $roles = [SdsCommon\AccessControl\Constant\Role::guest];
+    protected $roles = [\Sds\Common\AccessControl\Constant\Role::guest];
 
     /**
      *
