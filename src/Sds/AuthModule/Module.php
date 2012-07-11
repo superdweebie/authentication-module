@@ -27,26 +27,6 @@ class Module
 
     /**
      *
-     * @param \Zend\EventManager\Event $event
-     */
-    public function onBootstrap(Event $event){
-        $app = $event->getTarget();
-        $serviceManager = $app->getServiceManager();
-
-        $activeUserInitalizer =
-            function ($instance) use ($serviceManager) {
-                if ($instance instanceof ActiveUserAwareInterface){
-                    $instance->setActiveUser($serviceManager->get('sds.auth.activeUser'));
-                }
-            }
-        ;
-
-        $serviceManager->addInitializer($activeUserInitalizer);
-        $serviceManager->get('ControllerLoader')->addInitializer($activeUserInitalizer);
-    }
-
-    /**
-     *
      * @return array
      */
     public function getServiceConfiguration()

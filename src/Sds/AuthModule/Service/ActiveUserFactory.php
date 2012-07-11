@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    SdsAuthModule
+ * @package    Sds
  * @license    MIT
  */
 namespace Sds\AuthModule\Service;
