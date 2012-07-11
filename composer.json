@@ -1,5 +1,5 @@
 {
-    "name": "superdweebie/authModule",
+    "name": "superdweebie/auth-module",
     "description": "Zend Framework 2 Module that provides authentication functionality",
     "type": "library",
     "license": "MIT",
@@ -16,13 +16,13 @@
     ],
     "require": {
         "php": ">=5.4",
-		"superdweebie/jsonRpc": "dev-master",
-		"superdweebie/common": "dev-master",
+	"superdweebie/json-rpc": "dev-master",
+	"superdweebie/common": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "suggest": {
-        "doctrine/DoctrineModule": "The auth adapter in DoctrineModule is the default configured auth adapter",
-        "superdweebie/userModule": "The user model from Sds\\UserModule is the default configured user object"
+        "doctrine/doctrine-module": "The auth adapter in DoctrineModule is the default configured auth adapter",
+        "superdweebie/user-module": "The user model from Sds\\UserModule is the default configured user object"
     },    
     "autoload": {
         "psr-0": {
