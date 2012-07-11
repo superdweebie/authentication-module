@@ -5,8 +5,9 @@
  */
 namespace Sds\AuthModule\Controller;
 
-use Sds\AuthModule\Events;
 use Sds\AuthModule\AuthService;
+use Sds\AuthModule\Events;
+use Sds\AuthModule\Exception;
 use Sds\Common\User\ActiveUserAwareInterface;
 use Sds\Common\User\ActiveUserAwareTrait;
 use Sds\JsonRpc\Controller\AbstractJsonRpcController;
@@ -31,6 +32,12 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
 
     /**
      *
+     * @var string
+     */
+    protected $serializerCallable;
+
+    /**
+     *
      * @return \SdsAuthModule\AuthService
      */
     public function getAuthService() {
@@ -43,6 +50,30 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
      */
     public function setAuthService(AuthService $authService) {
         $this->authService = $authService;
+    }
+
+    /**
+     *
+     * @return callable
+     */
+    public function getSerializerCallable() {
+        return $this->serializerCallable;
+    }
+
+    /**
+     *
+     * @param callable $serializeCallable
+     */
+    public function setSerializerCallable($serializerCallable) {
+
+        if (!is_callable($serializerCallable)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '"%s" is not a callable',
+                is_string($serializerCallable) ? $serializerCallable : gettype($serializerCallable)
+            ));
+        }
+
+        $this->serializerCallable = $serializerCallable;
     }
 
     /**
@@ -66,17 +97,19 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
      * @param string $username
      * @param string $password
      * @return object
+     * @throws Exception\AlreadyLoggedInException
+     * @throws Exception\LoginFailedException
      */
     public function login($username, $password)
     {
         if($this->activeUser != $this->authService->getDefaultUser()){
             $this->getResponse()->setStatusCode(500);
-            return array('message' => 'You are aready logged in');
+            throw new Exception\AlreadyLoggedInException('You are aready logged in');
         }
         $result = $this->authService->login($username, $password);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
-            return array('message' => implode('. ', $result->getMessages()));
+            throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
         $activeUser = $result->getIdentity();
@@ -89,9 +122,13 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
             $data = array_merge($data, $response);
         }
 
+        if (isset($this->serializerCallable)) {
+            $activeUser = call_user_func($this->serializerCallable, $activeUser);
+        }
+
         return array(
-            'user' => $activeUser->jsonSerialize(),
-            'data' => json_encode($data)
+            'user' => $activeUser,
+            'data' => $data
         );
     }
 

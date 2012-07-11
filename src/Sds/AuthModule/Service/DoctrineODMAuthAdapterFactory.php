@@ -28,9 +28,12 @@ class DoctrineODMAuthAdapterFactory implements FactoryInterface
         $documentManager = $serviceLocator->get('doctrine.documentmanager.odm_default');
         $userClass = $config['userClass'];
 
-        return new DoctrineObjectRepository(
+        $adapter = new DoctrineObjectRepository(
             $documentManager->getRepository($userClass),
             $userClass
         );
+        $adapter->setCredentialCallable('Sds\Common\Auth\Crypt::hashPassword');
+
+        return $adapter;
     }
 }

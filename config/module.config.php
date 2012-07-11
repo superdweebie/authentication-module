@@ -20,6 +20,11 @@ return array(
             //The method of the adapter to inject the credential/password value
             'adapterPasswordMethod' => 'setCredentialValue',
 
+            'serializerCallable' => array(
+                'sds.doctrineExtensions.serializer',
+                'toArray'
+            ),
+
             'enableAccessControl' => false,
         ),
 
@@ -63,8 +68,8 @@ return array(
         ),
     ),
 
-    'controller' => array(
-        'invokables' => array(
+    'controllers' => array(
+        'factories' => array(
             'sds.auth' => 'Sds\AuthModule\Service\AuthControllerFactory'
         ),
     ),
