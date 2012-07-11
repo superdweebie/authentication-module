@@ -16,14 +16,15 @@
     ],
     "require": {
         "php": ">=5.4",
-		"superdweebie/json-rpc": "dev-master",
-		"superdweebie/common": "dev-master",
-        "zendframework/zendframework": "dev-master"
+		"superdweebie/json-rpc": "master@dev",
+		"superdweebie/common": "master@dev",
+        "superdweebie/module-unit-tester": "master@dev",
+        "zendframework/zendframework": "master@dev"
     },
     "suggest": {
         "doctrine/doctrine-module": "The auth adapter in doctrine/doctrine-module is the default configured auth adapter",
         "superdweebie/user-module": "The user model from superdweebie/user-module is the default configured user object"
-    },    
+    },
     "autoload": {
         "psr-0": {
             "Sds\\AuthModule": "src/"

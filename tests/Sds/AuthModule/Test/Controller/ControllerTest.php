@@ -2,7 +2,7 @@
 
 namespace Sds\AuthModule\Test\Controller;
 
-use Sds\AuthModule\Test\BaseTest;
+use Sds\ModuleUnitTester\BaseTest;
 use Sds\UserModule\Model\User;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;

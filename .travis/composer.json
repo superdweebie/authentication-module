@@ -1,7 +1,10 @@
 {
+    "minimum-stability": "dev",
     "require": {
-        "doctrine/DoctrineMongoODMModule": "dev-master",
-        "superdweebie/SdsAuthModule": "dev-master",
-        "zendframework/zendframework": "dev-master"
+        "doctrine/doctrine-mongo-odm-module": "master@dev",
+        "superdweebie/auth-module": "master@dev",
+        "superdweebie/doctrine-extensions-module": "master@dev",
+        "superdweebie/user-module": "master@dev",
+        "zendframework/zendframework": "master@dev"
     }
 }
