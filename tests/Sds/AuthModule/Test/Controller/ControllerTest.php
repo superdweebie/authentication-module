@@ -102,10 +102,10 @@ class ControllerTest extends BaseTest{
         );
     }
 
-    public function tearDown(){
-        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
-        $documentManager->remove($this->user);
-        $documentManager->flush();
-    }
+//    public function tearDown(){
+//        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
+//        $documentManager->remove($this->user);
+//        $documentManager->flush();
+//    }
 }
 

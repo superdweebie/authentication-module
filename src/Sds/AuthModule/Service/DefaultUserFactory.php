@@ -1,11 +1,10 @@
 <?php
 /**
- * @package    SdsAuthModule
+ * @package    Sds
  * @license    MIT
  */
 namespace Sds\AuthModule\Service;
 
-use Sds\AuthModule\AuthServiceBase;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -15,20 +14,21 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthServiceBaseFactory implements FactoryInterface
+class DefaultUserFactory implements FactoryInterface
 {
+
     /**
      *
      * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator
-     * @return \SdsAuthModule\AuthServiceBase
+     * @return object
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Configuration')['sds']['auth'];
-        $instance = new AuthServiceBase(
-            $serviceLocator->get($config['authService']),
-            $serviceLocator->get('sds.auth.defaultUser')
-        );
-        return $instance;
+        $config = $serviceLocator->get('configuration')['sds']['auth'];
+        $userClass = $config['userClass'];
+        $user = new $userClass();
+        $user->setUsername($config['defaultUser']['username']);
+        $user->setRoles($config['defaultUser']['roles']);
+        return $user;
     }
 }

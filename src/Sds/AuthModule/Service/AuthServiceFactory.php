@@ -27,7 +27,7 @@ class AuthServiceFactory implements FactoryInterface
         $config = $serviceLocator->get('Configuration')['sds']['auth'];
         $instance = new AuthService(
             $serviceLocator->get($config['authService']),
-            $serviceLocator->get($config['defaultUser']),
+            $serviceLocator->get('sds.auth.defaultUser'),
             $serviceLocator->get($config['adapter']),
             $config['adapterUsernameMethod'],
             $config['adapterPasswordMethod']

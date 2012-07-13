@@ -7,7 +7,12 @@ return array(
             'authService' => 'zend.authentication.authenticationService',
 
             //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
-            'defaultUser' => 'sds.auth.defaultUser',
+            'defaultUser' => array(
+                'username' => 'anonymous',
+                'roles' => array(
+                    \Sds\Common\AccessControl\Constant\Role::guest,
+                )
+            ),
 
             //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
             'adapter' => 'doctrine.odm.auth.adapter',
@@ -73,4 +78,17 @@ return array(
             'sds.auth' => 'Sds\AuthModule\Service\AuthControllerFactory'
         ),
     ),
+
+    'service_manager' => array(
+        'invokables' => array(
+            'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
+        ),
+        'factories' => array(
+            'doctrine.odm.auth.adapter' => 'Sds\AuthModule\Service\DoctrineODMAuthAdapterFactory',
+            'sds.auth.activeUser'       => 'Sds\AuthModule\Service\ActiveUserFactory',
+            'sds.auth.defaultUser'      => 'Sds\AuthModule\Service\DefaultUserFactory',
+            'sds.auth.authServiceBase'  => 'Sds\AuthModule\Service\AuthServiceBaseFactory',
+            'sds.auth.authService'      => 'Sds\AuthModule\Service\AuthServiceFactory',
+        )
+    )
 );
