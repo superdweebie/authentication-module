@@ -1,4 +1,5 @@
 {
+    "minimum-stability": "dev",
     "require": {
         "superdweebie/doctrine-extensions-module": "dev-master",
         "superdweebie/auth-module": "dev-master",
