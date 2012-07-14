@@ -3,6 +3,7 @@
     "require": {
         "superdweebie/doctrine-extensions-module": "dev-master",
         "superdweebie/auth-module": "dev-master",
+        "superdweebie/module-unit-tester": "dev-master",        
         "superdweebie/user-module": "dev-master",
         "zendframework/zendframework": "dev-master"
     }

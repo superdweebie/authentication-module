@@ -37,7 +37,8 @@ return array(
         'accessControl' => array(
             'controllers' => array(
                 'auth' => array(
-                    'actions' => array(
+                    'jsonRpc' => true,
+                    'methods' => array(
                         'serviceMap' => array(
                             'roles' => array(
                                 \Sds\Common\AccessControl\Constant\Role::guest

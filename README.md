@@ -1,5 +1,5 @@
-SdsAuthModule
-=============
+Sds authModule
+==============
 
 [![Build Status](https://secure.travis-ci.org/superdweebie/authModule.png)](http://travis-ci.org/superdweebie/authModule)
 

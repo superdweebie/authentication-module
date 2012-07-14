@@ -19,7 +19,7 @@ $loader->add('Sds\\AuthModule\\Test', __DIR__);
 $loader->add('Sds\\ModuleUnitTester', __DIR__ . '/../../../superdweebie/module-unit-tester/lib');
 
 \Sds\ModuleUnitTester\DependencyChecker::CheckTestDependencies(__DIR__ . '/composer.json');
-\Sds\ModuleUnitTester\BaseTest::setServiceConfigPaths(array(
+\Sds\ModuleUnitTester\AbstractTest::setServiceConfigPaths(array(
     __DIR__ . '/TestConfiguration.php',
     __DIR__ . '/TestConfiguration.php.dist'
 ));
