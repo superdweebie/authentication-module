@@ -2,13 +2,13 @@
 
 namespace Sds\AuthModule\Test\Controller;
 
-use Sds\ModuleUnitTester\BaseTest;
+use Sds\ModuleUnitTester\AbstractTest;
 use Sds\UserModule\Model\User;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 
-class ControllerTest extends BaseTest{
+class ControllerTest extends AbstractTest{
 
     public $userId;
     public $controller;
@@ -102,10 +102,10 @@ class ControllerTest extends BaseTest{
         );
     }
 
-//    public function tearDown(){
-//        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
-//        $documentManager->remove($this->user);
-//        $documentManager->flush();
-//    }
+    public function tearDown(){
+        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
+        $documentManager->remove($this->user);
+        $documentManager->flush();
+    }
 }
 

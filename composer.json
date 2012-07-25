@@ -18,7 +18,6 @@
         "php": ">=5.4",
 		"superdweebie/json-rpc": "dev-master",
 		"superdweebie/common": "dev-master",
-        "superdweebie/module-unit-tester": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "suggest": {
