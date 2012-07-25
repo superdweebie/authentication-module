@@ -28,7 +28,7 @@ class AuthControllerFactory implements FactoryInterface
         $authController->setActiveUser($serviceLocator->get('sds.auth.activeUser'));
         $authController->setAuthService($serviceLocator->get('sds.auth.authService'));
 
-        $serializerCallable = $serviceLocator->get('configuration')['sds']['auth']['serializerCallable'];
+        $serializerCallable = $serviceLocator->get('Config')['sds']['auth']['serializerCallable'];
         if (!is_callable($serializerCallable)) {
             $serializerCallable[0] = $serviceLocator->get($serializerCallable[0]);
         }

@@ -17,7 +17,12 @@ return array(
             //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
             'adapter' => 'doctrine.odm.auth.adapter',
 
-            'userClass' => 'Sds\UserModule\Model\User',
+            'user' => array(
+                'class' => 'Sds\UserModule\Model\User',
+                'identityProperty' => 'username', //Used by doctrine auth adapter
+                'credentialProperty' => 'password', //Used by doctrine auth adapter
+                'credentialCallable' => 'Sds\Common\Auth\Crypt::hashPassword' //Used by doctrine auth adapter
+            ),
 
             //The method on the adapter to inject the identity/username value
             'adapterUsernameMethod' => 'setIdentityValue',

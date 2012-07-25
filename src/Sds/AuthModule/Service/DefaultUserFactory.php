@@ -24,8 +24,8 @@ class DefaultUserFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('configuration')['sds']['auth'];
-        $userClass = $config['userClass'];
+        $config = $serviceLocator->get('Config')['sds']['auth'];
+        $userClass = $config['user']['class'];
         $user = new $userClass();
         $user->setUsername($config['defaultUser']['username']);
         $user->setRoles($config['defaultUser']['roles']);

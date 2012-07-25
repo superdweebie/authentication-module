@@ -5,7 +5,7 @@
  */
 namespace Sds\AuthModule\Service;
 
-use DoctrineModule\Authentication\Adapter\DoctrineObjectRepository;
+use DoctrineModule\Authentication\Adapter\ObjectRepository;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -24,15 +24,16 @@ class DoctrineODMAuthAdapterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Configuration')['sds']['auth'];
+        $config = $serviceLocator->get('Config')['sds']['auth']['user'];
         $documentManager = $serviceLocator->get('doctrine.documentmanager.odm_default');
-        $userClass = $config['userClass'];
+        $userClass = $config['class'];
 
-        $adapter = new DoctrineObjectRepository(
-            $documentManager->getRepository($userClass),
-            $userClass
-        );
-        $adapter->setCredentialCallable('Sds\Common\Auth\Crypt::hashPassword');
+        $adapter = new ObjectRepository(array(
+            'objectRepository' => $documentManager->getRepository($userClass),
+            'identityProperty' => $config['identityProperty'],
+            'credentialProperty' => $config['credentialProperty'],
+            'credentialCallable' => $config['credentialCallable']
+        ));
 
         return $adapter;
     }
