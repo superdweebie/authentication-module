@@ -6,6 +6,8 @@ return array(
             //Authentication service to use
             'authService' => 'zend.authentication.authenticationService',
 
+            'userClass' => 'Sds\UserModule\Model\User',
+
             //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
             'defaultUser' => array(
                 'username' => 'anonymous',
@@ -15,14 +17,7 @@ return array(
             ),
 
             //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
-            'adapter' => 'doctrine.odm.auth.adapter',
-
-            'user' => array(
-                'class' => 'Sds\UserModule\Model\User',
-                'identityProperty' => 'username', //Used by doctrine auth adapter
-                'credentialProperty' => 'password', //Used by doctrine auth adapter
-                'credentialCallable' => 'Sds\Common\Auth\Crypt::hashPassword' //Used by doctrine auth adapter
-            ),
+            'adapter' => 'doctrine.authenticationadapter.odm_default',
 
             //The method on the adapter to inject the identity/username value
             'adapterUsernameMethod' => 'setIdentityValue',
@@ -65,6 +60,15 @@ return array(
         ),
     ),
 
+    'doctrine' => array(
+        'authenticationadapter' => array(
+            'odm_default' => array(
+                'identityClass' => 'Sds\UserModule\Model\User',
+                'credentialCallable' => 'Sds\Common\Auth\Crypt::hashPassword'
+            )
+        ),
+    ),
+
     'router' => array(
         'routes' => array(
             'sds.auth' => array(
@@ -90,7 +94,6 @@ return array(
             'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
         ),
         'factories' => array(
-            'doctrine.odm.auth.adapter' => 'Sds\AuthModule\Service\DoctrineODMAuthAdapterFactory',
             'sds.auth.activeUser'       => 'Sds\AuthModule\Service\ActiveUserFactory',
             'sds.auth.defaultUser'      => 'Sds\AuthModule\Service\DefaultUserFactory',
             'sds.auth.authServiceBase'  => 'Sds\AuthModule\Service\AuthServiceBaseFactory',

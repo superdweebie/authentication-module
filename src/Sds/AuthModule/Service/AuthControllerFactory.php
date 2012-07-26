@@ -24,6 +24,8 @@ class AuthControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $serviceLocator = $serviceLocator->getServiceLocator();
+
         $authController = new AuthController;
         $authController->setActiveUser($serviceLocator->get('sds.auth.activeUser'));
         $authController->setAuthService($serviceLocator->get('sds.auth.authService'));
