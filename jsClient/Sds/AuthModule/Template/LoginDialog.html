@@ -1,0 +1,37 @@
+<div class="loginDialog">
+    <div data-dojo-type="sds.Dialog" title = "'Please login'" data-dojo-attach-point="loginDialogNode">
+        <div class="dialogMessage">
+            <div>In order to access the requesed data you must login.</div>
+            <br />
+            <div data-dojo-type="dojox.layout.TableContainer" data-dojo-props="cols:1">
+                <input 
+                    data-dojo-type="dijit.form.ValidationTextBox" 
+                    name="username" 
+                    title="Username:" 
+                    data-dojo-props="regExp:'[a-zA-Z0-9]{3,}', required: true"
+                />
+                <input 
+                    data-dojo-type="dijit.form.ValidationTextBox" 
+                    data-dojo-props="required: true"
+                    name="password" 
+                    type="password" 
+                    title="Password:" 
+                />
+            </div>
+            <p class="link, clickable" data-dojo-attach-event="onclick:onRecoverPassword">Recover password</p>
+            <input       
+                data-dojo-type="dijit.form.TextBox"                 
+                name="recoverPassword"
+                type="hidden"
+                value="0"
+            />
+            <p class="link, clickable" data-dojo-attach-event="onclick:onRegister">Register</p>
+            <input    
+                data-dojo-type="dijit.form.TextBox"                
+                name="register"
+                type="hidden"
+                value="0"
+            >           
+        </div>
+    </div>
+</div>

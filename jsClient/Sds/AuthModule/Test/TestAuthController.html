@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>Testing Sds.AuthModule.AuthController</title>
+		<style type="text/css">
+			@import "../resources/dojo.css";
+		</style>
+		<script
+            type="text/javascript"
+            src="../../../dojo/dojo.js"
+            data-dojo-config="isDebug: true, popup: true, async: true">
+        </script>
+		<script type="text/javascript">
+			require([
+                'dojo/parser',
+                'dojo/_base/Deferred',
+                'dojo/_base/connect',
+                'sijit/serviceManager/ServiceManager',
+                'sijit/bootstrap/Bootstrap',
+                'dojo/domReady!'
+            ],
+            function(
+                parser,
+                Deferred,
+                connect,
+                ServiceManager
+            ){
+                connect.subscribe('postBootstrap', function(){
+                    var serviceManager = ServiceManager.getInstance();
+                    Deferred.when(serviceManager.getObject('authController'), function(authController){
+   console.debug(authController);
+                        authController.login();
+                    });
+                });
+                parser.parse();
+            })
+		</script>
+	</head>
+	<body>
+        <h1>Testing Sds.AuthModule.AuthController</h1>
+        <div data-dojo-type="sijit.bootstrap.Bootstrap" data-dojo-props="config: {
+             mergeConfigs: [
+                'Sds/AuthModule/Config'
+             ]
+        }">
+        </div>
+	</body>
+</html>
