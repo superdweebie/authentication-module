@@ -5,18 +5,16 @@ define(
             serviceManager: {
                 authController: {
                     moduleName: 'Sds/AuthModule/AuthController',
-                    variable: {
+                    values: {
                         authApiMap: undefined,
                         loginPostBootstrap: undefined,
                         pageRefreshTarget: undefined,
                         activeUser: undefined
                     },
-                    asyncObject: {
+                    refObjects: {
 //                        status: 'status',
 //                        errorService: 'errorController',
-//                        recoverPasswordDialog: 'Sds/UserModule/RecoverPasswordDialog',
-//                        registerDialog: 'Sds/UserModule/RegisterDialog',
-                        loginDialog: 'Sds/AuthModule/LoginDialog'
+                        loginForm: 'Sds/AuthModule/LoginFormDialog'
                     }
                 }
             }

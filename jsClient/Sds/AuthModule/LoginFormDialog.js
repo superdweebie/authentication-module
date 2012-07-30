@@ -5,8 +5,9 @@ define
         'dijit/_Widget',
         'dijit/_TemplatedMixin',
         'dijit/_WidgetsInTemplateMixin',
-        'dojo/text!./Template/LoginDialog.html',
-        'sds/Dialog',
+        'Sds/AuthModule/LoginFormInterface',
+        'dojo/text!./Template/LoginFormDialog.html',
+        'sijit/Common/Dialog',
         'dojox/layout/TableContainer',
         'dijit/form/ValidationTextBox'
     ],
@@ -16,29 +17,34 @@ define
         _Widget,
         templatedMixin,
         widgetsInTemplateMixin,
+        LoginFormInterface,
         template
     )
     {
         return declare
         (
-            'Sds.AuthModule.LoginDialog',
-            [_Widget, templatedMixin, widgetsInTemplateMixin],
+            'Sds.AuthModule.LoginFormDialog',
+            [_Widget, templatedMixin, widgetsInTemplateMixin, LoginFormInterface],
             {
                 templateString: template,
-                show: function(){
+                _isValild: false,
+                activate: function(){
                     return this.loginDialogNode.show();
                 },
-                getFormValue: function(){
+                isValid: function(){
+                    return this._isValid;
+                },
+                getValues: function(){
                     return this.loginDialogNode.getFormValue();
                 },
-                resetForm: function(){
+                reset: function(){
                     return this.loginDialogNode.resetForm();
                 },
-                onRecoverPassword: function(){
+                _onRecoverPassword: function(){
                     this.loginDialogNode.setFormValue({recoverPassword: "1"});
                     this.loginDialogNode.hide();
                 },
-                onRegister: function(){
+                _onRegister: function(){
                     this.loginDialogNode.setFormValue({register: "1"});
                     this.loginDialogNode.hide();
                 }

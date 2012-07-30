@@ -4,7 +4,10 @@
 	<head>
 		<title>Testing Sds.AuthModule.AuthController</title>
 		<style type="text/css">
-			@import "../resources/dojo.css";
+			@import "../../../dojo/resources/dojo.css";
+            @import "../../../dijit/themes/claro/claro.css";
+            @import "../../../sijit/themes/claro/claro.css";
+			@import "../../../util/doh/robot/robot.css";
 		</style>
 		<script
             type="text/javascript"
@@ -16,30 +19,31 @@
                 'dojo/parser',
                 'dojo/_base/Deferred',
                 'dojo/_base/connect',
-                'sijit/serviceManager/ServiceManager',
-                'sijit/bootstrap/Bootstrap',
+                'dijit/robotx',
+                'sijit/Bootstrap/Bootstrap',
                 'dojo/domReady!'
             ],
             function(
                 parser,
                 Deferred,
                 connect,
-                ServiceManager
+                robot
             ){
-                connect.subscribe('postBootstrap', function(){
-                    var serviceManager = ServiceManager.getInstance();
+                connect.subscribe('postBootstrap', function(object){
+                    var serviceManager = object.serviceManager;
+
                     Deferred.when(serviceManager.getObject('authController'), function(authController){
-   console.debug(authController);
                         authController.login();
+
                     });
                 });
                 parser.parse();
             })
 		</script>
 	</head>
-	<body>
+	<body class="claro">
         <h1>Testing Sds.AuthModule.AuthController</h1>
-        <div data-dojo-type="sijit.bootstrap.Bootstrap" data-dojo-props="config: {
+        <div data-dojo-type="sijit.Bootstrap.Bootstrap" data-dojo-props="config: {
              mergeConfigs: [
                 'Sds/AuthModule/Config'
              ]

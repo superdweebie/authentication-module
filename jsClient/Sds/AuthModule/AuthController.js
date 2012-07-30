@@ -5,9 +5,9 @@ define
         'dojo/_base/lang',
         'dojo/_base/Deferred',
         'dojox/rpc/Service',
-        'dojox/rpc/JsonRPC',
         'dojo/Stateful',
-        'sijit/common/SubscribeMixin'
+        'sijit/common/SubscribeMixin',
+        'dojox/rpc/JsonRPC'
     ],
     function
     (
@@ -15,7 +15,6 @@ define
         lang,
         Deferred,
         RpcService,
-        JsonRpc,
         Stateful,
         SubscribeMixin
     )
@@ -27,34 +26,30 @@ define
             {
                 authApiMap: undefined,
 
-                authApi: undefined,
-
                 loginPostBootstrap: false,
-
-                pageRefreshTarget: undefined,
 
                 activeUser: undefined,
 
                 loggedIn: false,
+
                 status: undefined,
-                objectService: undefined,
-                pageLoaderService: undefined,
+
                 errorService: undefined,
-                loginDialog: undefined,
-                recoverPasswordDialog: undefined,
-                registerDialog: undefined,
+
+                loginForm: undefined,
+
+                authApi: undefined,
+
                 constructor: function()
                 {
-                    this.subscribe('postBootstrap', 'postBootstrap');
-                },
-                postBootstrap: function(){
-                    this.authApi = new RpcService(this.authApiMap);
-                    if(this.loginPostBootstrap){
-                        this.login();
-                    }
+                    this.subscribe('postBootstrap', '_postBootstrap');
                 },
                 handleAccessDenied: function()
                 {
+                    // summary:
+                    //		Checks if there is an active user. If so, raise an error.
+                    //      If not, then prompt for login.
+
                     if(this.get('activeUser'))
                     {
                         this.errorService.use(function(errorService){
@@ -67,71 +62,117 @@ define
                 },
                 login: function()
                 {
-                    this.showLoginForm();
+                    // summary:
+                    //		Prompt for login details, and process
+                    // returns: Deferred
+                    //      Returned deferred will resolve when the whole login
+                    //      process is complete.
+
+                    Deferred.when(this._activateLoginForm(), lang.hitch(this, function(){
+                        this._processFormData();
+                    }));
                     this._loginDeferred = new Deferred();
                     return this._loginDeferred;
                 },
-                showLoginForm: function()
+                logout: function()
                 {
-                    if (this.loginDialog.show == undefined){
-                        this.loginDialog.getObject(lang.hitch(this, function(loginDialog){
-                            this.loginDialog = loginDialog;
-                            this.showLoginForm();
+                    // summary:
+                    //		Send logout message to the server
+                    // returns: Deferred
+                    //      Returned deferred will resolve when the whole login
+                    //      process is complete.
+
+                    // Update status
+                    this._setStatus({message: 'logging out', icon: 'spinner'});
+
+                    // Send message to server
+                    this.authApi.logout().then(
+                        lang.hitch(this, '_logoutComplete'),
+                        lang.hitch(this, '_logoutError')
+                    );
+                    this._logoutDeferred = new Deferred();
+                    return this._logoutDeferred;
+                },
+                _postBootstrap: function(){
+                    // summary:
+                    //		Creates the rpc service
+
+                    this.authApi = new RpcService(this.authApiMap);
+                    if(this.loginPostBootstrap){
+                        this.login();
+                    }
+                },
+                _activateLoginForm: function()
+                {
+                    // summary:
+                    //		Prompt for login details
+                    // returns: Deferred
+                    //      Returned deferred will resolve when the login
+                    //      form is complete.
+
+                    // Checks to see if the form is only a reference. If so, the reference is loaded.
+                    if (this.loginForm.getObject){
+                        var outterFormDeferred = new Deferred;
+                        Deferred.when(this.loginForm.getObject(), lang.hitch(this, function(loginForm){
+                            this.loginForm = loginForm;
+                            Deferred.when(this._activateLoginForm(), function(){
+                               outterFormDeferred.resolve();
+                            });
                         }));
+                        return outterFormDeferred;
+                    }
+
+                    // The actual form activation
+                    var innnerFormDeferred = new Deferred;
+                    Deferred.when(this.loginForm.activate(), lang.hitch(this, function(){
+                        innnerFormDeferred.resolve();
+                    }));
+
+                    return innnerFormDeferred;
+                },
+                _processFormData: function(){
+                    // summary:
+                    //		Check the form validity, and send to the server
+                    // returns: Deferred
+                    //      Returned deferred will resolve when the login
+                    //      form is complete.
+
+                    // Do nothing if not valid.
+                    if (!this.loginForm.isValid()){
                         return;
                     }
 
-                    Deferred.when(this.loginDialog.show(), lang.hitch(this, function()
-                    {
-                        var formValues = this.loginDialog.getFormValue();
-                        if(formValues['recoverPassword'] && formValues['recoverPassword'] != "0"){
-                            this.recoverPassword();
-                            return;
-                        }
-                        if(formValues['register'] && formValues['register'] != "0"){
-                            this.register();
-                            return;
-                        }
+                    var formValues = this.loginForm.getValues();
 
-                        this._setStatus({message: 'logging in', icon: 'spinner'});
-                        this.authApi.login(formValues['username'], formValues['password']).then(
-                            lang.hitch(this, 'loginComplete'),
-                            lang.hitch(this, 'loginError')
-                        );
-                        this.loginDialog.resetForm();
-                    }));
+                    // Update status
+                    this._setStatus({message: 'logging in', icon: 'spinner'});
+
+                    // Send data to server
+                    this.authApi.login(formValues['username'], formValues['password']).then(
+                        lang.hitch(this, '_loginComplete'),
+                        lang.hitch(this, '_loginError')
+                    );
+                    this.loginDialog.reset();
                 },
-                loginComplete: function(data)
+                _loginComplete: function(data)
                 {
+                    // Update status
                     this._setStatus({message: 'login complete', icon: 'success', timeout: 5000});
+
+                    //Set the active user
                     this.set('activeUser', data.user);
-                    if(data.data){
-                        this.objectService.use(function(objectService){
-                            objectService.preloadCache({data: data.data});
-                        });
-                    }
-                    this.refreshPage();
-                    this._loginDeferred.resolve(true);
+
                     this.set('loggedIn', true);
+                    this._loginDeferred.resolve(true);
                 },
-                loginError: function(error)
+                _loginError: function(error)
                 {
                     this.errorService.use(function(errorService){
                         errorService.handle(error);
                     });
                     this._loginDeferred.resolve(false);
                 },
-                logout: function()
-                {
-                    this._setStatus({message: 'logging out', icon: 'spinner'});
-                    this.authApi.logout().then(
-                        lang.hitch(this, 'logoutComplete'),
-                        lang.hitch(this, 'logoutError')
-                    );
-                    this._logoutDeferred = new Deferred();
-                    return this._logoutDeferred;
-                },
-                logoutComplete: function(data)
+                _logoutComplete: function(data)
                 {
                     this._setStatus({message: 'logout complete', icon: 'success', timeout: 5000});
                     this.set('activeUser', data.user);
@@ -147,7 +188,7 @@ define
                     this._logoutDeferred.resolve(true);
                     this.set('loggedIn', false);
                 },
-                logoutError: function(error)
+                _logoutError: function(error)
                 {
                     this.errorService.use(function(errorService){
                         errorService.handle(error);
