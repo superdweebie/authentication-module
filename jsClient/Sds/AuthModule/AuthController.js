@@ -6,7 +6,6 @@ define
         'dojo/_base/Deferred',
         'dojox/rpc/Service',
         'dojo/Stateful',
-        'sijit/common/SubscribeMixin',
         'dojox/rpc/JsonRPC'
     ],
     function
@@ -15,18 +14,15 @@ define
         lang,
         Deferred,
         RpcService,
-        Stateful,
-        SubscribeMixin
+        Stateful
     )
     {
         return declare
         (
             'Sds.AuthModule.AuthController',
-            [Stateful, SubscribeMixin],
+            [Stateful],
             {
                 authApiMap: undefined,
-
-                loginPostBootstrap: false,
 
                 activeUser: undefined,
 
@@ -42,7 +38,7 @@ define
 
                 constructor: function()
                 {
-                    this.subscribe('postBootstrap', '_postBootstrap');
+                    this.authApi = new RpcService(this.authApiMap);
                 },
                 handleAccessDenied: function()
                 {
@@ -92,15 +88,6 @@ define
                     );
                     this._logoutDeferred = new Deferred();
                     return this._logoutDeferred;
-                },
-                _postBootstrap: function(){
-                    // summary:
-                    //		Creates the rpc service
-
-                    this.authApi = new RpcService(this.authApiMap);
-                    if(this.loginPostBootstrap){
-                        this.login();
-                    }
                 },
                 _activateLoginForm: function()
                 {
@@ -181,7 +168,7 @@ define
                     });
                     if(data.url){
                         this.pageLoaderService.use(function(pageLoaderService){
-                            pageLoaderService..loadPage({url: data.url});
+                            pageLoaderService.loadPage({url: data.url});
                         });
                     }
                     this.refreshPage();

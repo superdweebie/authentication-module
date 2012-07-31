@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+		"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>doh.robot ds.AuthModule.AuthController</title>
+
+		<style>
+			@import "../../../util/doh/robot/robot.css";
+		</style>
+
+		<!-- required: dojo.js -->
+		<script
+            type="text/javascript"
+            src="../../../dojo/dojo.js"
+            data-dojo-config="
+                isDebug: true,
+                popup: true,
+                async: true
+            ">
+        </script>
+		<script type="text/javascript">
+			require([
+                'doh/runner',
+                'dijit/robotx',
+                'dojo/domReady!'
+            ],
+            function(
+                doh,
+                robot
+            ){
+                robot.initRobot('TestAuthController.html');
+
+                doh.register([
+                    function testLogin(){}
+                ]);
+
+                doh.runOnLoad();
+            })
+		</script>
+	</head>
+</html>
