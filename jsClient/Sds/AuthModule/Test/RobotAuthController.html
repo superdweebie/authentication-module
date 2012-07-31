@@ -1,41 +1,61 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-		"http://www.w3.org/TR/html4/strict.dtd">
+	"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>doh.robot ds.AuthModule.AuthController</title>
-
-		<style>
+		<title>Robot Testing Sds.AuthModule.AuthController</title>
+		<style type="text/css">
 			@import "../../../util/doh/robot/robot.css";
 		</style>
-
-		<!-- required: dojo.js -->
 		<script
             type="text/javascript"
             src="../../../dojo/dojo.js"
             data-dojo-config="
                 isDebug: true,
                 popup: true,
-                async: true
+                async: true,
+
             ">
         </script>
 		<script type="text/javascript">
 			require([
                 'doh/runner',
-                'dijit/robotx',
+                'dojo/robotx',
+                'dojo/keys',
                 'dojo/domReady!'
             ],
             function(
                 doh,
-                robot
+                robot,
+                keys
             ){
                 robot.initRobot('TestAuthController.html');
 
-                doh.register([
-                    function testLogin(){}
+                doh.register("robot", [
+                    {
+                        name: "dojorobot1",
+                        timeout: 10000,
+                        setUp: function(){
+
+                        },
+                        runTest: function(){
+                            var testDeferred = new doh.Deferred();
+                            robot.typeKeys("testuser", 200, 2000);
+                            robot.keyPress(keys.TAB, 200, 300);
+                            robot.typeKeys("password", 200, 2000);
+                            robot.keyPress(keys.ENTER, 200, 300);
+
+                            robot.sequence(testDeferred.getTestCallback(function(){
+
+                            }), 900);
+                            return testDeferred;
+                        }
+                    }
                 ]);
 
-                doh.runOnLoad();
-            })
+                doh.run();
+            });
 		</script>
 	</head>
+	<body>
+	</body>
 </html>
