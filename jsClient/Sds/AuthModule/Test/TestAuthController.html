@@ -23,23 +23,19 @@
 		<script type="text/javascript">
 			require([
                 'dojo/_base/Deferred',
-                'sijit/ConfigManager/ConfigManager',
                 'sijit/ServiceManager/ServiceManager',
+                'sijit/ConfigManager/ConfigReady!',
                 'dojo/domReady!'
             ],
             function(
                 Deferred,
-                ConfigManager,
                 ServiceManager
             ){
-                var configManager = new ConfigManager();
-                Deferred.when(configManager.merge(), function(){
-                    var serviceManager = new ServiceManager();
+                var serviceManager = new ServiceManager();
 
-                    // Activate login form immediately
-                    Deferred.when(serviceManager.getObject('authController'), function(authController){
-                        authController.login();
-                    });
+                // Activate login form immediately
+                Deferred.when(serviceManager.getObject('authController'), function(authController){
+                    authController.login();
                 });
             })
 		</script>

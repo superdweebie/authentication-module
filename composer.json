@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=5.4",
-		"superdweebie/json-rpc": "dev-master",
+		"superdweebie/json-controller": "dev-master",
 		"superdweebie/common": "dev-master",
         "superdweebie/sijit": "dev-master",
         "superdweebie/dojo-module": "dev-master",
