@@ -22,21 +22,14 @@
         </script>
 		<script type="text/javascript">
 			require([
-                'dojo/_base/Deferred',
-                'sijit/ServiceManager/ServiceManager',
-                'sijit/ConfigManager/ConfigReady!',
+                'sijit/ServiceManager/Shared/GetObject!authController',
                 'dojo/domReady!'
             ],
             function(
-                Deferred,
-                ServiceManager
+                authController
             ){
-                var serviceManager = new ServiceManager();
-
                 // Activate login form immediately
-                Deferred.when(serviceManager.getObject('authController'), function(authController){
-                    authController.login();
-                });
+                authController.login();
             })
 		</script>
 	</head>

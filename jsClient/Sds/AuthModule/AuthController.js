@@ -24,6 +24,8 @@ define
             {
                 authApiMap: undefined,
 
+                authApi: undefined,
+
                 activeUser: undefined,
 
                 loggedIn: false,
@@ -32,9 +34,10 @@ define
 
                 errorService: undefined,
 
+                // loginForm: Sds.AuthModule.LoginFormInterface | sijit.ServiceManager.Ref
+                //     A login form, or reference to a login form.
+                //     This form is shown to prompt login
                 loginForm: undefined,
-
-                authApi: undefined,
 
                 constructor: function()
                 {
