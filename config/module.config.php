@@ -64,7 +64,7 @@ return array(
         'authenticationadapter' => array(
             'odm_default' => array(
                 'identityClass' => 'Sds\UserModule\Model\User',
-                'credentialCallable' => 'Sds\Common\Auth\Crypt::hashPassword'
+                'credentialCallable' => 'Sds\Common\Crypt\Hash::hashPassword'
             )
         ),
     ),
@@ -89,6 +89,12 @@ return array(
         ),
     ),
 
+    'view_manager' => array(
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
+    ),
+    
     'service_manager' => array(
         'invokables' => array(
             'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',

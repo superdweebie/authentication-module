@@ -10,7 +10,7 @@ use Sds\AuthModule\Events;
 use Sds\AuthModule\Exception;
 use Sds\Common\User\ActiveUserAwareInterface;
 use Sds\Common\User\ActiveUserAwareTrait;
-use Sds\JsonRpc\Controller\AbstractJsonRpcController;
+use Sds\JsonController\AbstractJsonRpcController;
 
 /**
  * Controller to handle login and logout actions via json rpc

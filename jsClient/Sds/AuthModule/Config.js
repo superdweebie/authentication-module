@@ -6,15 +6,20 @@ define(
                 authController: {
                     moduleName: 'Sds/AuthModule/AuthController',
                     values: {
-                        authApiMap: '../../../../auth',
+                        authApiMap: '../../../../../auth',
                         loginPostBootstrap: undefined,
                         pageRefreshTarget: undefined,
                         activeUser: undefined
                     },
                     refObjects: {
-//                        status: 'status',
 //                        errorService: 'errorController',
-                        loginForm: 'Sds/AuthModule/LoginFormDialog'
+                        loginForm: 'loginForm'
+                    }
+                },
+                loginForm: {
+                    moduleName: 'Sds/AuthModule/LoginFormDialog',
+                    refObjects: {
+                        userController: 'userController'
                     }
                 }
             }
