@@ -5,6 +5,7 @@
  */
 namespace Sds\AuthModule\Service;
 
+use Sds\Common\User\RoleAwareUserInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -28,7 +29,11 @@ class DefaultUserFactory implements FactoryInterface
         $userClass = $config['userClass'];
         $user = new $userClass();
         $user->setUsername($config['defaultUser']['username']);
-        $user->setRoles($config['defaultUser']['roles']);
+
+        if ($user instanceof RoleAwareUserInterface) {
+            $user->setRoles($config['defaultUser']['roles']);
+        }
+        
         return $user;
     }
 }

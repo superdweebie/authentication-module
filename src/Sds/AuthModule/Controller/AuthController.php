@@ -8,6 +8,7 @@ namespace Sds\AuthModule\Controller;
 use Sds\AuthModule\AuthService;
 use Sds\AuthModule\Events;
 use Sds\AuthModule\Exception;
+use Sds\Common\Serializer\SerializerInterface;
 use Sds\Common\User\ActiveUserAwareInterface;
 use Sds\Common\User\ActiveUserAwareTrait;
 use Sds\JsonController\AbstractJsonRpcController;
@@ -34,7 +35,7 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
      *
      * @var string
      */
-    protected $serializerCallable;
+    protected $serializer;
 
     /**
      *
@@ -54,26 +55,18 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
 
     /**
      *
-     * @return callable
+     * @return \Sds\Common\Serializer\SerializerInterface
      */
-    public function getSerializerCallable() {
-        return $this->serializerCallable;
+    public function getSerializer() {
+        return $this->serializer;
     }
 
     /**
      *
-     * @param callable $serializeCallable
+     * @param $serializeCallable
      */
-    public function setSerializerCallable($serializerCallable) {
-
-        if (!is_callable($serializerCallable)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '"%s" is not a callable',
-                is_string($serializerCallable) ? $serializerCallable : gettype($serializerCallable)
-            ));
-        }
-
-        $this->serializerCallable = $serializerCallable;
+    public function setSerializer(SerializerInterface $serializer) {
+        $this->serializer = $serializer;
     }
 
     /**
@@ -122,8 +115,8 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
             $data = array_merge($data, $response);
         }
 
-        if (isset($this->serializerCallable)) {
-            $activeUser = call_user_func($this->serializerCallable, $activeUser);
+        if (isset($this->serializer)) {
+            $activeUser = $this->serializer->toArray($activeUser);
         }
 
         return array(

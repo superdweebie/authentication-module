@@ -2,22 +2,19 @@
 
 namespace Sds\AuthModule\Test\Controller;
 
-use Sds\ModuleUnitTester\AbstractTest;
-use Sds\UserModule\Model\User;
+use Sds\AuthModule\Test\TestAsset\User;
+use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Request;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 
-class ControllerTest extends AbstractTest{
+class ControllerTest extends AbstractControllerTest{
 
-    public $userId;
-    public $controller;
-    public $serviceMapArray;
-    public $event;
-    public $request;
-    public $response;
+    protected $serviceMapArray;
 
     public function setUp(){
+
+        $this->controllerName = 'sds.auth';
 
         parent::setUp();
 
@@ -25,11 +22,6 @@ class ControllerTest extends AbstractTest{
         $user = new User();
         $user->setUsername('toby');
         $user->setPassword('password');
-
-        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
-        $documentManager->persist($user);
-        $this->user = $user;
-        $documentManager->flush();
 
         $this->request    = new Request();
         $this->routeMatch = new RouteMatch(array('controller' => 'sds.auth'));
@@ -43,6 +35,11 @@ class ControllerTest extends AbstractTest{
     }
 
     protected function alterConfig(array $config) {
+
+        $config['sds']['auth']['userClass'] = 'Sds\AuthModule\Test\TestAsset\User';
+        $config['sds']['auth']['adapter'] = 'Sds\AuthModule\Test\TestAsset\Adapter';
+        $config['sds']['auth']['serializer'] = 'Sds\AuthModule\Test\TestAsset\Serializer';
+
         return $config;
     }
 

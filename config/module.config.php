@@ -6,6 +6,7 @@ return array(
             //Authentication service to use
             'authService' => 'zend.authentication.authenticationService',
 
+            //The user class. Defaults to the user class shipped with superdweeibe/userModule
             'userClass' => 'Sds\UserModule\Model\User',
 
             //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
@@ -19,16 +20,8 @@ return array(
             //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
             'adapter' => 'doctrine.authenticationadapter.odm_default',
 
-            //The method on the adapter to inject the identity/username value
-            'adapterUsernameMethod' => 'setIdentityValue',
-
-            //The method of the adapter to inject the credential/password value
-            'adapterPasswordMethod' => 'setCredentialValue',
-
-            'serializerCallable' => array(
-                'sds.doctrineExtensions.serializer',
-                'toArray'
-            ),
+            //Used to serialize objects
+            'serializer' => 'sds.doctrineExtensions.serializer',
 
             'enableAccessControl' => false,
         ),
@@ -94,7 +87,7 @@ return array(
             'ViewJsonStrategy',
         ),
     ),
-    
+
     'service_manager' => array(
         'invokables' => array(
             'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
