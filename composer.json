@@ -18,12 +18,11 @@
         "php": ">=5.4",
 		"superdweebie/json-controller": "dev-master",
 		"superdweebie/common": "dev-master",
-        "superdweebie/sijit": "dev-master",
-        "superdweebie/dojo-module": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "suggest": {
         "doctrine/doctrine-module": "The auth adapter in doctrine/doctrine-module is the default configured auth adapter",
+        "superdweebie/auth-module-js-client": "A dojo based javascript client for this auth module",
         "superdweebie/user-module": "The user model from superdweebie/user-module is the default configured user object"
     },
     "autoload": {
