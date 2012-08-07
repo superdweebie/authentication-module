@@ -65,8 +65,8 @@ class AuthService extends AuthServiceBase
      */
     public function login($username, $password)
     {
-        $this->adapter->setIdentity($username);
-        $this->adapter->setCredential($password);
+        $this->adapter->setIdentityValue($username);
+        $this->adapter->setCredentialValue($password);
         $result  = $this->authenticationService->authenticate($this->adapter);
         return $result;
     }

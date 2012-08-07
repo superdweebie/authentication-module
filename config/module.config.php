@@ -18,7 +18,7 @@ return array(
             ),
 
             //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
-            'adapter' => 'doctrine.authenticationadapter.odm_default',
+            'adapter' => 'sds.auth.doctrineAuthenticationAdapter',
 
             //Used to serialize objects
             'serializer' => 'sds.doctrineExtensions.serializer',
@@ -97,6 +97,7 @@ return array(
             'sds.auth.defaultUser'      => 'Sds\AuthModule\Service\DefaultUserFactory',
             'sds.auth.authServiceBase'  => 'Sds\AuthModule\Service\AuthServiceBaseFactory',
             'sds.auth.authService'      => 'Sds\AuthModule\Service\AuthServiceFactory',
+            'sds.auth.doctrineAuthenticationAdapter' => 'Sds\AuthModule\Service\DoctrineAuthenticationAdapterFactory'
         )
     )
 );

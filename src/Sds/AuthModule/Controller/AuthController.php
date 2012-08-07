@@ -77,9 +77,7 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
     public function registerRpcMethods(){
         return array(
             'login',
-            'logout',
-            'recoverPassword',
-            'register'
+            'logout'
         );
     }
 
@@ -107,21 +105,12 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
 
         $activeUser = $result->getIdentity();
 
-        $this->events->addIdentifiers(array(Events::identifier));
-        $collection = $this->events->trigger(Events::login, $activeUser);
-
-        $data = array();
-        foreach($collection as $response){
-            $data = array_merge($data, $response);
-        }
-
         if (isset($this->serializer)) {
             $activeUser = $this->serializer->toArray($activeUser);
         }
 
         return array(
-            'user' => $activeUser,
-            'data' => $data
+            'user' => $activeUser
         );
     }
 
@@ -133,46 +122,8 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
     public function logout()
     {
         $this->authService->logout();
-
-        $this->events->addIdentifiers(array(Events::identifier));
-        $this->events->trigger(Events::logout);
-
         return array(
-            'user' => null,
-            'url' => null,
+            'user' => null
         );
-    }
-
-    /**
-     *
-     * @param string $username
-     * @param string $email
-     * @return object
-     */
-    public function recoverPassword($username = null, $email = null){
-
-        $this->events->addIdentifiers(array(Events::identifier));
-        $collection = $this->events->trigger(Events::recoverPassword, array(
-            'username' => $username,
-            'email' => $email
-        ));
-
-
-    }
-
-    /**
-     *
-     * @param string $username
-     * @param array $details
-     * @return object
-     */
-    public function register($username, array $details){
-
-        $this->events->addIdentifiers(array(Events::identifier));
-        $collection = $this->events->trigger(Events::register, array(
-            'username' => $username,
-            'details' => $details
-        ));
-
     }
 }

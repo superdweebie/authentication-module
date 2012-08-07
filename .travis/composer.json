@@ -1,0 +1,10 @@
+{
+    "require": {
+        "php": ">=5.4",
+        "superdweebie/auth-module"       : "dev-master",
+		"superdweebie/common"            : "dev-master",
+		"superdweebie/json-controller"   : "dev-master",
+        "superdweebie/module-unit-tester": "dev-master",
+        "zendframework/zendframework"    : "dev-master"
+    },
+}

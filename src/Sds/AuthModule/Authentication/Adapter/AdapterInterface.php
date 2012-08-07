@@ -3,7 +3,7 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule;
+namespace Sds\AuthModule\Authentication\Adapter;
 
 use Zend\Authentication\Adapter\AdapterInterface as ZendAdapterInterface;
 
@@ -15,9 +15,9 @@ use Zend\Authentication\Adapter\AdapterInterface as ZendAdapterInterface;
  */
 interface AdapterInterface extends ZendAdapterInterface
 {
-    public function setIdentityValue($identity);
+    public function setIdentityValue($identityValue);
 
-    public function setCredentialValue($credential);
+    public function setCredentialValue($credentialValue);
 }
 
 

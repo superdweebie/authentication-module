@@ -5,8 +5,6 @@ namespace Sds\AuthModule\Test\Controller;
 use Sds\AuthModule\Test\TestAsset\User;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Request;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
 
 class ControllerTest extends AbstractControllerTest{
 
@@ -17,28 +15,16 @@ class ControllerTest extends AbstractControllerTest{
         $this->controllerName = 'sds.auth';
 
         parent::setUp();
-
-        //create test user
-        $user = new User();
-        $user->setUsername('toby');
-        $user->setPassword('password');
-
-        $this->request    = new Request();
-        $this->routeMatch = new RouteMatch(array('controller' => 'sds.auth'));
-        $this->event      = new MvcEvent();
-        $this->event->setRouteMatch($this->routeMatch);
-
-        $controllerLoader = $this->serviceManager->get('ControllerLoader');
-        $this->controller = $controllerLoader->get('sds.auth');
-
-        $this->controller->setEvent($this->event);
     }
 
     protected function alterConfig(array $config) {
 
         $config['sds']['auth']['userClass'] = 'Sds\AuthModule\Test\TestAsset\User';
-        $config['sds']['auth']['adapter'] = 'Sds\AuthModule\Test\TestAsset\Adapter';
-        $config['sds']['auth']['serializer'] = 'Sds\AuthModule\Test\TestAsset\Serializer';
+        $config['sds']['auth']['adapter'] = 'testAdapter';
+        $config['sds']['auth']['serializer'] = 'testSerializer';
+
+        $config['service_manager']['invokables']['testAdapter'] = 'Sds\AuthModule\Test\TestAsset\Adapter';
+        $config['service_manager']['invokables']['testSerializer'] = 'Sds\AuthModule\Test\TestAsset\Serializer';
 
         return $config;
     }
@@ -90,19 +76,12 @@ class ControllerTest extends AbstractControllerTest{
             array(
                 'id' => 1,
                 'result' => array(
-                    'url' => null,
                     'user' => null
                 ),
                 'error' => null
            ),
            $returnArray
         );
-    }
-
-    public function tearDown(){
-        $documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
-        $documentManager->remove($this->user);
-        $documentManager->flush();
     }
 }
 

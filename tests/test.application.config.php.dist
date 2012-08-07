@@ -4,13 +4,8 @@ return array(
         'Sds\AuthModule'
     ),
     'module_listener_options' => array(
-        'config_cache_enabled' => false,
-        'cache_dir'            => 'data/cache',
         'module_paths' => array(
             './vendor',
         ),
-    ),
-    'service_manager' => array(
-        'use_defaults' => true,
     ),
 );

@@ -31,7 +31,7 @@ class AuthControllerFactory implements FactoryInterface
         $authController->setAuthService($serviceLocator->get('sds.auth.authService'));
 
         $serializer = $serviceLocator->get('Config')['sds']['auth']['serializer'];
-        if (!is_string($serializer)) {
+        if (is_string($serializer)) {
             $serializer = $serviceLocator->get($serializer);
         }
         $authController->setSerializer($serializer);

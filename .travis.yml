@@ -4,23 +4,19 @@ php:
   - 5.4
 
 before_script:
-  - wget http://pecl.php.net/get/mongo-1.2.10.tgz
-  - tar -xzf mongo-1.2.10.tgz
-  - sh -c "cd mongo-1.2.10 && phpize && ./configure --enable-mongo && make && sudo make install"
-  - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - git submodule update --init
   - cd ..
   - git clone git://github.com/zendframework/ZendSkeletonApplication.git
   - cd ZendSkeletonApplication
   - rm .gitmodules
   - git rm --cached vendor/ZF2
-  - cp ../authModule/tests/composer.json ./
+  - cp ../authModule/.travis/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
   - rm -rf vendor/superdweebie/auth-module
   - cp -r ../authModule vendor/superdweebie/
   - mv vendor/superdweebie/authModule vendor/superdweebie/auth-module
-
+  - rm config/application.config.php
+  
 script:
   - cd vendor/superdweebie/auth-module
   - phpunit
