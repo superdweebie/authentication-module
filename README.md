@@ -5,7 +5,13 @@ Sds authModule
 
 A simple zend framework 2 authentication module. This module is enables AJAX authentication.
 
+For a dojo based client that consumes this authenticaion service, see superdweebie/authModuleJsClient.
+
 Module is also configured to use Sds accessControl if desired.
+
+#Release Information
+
+I'm pleased to annouce that authModule has reached some degree of stability! This is therefore release 0.1.
 
 #Installation
 
