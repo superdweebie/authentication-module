@@ -2,7 +2,6 @@
 
 namespace Sds\AuthModule\Test\Controller;
 
-use Sds\AuthModule\Test\TestAsset\User;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Request;
 
