@@ -25,16 +25,12 @@ class AuthServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config')['sds']['auth'];
-
+$adapter = $serviceLocator->get($config['adapter']);
         $instance = new AuthService(
             $serviceLocator->get($config['authService']),
             $serviceLocator->get('sds.auth.defaultUser'),
             $serviceLocator->get($config['adapter'])
         );
-        if(isset($config['returnDataObject'])){
-            $instance->setReturnDataObject($serviceLocator->get($config['returnDataObject']));
-            $instance->setReturnDataMethod($config['returnDataMethod']);
-        }
         return $instance;
     }
 }

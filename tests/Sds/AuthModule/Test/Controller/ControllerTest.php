@@ -16,18 +16,6 @@ class ControllerTest extends AbstractControllerTest{
         parent::setUp();
     }
 
-    protected function alterConfig(array $config) {
-
-        $config['sds']['auth']['userClass'] = 'Sds\AuthModule\Test\TestAsset\User';
-        $config['sds']['auth']['adapter'] = 'testAdapter';
-        $config['sds']['auth']['serializer'] = 'testSerializer';
-
-        $config['service_manager']['invokables']['testAdapter'] = 'Sds\AuthModule\Test\TestAsset\Adapter';
-        $config['service_manager']['invokables']['testSerializer'] = 'Sds\AuthModule\Test\TestAsset\Serializer';
-
-        return $config;
-    }
-
     public function testLogout(){
         $this->logout();
     }
