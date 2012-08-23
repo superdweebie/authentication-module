@@ -6,7 +6,6 @@
 namespace Sds\AuthModule\Controller;
 
 use Sds\AuthModule\AuthService;
-use Sds\AuthModule\Events;
 use Sds\AuthModule\Exception;
 use Sds\Common\Serializer\SerializerInterface;
 use Sds\Common\User\ActiveUserAwareInterface;
