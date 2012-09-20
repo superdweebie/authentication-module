@@ -7,7 +7,7 @@ return array(
             'authService' => 'zend.authentication.authenticationService',
 
             //The user class. Defaults to the user class shipped with superdweeibe/userModule
-            'userClass' => 'Sds\UserModule\Model\User',
+            'userClass' => 'Sds\UserModule\DataModel\User',
 
             //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
             'defaultUser' => array(
