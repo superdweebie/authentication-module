@@ -1,4 +1,5 @@
 {
+    "minimum-stability": "dev",
     "require": {
         "superdweebie/auth-module"       : "dev-master"
     }
