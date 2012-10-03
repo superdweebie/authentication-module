@@ -3,6 +3,7 @@
 namespace Sds\AuthModule\Test\Controller;
 
 use Sds\ModuleUnitTester\AbstractControllerTest;
+use Sds\AuthModule\Test\TestAsset\User;
 use Zend\Http\Request;
 
 class ControllerTest extends AbstractControllerTest{
@@ -14,6 +15,12 @@ class ControllerTest extends AbstractControllerTest{
         $this->controllerName = 'sds.auth';
 
         parent::setUp();
+
+        $user = new User;
+        $user->setUsername('toby');
+        $user->setPassword('password');
+
+        $this->serviceManager->get($this->serviceManager->get('config')['sds']['auth']['authenticationService'])->getAdapter()->setIdentity($user);
     }
 
     public function testLogout(){
@@ -30,7 +37,7 @@ class ControllerTest extends AbstractControllerTest{
         $this->assertEquals('Sds\AuthModule\Exception\LoginFailedException', $returnArray['error']['type']);
     }
 
-    public function testLoginSuccess(){
+    public function testLoginSuccessAndAlreadyLoggedIn(){
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
         $result = $this->controller->dispatch($this->request, $this->response);
@@ -38,9 +45,7 @@ class ControllerTest extends AbstractControllerTest{
 
         $this->assertEquals(1, $returnArray['id']);
         $this->assertEquals('toby', $returnArray['result']['user']['username']);
-    }
 
-    public function testAlreadyLoggedIn(){
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
         $result = $this->controller->dispatch($this->request, $this->response);

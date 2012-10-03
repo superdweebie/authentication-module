@@ -1,6 +1,8 @@
 <?php
 return array(
     'modules' => array(
+        'DoctrineModule',
+        'DoctrineMongoODMModule',
         'Sds\AuthModule'
     ),
     'module_listener_options' => array(

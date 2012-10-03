@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    SdsAuthModule
+ * @package    Sds
  * @license    MIT
  */
 namespace Sds\AuthModule;
@@ -14,6 +14,7 @@ namespace Sds\AuthModule;
  */
 class Module
 {
+
     /**
      *
      * @return array

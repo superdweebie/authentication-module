@@ -2,14 +2,13 @@
 return array(
     'sds' => array(
         'auth' => array(
-            'userClass' => 'Sds\AuthModule\Test\TestAsset\User',
-            'adapter' => 'testAdapter',
             'serializer' => 'testSerializer',
+            'authenticationAdapter' => new \Sds\AuthModule\Test\TestAsset\AuthenticationAdapter,
+            'authenticationStorage' => new \Zend\Authentication\Storage\NonPersistent
         ),
     ),
     'service_manager' => array(
         'invokables' => array(
-            'testAdapter' => 'Sds\AuthModule\Test\TestAsset\Adapter',
             'testSerializer' => 'Sds\AuthModule\Test\TestAsset\Serializer',
         ),
     ),

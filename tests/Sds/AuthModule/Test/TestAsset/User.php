@@ -14,8 +14,6 @@ class User implements UserInterface, AuthInterface
 
     protected $password;
 
-    protected $isGuest;
-
     public function getUsername() {
         return $this->username;
     }
@@ -30,13 +28,5 @@ class User implements UserInterface, AuthInterface
 
     public function setPassword($password) {
         $this->password = $password;
-    }
-
-    public function getIsGuest() {
-        return $this->isGuest;
-    }
-
-    public function setIsGuest($isGuest) {
-        $this->isGuest = $isGuest;
     }
 }

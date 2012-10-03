@@ -1,6 +1,6 @@
 <?php
 /**
- * @package    SdsAuthModule
+ * @package    Sds
  * @license    MIT
  */
 namespace Sds\AuthModule\Service;
@@ -26,11 +26,11 @@ class AuthControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
 
+        $config = $serviceLocator->get('Config')['sds']['auth'];
         $authController = new AuthController;
-        $authController->setActiveUser($serviceLocator->get('sds.auth.activeUser'));
-        $authController->setAuthService($serviceLocator->get('sds.auth.authService'));
+        $authController->setAuthenticationService($serviceLocator->get($config['authenticationService']));
 
-        $serializer = $serviceLocator->get('Config')['sds']['auth']['serializer'];
+        $serializer = $config['serializer'];
         if (is_string($serializer)) {
             $serializer = $serviceLocator->get($serializer);
         }

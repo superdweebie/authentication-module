@@ -4,21 +4,11 @@ return array(
         'auth' => array(
 
             //Authentication service to use
-            'authService' => 'zend.authentication.authenticationService',
+            'authenticationService' => 'sds.auth.authenticationservice',
 
-            //The user class. Defaults to the user class shipped with superdweeibe/userModule
-            'userClass' => 'Sds\UserModule\DataModel\User',
+            'authenticationAdapter' => 'doctrine.authenticationadapter.odm_default',
 
-            //Name that can be used by the serviceManager to retrieve an object that will be returned when there is no user logged in.
-            'defaultUser' => array(
-                'username' => 'anonymous',
-                'roles' => array(
-                    \Sds\Common\AccessControl\Constant\Role::guest,
-                )
-            ),
-
-            //The auth adapter to use. Defaults to the adapter supplied with the Doctrine integration modules
-            'adapter' => 'sds.auth.doctrineAuthenticationAdapter',
+            'authenticationStorage' => 'doctrine.authenticationstorage.odm_default',
 
             //Used to serialize objects
             'serializer' => 'sds.doctrineExtensions.serializer',
@@ -63,7 +53,7 @@ return array(
     ),
 
     'doctrine' => array(
-        'authenticationadapter' => array(
+        'authentication' => array(
             'odm_default' => array(
                 'identityClass' => 'Sds\UserModule\Model\User',
                 'credentialCallable' => 'Sds\Common\Crypt\Hash::hashPassword'
@@ -97,16 +87,21 @@ return array(
         ),
     ),
 
-    'service_manager' => array(
-        'invokables' => array(
-            'zend.authentication.authenticationService' => 'Zend\Authentication\AuthenticationService',
-        ),
+    'controller_plugins' => array(
         'factories' => array(
-            'sds.auth.activeUser'       => 'Sds\AuthModule\Service\ActiveUserFactory',
-            'sds.auth.defaultUser'      => 'Sds\AuthModule\Service\DefaultUserFactory',
-            'sds.auth.authServiceBase'  => 'Sds\AuthModule\Service\AuthServiceBaseFactory',
-            'sds.auth.authService'      => 'Sds\AuthModule\Service\AuthServiceFactory',
-            'sds.auth.doctrineAuthenticationAdapter' => 'Sds\AuthModule\Service\DoctrineAuthenticationAdapterFactory'
+            'identity' => 'Sds\AuthModule\Service\ControllerPluginFactory'
+        ),
+    ),
+
+    'view_helpers' => array(
+        'factories' => array(
+            'identity' => 'Sds\AuthModule\Service\ViewHelperFactory'
+        ),
+    ),
+
+    'service_manager' => array(
+        'factories' => array(
+            'sds.auth.authenticationservice' => 'Sds\AuthModule\Service\AuthenticationServiceFactory'
         )
     )
 );

@@ -5,11 +5,9 @@
  */
 namespace Sds\AuthModule\Controller;
 
-use Sds\AuthModule\AuthService;
+use Zend\Authentication\AuthenticationService;
 use Sds\AuthModule\Exception;
 use Sds\Common\Serializer\SerializerInterface;
-use Sds\Common\User\ActiveUserAwareInterface;
-use Sds\Common\User\ActiveUserAwareTrait;
 use Sds\JsonController\AbstractJsonRpcController;
 
 /**
@@ -19,37 +17,33 @@ use Sds\JsonController\AbstractJsonRpcController;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthController extends AbstractJsonRpcController implements ActiveUserAwareInterface
+class AuthController extends AbstractJsonRpcController
 {
-
-    use ActiveUserAwareTrait;
-
     /**
      *
-     * @var \SdsAuthModule\AuthService
+     * @var \Zend\Authentication\AuthenticationService
      */
-    protected $authService;
+    protected $authenticationService;
 
     /**
      *
-     * @var string
+     * @var \Sds\Common\Serializer\SerializerInterface
      */
     protected $serializer;
 
     /**
      *
-     * @return \SdsAuthModule\AuthService
+     * @return \Zend\Authentication\AuthenticationService
      */
-    public function getAuthService() {
+    public function getAuthenticationService() {
         return $this->authService;
     }
 
     /**
-     *
-     * @param \SdsAuthModule\AuthService $authService
+     * @param \Zend\Authentication\AuthenticationService $authenticationService
      */
-    public function setAuthService(AuthService $authService) {
-        $this->authService = $authService;
+    public function setAuthenticationService(AuthenticationService $authenticationService) {
+        $this->authenticationService = $authenticationService;
     }
 
     /**
@@ -62,7 +56,7 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
 
     /**
      *
-     * @param $serializeCallable
+     * @param \Sds\Common\Serializer\SerializerInterface $serializer
      */
     public function setSerializer(SerializerInterface $serializer) {
         $this->serializer = $serializer;
@@ -92,24 +86,24 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
      */
     public function login($username, $password)
     {
-        if($this->activeUser != $this->authService->getDefaultUser()){
+        if($this->authenticationService->hasIdentity()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\AlreadyLoggedInException('You are aready logged in');
         }
-        $result = $this->authService->login($username, $password);
+        $result = $this->authenticationService->login($username, $password);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
-        $activeUser = $result->getIdentity();
+        $identity = $result->getIdentity();
 
         if (isset($this->serializer)) {
-            $activeUser = $this->serializer->toArray($activeUser);
+            $identity = $this->serializer->toArray($identity);
         }
 
         return array(
-            'user' => $activeUser
+            'user' => $identity
         );
     }
 
@@ -120,7 +114,7 @@ class AuthController extends AbstractJsonRpcController implements ActiveUserAwar
      */
     public function logout()
     {
-        $this->authService->logout();
+        $this->authenticationService->logout();
         return array(
             'user' => null
         );
