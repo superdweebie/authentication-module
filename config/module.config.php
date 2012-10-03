@@ -3,9 +3,6 @@ return array(
     'sds' => array(
         'auth' => array(
 
-            //Authentication service to use
-            'authenticationService' => 'sds.auth.authenticationservice',
-
             'authenticationAdapter' => 'doctrine.authenticationadapter.odm_default',
 
             'authenticationStorage' => 'doctrine.authenticationstorage.odm_default',
@@ -101,7 +98,7 @@ return array(
 
     'service_manager' => array(
         'factories' => array(
-            'sds.auth.authenticationservice' => 'Sds\AuthModule\Service\AuthenticationServiceFactory'
+            'Zend\Authentication\AuthenticationService' => 'Sds\AuthModule\Service\AuthenticationServiceFactory'
         )
     )
 );

@@ -5,9 +5,7 @@
  */
 namespace Sds\AuthModule\Controller;
 
-use Zend\Authentication\AuthenticationService;
 use Sds\AuthModule\Exception;
-use Sds\Common\Serializer\SerializerInterface;
 use Sds\JsonController\AbstractJsonRpcController;
 
 /**
@@ -21,13 +19,13 @@ class AuthController extends AbstractJsonRpcController
 {
     /**
      *
-     * @var \Zend\Authentication\AuthenticationService
+     * @var string | \Zend\Authentication\AuthenticationService
      */
     protected $authenticationService;
 
     /**
      *
-     * @var \Sds\Common\Serializer\SerializerInterface
+     * @var string | \Sds\Common\Serializer\SerializerInterface
      */
     protected $serializer;
 
@@ -36,13 +34,16 @@ class AuthController extends AbstractJsonRpcController
      * @return \Zend\Authentication\AuthenticationService
      */
     public function getAuthenticationService() {
-        return $this->authService;
+        if (is_string($this->authenticationService)){
+            $this->authenticationService = $this->serviceLocator->get($this->authenticationService);
+        }
+        return $this->authenticationService;
     }
 
     /**
-     * @param \Zend\Authentication\AuthenticationService $authenticationService
+     * @param string | \Zend\Authentication\AuthenticationService $authenticationService
      */
-    public function setAuthenticationService(AuthenticationService $authenticationService) {
+    public function setAuthenticationService($authenticationService) {
         $this->authenticationService = $authenticationService;
     }
 
@@ -51,14 +52,17 @@ class AuthController extends AbstractJsonRpcController
      * @return \Sds\Common\Serializer\SerializerInterface
      */
     public function getSerializer() {
+        if (is_string($this->serializer)){
+            $this->serializer = $this->serviceLocator->get($this->serializer);
+        }
         return $this->serializer;
     }
 
     /**
      *
-     * @param \Sds\Common\Serializer\SerializerInterface $serializer
+     * @param string | \Sds\Common\Serializer\SerializerInterface $serializer
      */
-    public function setSerializer(SerializerInterface $serializer) {
+    public function setSerializer($serializer) {
         $this->serializer = $serializer;
     }
 
@@ -86,11 +90,13 @@ class AuthController extends AbstractJsonRpcController
      */
     public function login($username, $password)
     {
-        if($this->authenticationService->hasIdentity()){
+        $authenticationService = $this->getAuthenticationService();
+
+        if($authenticationService->hasIdentity()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\AlreadyLoggedInException('You are aready logged in');
         }
-        $result = $this->authenticationService->login($username, $password);
+        $result = $authenticationService->login($username, $password);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
@@ -99,7 +105,7 @@ class AuthController extends AbstractJsonRpcController
         $identity = $result->getIdentity();
 
         if (isset($this->serializer)) {
-            $identity = $this->serializer->toArray($identity);
+            $identity = $this->getSerializer()->toArray($identity);
         }
 
         return array(
@@ -114,7 +120,7 @@ class AuthController extends AbstractJsonRpcController
      */
     public function logout()
     {
-        $this->authenticationService->logout();
+        $this->getAuthenticationService()->logout();
         return array(
             'user' => null
         );

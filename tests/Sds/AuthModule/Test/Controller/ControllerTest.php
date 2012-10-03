@@ -20,7 +20,7 @@ class ControllerTest extends AbstractControllerTest{
         $user->setUsername('toby');
         $user->setPassword('password');
 
-        $this->serviceManager->get($this->serviceManager->get('config')['sds']['auth']['authenticationService'])->getAdapter()->setIdentity($user);
+        $this->serviceManager->get('Zend\Authentication\AuthenticationService')->getAdapter()->setIdentity($user);
     }
 
     public function testLogout(){

@@ -27,14 +27,11 @@ class AuthControllerFactory implements FactoryInterface
         $serviceLocator = $serviceLocator->getServiceLocator();
 
         $config = $serviceLocator->get('Config')['sds']['auth'];
-        $authController = new AuthController;
-        $authController->setAuthenticationService($serviceLocator->get($config['authenticationService']));
 
-        $serializer = $config['serializer'];
-        if (is_string($serializer)) {
-            $serializer = $serviceLocator->get($serializer);
-        }
-        $authController->setSerializer($serializer);
+        $authController = new AuthController;
+        
+        $authController->setAuthenticationService('Zend\Authentication\AuthenticationService');
+        $authController->setSerializer($config['serializer']);
 
         return $authController;
     }
