@@ -1,6 +1,7 @@
 {
     "minimum-stability": "dev",
     "require": {
-        "superdweebie/auth-module"       : "dev-master"
+        "superdweebie/auth-module"       : "dev-master",
+        "zendframework/zendframework"    : "dev-master"
     }
 }
