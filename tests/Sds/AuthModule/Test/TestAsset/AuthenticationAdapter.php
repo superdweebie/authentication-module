@@ -29,8 +29,8 @@ class AuthenticationAdapter implements AdapterInterface
 
     public function authenticate()
     {
-        if ($this->identity->getUsername() == $this->identityValue &&
-            $this->identity->getPassword() == $this->credentialValue
+        if ($this->identity->getName() == $this->identityValue &&
+            $this->identity->getCredential() == $this->credentialValue
         ) {
             return new Result(Result::SUCCESS, $this->identity);
         } else {

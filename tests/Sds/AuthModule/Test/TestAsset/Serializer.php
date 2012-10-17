@@ -12,7 +12,7 @@ class Serializer implements SerializerInterface
 
     public function toArray($object){
         return [
-            'username' => $object->getUsername()
+            'name' => $object->getName()
         ];
     }
 

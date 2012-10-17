@@ -3,7 +3,7 @@
 namespace Sds\AuthModule\Test\Controller;
 
 use Sds\ModuleUnitTester\AbstractControllerTest;
-use Sds\AuthModule\Test\TestAsset\User;
+use Sds\AuthModule\Test\TestAsset\Identity;
 use Zend\Http\Request;
 
 class ControllerTest extends AbstractControllerTest{
@@ -16,11 +16,11 @@ class ControllerTest extends AbstractControllerTest{
 
         parent::setUp();
 
-        $user = new User;
-        $user->setUsername('toby');
-        $user->setPassword('password');
+        $identity = new Identity;
+        $identity->setName('toby');
+        $identity->setCredential('password');
 
-        $this->serviceManager->get('Zend\Authentication\AuthenticationService')->getAdapter()->setIdentity($user);
+        $this->serviceManager->get('Zend\Authentication\AuthenticationService')->getAdapter()->setIdentity($identity);
     }
 
     public function testLogout(){
@@ -44,7 +44,7 @@ class ControllerTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('toby', $returnArray['result']['user']['username']);
+        $this->assertEquals('toby', $returnArray['result']['user']['name']);
 
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
