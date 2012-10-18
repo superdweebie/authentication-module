@@ -1,5 +1,5 @@
 {
-    "name": "superdweebie/auth-module",
+    "name": "superdweebie/authentication-module",
     "description": "Zend Framework 2 Module that provides authentication functionality",
     "type": "library",
     "license": "MIT",
