@@ -6,7 +6,7 @@
     backupGlobals="false"
 >
     <testsuites>
-        <testsuite name="Sds AuthModule Test Suite">
+        <testsuite name="Sds AuthenticationModule Test Suite">
             <directory>./tests/Sds/</directory>
         </testsuite>
     </testsuites>

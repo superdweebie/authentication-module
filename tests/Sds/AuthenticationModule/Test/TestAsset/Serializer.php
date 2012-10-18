@@ -3,7 +3,7 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule\Test\TestAsset;
+namespace Sds\AuthenticationModule\Test\TestAsset;
 
 use Sds\Common\Serializer\SerializerInterface;
 

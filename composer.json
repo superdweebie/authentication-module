@@ -22,7 +22,7 @@
     },
     "suggest": {
         "doctrine/doctrine-module"          : "The auth adapter in doctrine/doctrine-module is the default configured auth adapter",
-        "superdweebie/sijit": "A dojo extensions that include a javascript client for this auth module",
+        "superdweebie/sijit": "A dojo extensions that include a javascript client for this authentication module",
         "superdweebie/user-module"          : "The user model from superdweebie/user-module is the default configured user object"
     },
     "autoload": {

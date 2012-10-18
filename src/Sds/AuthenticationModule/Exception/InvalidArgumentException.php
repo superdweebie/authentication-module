@@ -5,7 +5,7 @@
  * @license    MIT
  */
 
-namespace Sds\AuthModule\Exception;
+namespace Sds\AuthenticationModule\Exception;
 
 /**
  *
@@ -13,6 +13,6 @@ namespace Sds\AuthModule\Exception;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AlreadyLoggedInException extends \Exception implements ExceptionInterface
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

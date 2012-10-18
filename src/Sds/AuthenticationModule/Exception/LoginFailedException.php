@@ -5,7 +5,7 @@
  * @license    MIT
  */
 
-namespace Sds\AuthModule\Exception;
+namespace Sds\AuthenticationModule\Exception;
 
 /**
  *

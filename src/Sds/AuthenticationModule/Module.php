@@ -3,7 +3,7 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule;
+namespace Sds\AuthenticationModule;
 
 /**
  *

@@ -1,15 +1,15 @@
 <?php
 return array(
     'sds' => array(
-        'auth' => array(
+        'authentication' => array(
             'serializer' => 'testSerializer',
-            'authenticationAdapter' => new \Sds\AuthModule\Test\TestAsset\AuthenticationAdapter,
+            'authenticationAdapter' => new \Sds\AuthenticationModule\Test\TestAsset\AuthenticationAdapter,
             'authenticationStorage' => new \Zend\Authentication\Storage\NonPersistent
         ),
     ),
     'service_manager' => array(
         'invokables' => array(
-            'testSerializer' => 'Sds\AuthModule\Test\TestAsset\Serializer',
+            'testSerializer' => 'Sds\AuthenticationModule\Test\TestAsset\Serializer',
         ),
     ),
 );

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sds\AuthModule\Test\Controller;
+namespace Sds\AuthenticationModule\Test\Controller;
 
 use Sds\ModuleUnitTester\AbstractControllerTest;
-use Sds\AuthModule\Test\TestAsset\Identity;
+use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Request;
 
 class ControllerTest extends AbstractControllerTest{
@@ -12,7 +12,7 @@ class ControllerTest extends AbstractControllerTest{
 
     public function setUp(){
 
-        $this->controllerName = 'sds.auth';
+        $this->controllerName = 'sds.authentication';
 
         parent::setUp();
 
@@ -34,7 +34,7 @@ class ControllerTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('Sds\AuthModule\Exception\LoginFailedException', $returnArray['error']['type']);
+        $this->assertEquals('Sds\AuthenticationModule\Exception\LoginFailedException', $returnArray['error']['type']);
     }
 
     public function testLoginSuccessAndAlreadyLoggedIn(){
@@ -52,7 +52,7 @@ class ControllerTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('Sds\AuthModule\Exception\AlreadyLoggedInException', $returnArray['error']['type']);
+        $this->assertEquals('Sds\AuthenticationModule\Exception\AlreadyLoggedInException', $returnArray['error']['type']);
     }
 
     public function testSecondLogout(){

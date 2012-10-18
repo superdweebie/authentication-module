@@ -9,14 +9,14 @@ before_script:
   - cd ZendSkeletonApplication
   - rm .gitmodules
   - git rm --cached vendor/ZF2
-  - cp ../authModule/.travis/composer.json ./
+  - cp ../authenticationModule/.travis/composer.json ./
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
-  - rm -rf vendor/superdweebie/auth-module
-  - cp -r ../authModule vendor/superdweebie/
-  - mv vendor/superdweebie/authModule vendor/superdweebie/auth-module
+  - rm -rf vendor/superdweebie/authentication-module
+  - cp -r ../authenticationModule vendor/superdweebie/
+  - mv vendor/superdweebie/authenticationModule vendor/superdweebie/authentication-module
   - rm config/application.config.php
-  
+
 script:
-  - cd vendor/superdweebie/auth-module
+  - cd vendor/superdweebie/authentication-module
   - phpunit

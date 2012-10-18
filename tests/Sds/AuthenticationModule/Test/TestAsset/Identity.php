@@ -3,23 +3,23 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule\Test\TestAsset;
+namespace Sds\AuthenticationModule\Test\TestAsset;
 
 use Sds\Common\Identity\IdentityInterface;
 use Sds\Common\Identity\CredentialInterface;
 
 class Identity implements IdentityInterface, CredentialInterface
 {
-    protected $name;
+    protected $identityName;
 
     protected $credential;
 
-    public function getName() {
-        return $this->name;
+    public function getIdentityName() {
+        return $this->identityName;
     }
 
-    public function setName($name) {
-        $this->name = $name;
+    public function setIdentityName($identityName) {
+        $this->identityName = $identityName;
     }
 
     public function getCredential() {

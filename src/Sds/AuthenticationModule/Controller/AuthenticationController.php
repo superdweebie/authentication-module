@@ -3,9 +3,9 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule\Controller;
+namespace Sds\AuthenticationModule\Controller;
 
-use Sds\AuthModule\Exception;
+use Sds\AuthenticationModule\Exception;
 use Sds\JsonController\AbstractJsonRpcController;
 
 /**
@@ -15,7 +15,7 @@ use Sds\JsonController\AbstractJsonRpcController;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthController extends AbstractJsonRpcController
+class AuthenticationController extends AbstractJsonRpcController
 {
     /**
      *
@@ -79,7 +79,7 @@ class AuthController extends AbstractJsonRpcController
     }
 
     /**
-     * Checks the provided username and password against the authService and
+     * Checks the provided username and password against the AuthenticationService and
      * returns the active user
      *
      * @param string $username

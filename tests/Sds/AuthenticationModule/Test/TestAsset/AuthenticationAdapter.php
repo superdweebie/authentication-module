@@ -1,6 +1,6 @@
 <?php
 
-namespace Sds\AuthModule\Test\TestAsset;
+namespace Sds\AuthenticationModule\Test\TestAsset;
 
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
@@ -29,7 +29,7 @@ class AuthenticationAdapter implements AdapterInterface
 
     public function authenticate()
     {
-        if ($this->identity->getName() == $this->identityValue &&
+        if ($this->identity->getIdentityName() == $this->identityValue &&
             $this->identity->getCredential() == $this->credentialValue
         ) {
             return new Result(Result::SUCCESS, $this->identity);
