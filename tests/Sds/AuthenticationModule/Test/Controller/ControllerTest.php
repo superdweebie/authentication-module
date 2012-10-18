@@ -17,7 +17,7 @@ class ControllerTest extends AbstractControllerTest{
         parent::setUp();
 
         $identity = new Identity;
-        $identity->setName('toby');
+        $identity->setIdentityName('toby');
         $identity->setCredential('password');
 
         $this->serviceManager->get('Zend\Authentication\AuthenticationService')->getAdapter()->setIdentity($identity);

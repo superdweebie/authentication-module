@@ -74,7 +74,7 @@ return array(
 
     'controllers' => array(
         'factories' => array(
-            'sds.authentication' => 'Sds\AuthModule\Service\AuthenticationControllerFactory'
+            'sds.authentication' => 'Sds\AuthenticationModule\Service\AuthenticationControllerFactory'
         ),
     ),
 

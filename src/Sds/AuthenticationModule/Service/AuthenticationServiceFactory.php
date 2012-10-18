@@ -3,9 +3,9 @@
  * @package    Sds
  * @license    MIT
  */
-namespace Sds\AuthModule\Service;
+namespace Sds\AuthenticationModule\Service;
 
-use Sds\AuthModule\AuthenticationService;
+use Sds\AuthenticationModule\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -24,7 +24,7 @@ class AuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config')['sds']['auth'];
+        $config = $serviceLocator->get('config')['sds']['authentication'];
 
         if (is_string($config['authenticationStorage'])){
             $storage = $serviceLocator->get($config['authenticationStorage']);
