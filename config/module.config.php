@@ -52,7 +52,7 @@ return array(
     'doctrine' => array(
         'authentication' => array(
             'odm_default' => array(
-                'identityClass' => 'Sds\UserModule\DataModel\User',
+                'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
                 'credentialCallable' => 'Sds\Common\Crypt\Hash::hashCredential'
             )
         ),
@@ -60,12 +60,12 @@ return array(
 
     'router' => array(
         'routes' => array(
-            'sds.authentication' => array(
+            'Sds\AuthenticationModule\Authentication' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route'    => '/auth',
+                    'route'    => '/authentication',
                     'defaults' => array(
-                        'controller' => 'sds.authentication',
+                        'controller' => 'Sds\AuthenticationModule\Controller\AuthenticationController',
                     ),
                 ),
             ),
@@ -74,7 +74,7 @@ return array(
 
     'controllers' => array(
         'factories' => array(
-            'sds.authentication' => 'Sds\AuthenticationModule\Service\AuthenticationControllerFactory'
+            'Sds\AuthenticationModule\Controller\AuthenticationController' => 'Sds\AuthenticationModule\Service\AuthenticationControllerFactory'
         ),
     ),
 

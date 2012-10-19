@@ -12,7 +12,7 @@ class ControllerTest extends AbstractControllerTest{
 
     public function setUp(){
 
-        $this->controllerName = 'sds.authentication';
+        $this->controllerName = 'Sds\AuthenticationModule\Controller\AuthenticationController';
 
         parent::setUp();
 
@@ -44,7 +44,7 @@ class ControllerTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('toby', $returnArray['result']['user']['name']);
+        $this->assertEquals('toby', $returnArray['result']['identity']['name']);
 
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
@@ -68,7 +68,7 @@ class ControllerTest extends AbstractControllerTest{
             array(
                 'id' => 1,
                 'result' => array(
-                    'user' => null
+                    'identity' => null
                 ),
                 'error' => null
            ),

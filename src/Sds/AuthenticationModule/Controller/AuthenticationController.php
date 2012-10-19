@@ -79,16 +79,16 @@ class AuthenticationController extends AbstractJsonRpcController
     }
 
     /**
-     * Checks the provided username and password against the AuthenticationService and
-     * returns the active user
+     * Checks the provided identityName(nomally username) and credential(normally password) against the AuthenticationService and
+     * returns the active identity
      *
-     * @param string $username
-     * @param string $password
+     * @param string $identityName
+     * @param string $credential
      * @return object
      * @throws Exception\AlreadyLoggedInException
      * @throws Exception\LoginFailedException
      */
-    public function login($username, $password)
+    public function login($identityName, $credential)
     {
         $authenticationService = $this->getAuthenticationService();
 
@@ -96,7 +96,7 @@ class AuthenticationController extends AbstractJsonRpcController
             $this->getResponse()->setStatusCode(500);
             throw new Exception\AlreadyLoggedInException('You are aready logged in');
         }
-        $result = $authenticationService->login($username, $password);
+        $result = $authenticationService->login($identityName, $credential);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
@@ -109,12 +109,12 @@ class AuthenticationController extends AbstractJsonRpcController
         }
 
         return array(
-            'user' => $identity
+            'identity' => $identity
         );
     }
 
     /**
-     * Clears the active user
+     * Clears the active identity
      *
      * @return object
      */
@@ -122,7 +122,7 @@ class AuthenticationController extends AbstractJsonRpcController
     {
         $this->getAuthenticationService()->logout();
         return array(
-            'user' => null
+            'identity' => null
         );
     }
 }
