@@ -73,9 +73,29 @@ class AuthenticationController extends AbstractJsonRpcController
      */
     public function registerRpcMethods(){
         return array(
+            'getIdentity',
             'login',
             'logout'
         );
+    }
+
+    /**
+     *
+     * @return object
+     */
+    public function getIdentity(){
+
+        $authenticationService = $this->getAuthenticationService();
+
+        $result = [];
+        $result['hasIdentity'] = $authenticationService->hasIdentity();
+        if ($result['hasIdentity']){
+            $result['identity'] = $this->getSerializer()->toArray($authenticationService->getIdentity());
+        } else {
+            $result['identity'] = false;
+        }
+
+        return $result;
     }
 
     /**
@@ -102,14 +122,8 @@ class AuthenticationController extends AbstractJsonRpcController
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
-        $identity = $result->getIdentity();
-
-        if (isset($this->serializer)) {
-            $identity = $this->getSerializer()->toArray($identity);
-        }
-
         return array(
-            'identity' => $identity
+            'identity' => $this->getSerializer()->toArray($result->getIdentity())
         );
     }
 
@@ -122,7 +136,7 @@ class AuthenticationController extends AbstractJsonRpcController
     {
         $this->getAuthenticationService()->logout();
         return array(
-            'identity' => null
+            'identity' => false
         );
     }
 }

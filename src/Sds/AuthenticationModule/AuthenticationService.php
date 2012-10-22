@@ -44,4 +44,5 @@ class AuthenticationService extends ZendAuthenticationService
             return $this->storage->readKeyOnly();
         }
     }
+
 }
