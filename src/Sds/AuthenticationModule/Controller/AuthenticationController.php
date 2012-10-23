@@ -6,7 +6,9 @@
 namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
+use Sds\AuthenticationModule\Options\AuthenticationController as AuthenticationControllerOptions;
 use Sds\JsonController\AbstractJsonRpcController;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Controller to handle login and logout actions via json rpc
@@ -17,53 +19,25 @@ use Sds\JsonController\AbstractJsonRpcController;
  */
 class AuthenticationController extends AbstractJsonRpcController
 {
-    /**
-     *
-     * @var string | \Zend\Authentication\AuthenticationService
-     */
-    protected $authenticationService;
 
-    /**
-     *
-     * @var string | \Sds\Common\Serializer\SerializerInterface
-     */
-    protected $serializer;
+    protected $options;
 
-    /**
-     *
-     * @return \Zend\Authentication\AuthenticationService
-     */
-    public function getAuthenticationService() {
-        if (is_string($this->authenticationService)){
-            $this->authenticationService = $this->serviceLocator->get($this->authenticationService);
+    public function getOptions() {
+        return $this->options;
+    }
+
+    public function setOptions($options) {
+        if (!$options instanceof AuthenticationControllerOptions) {
+            $options = new AuthenticationControllerOptions($options);
         }
-        return $this->authenticationService;
+        isset($this->serviceLocator) ? $options->setServiceLocator($this->serviceLocator) : null;
+        $this->options = $options;
     }
 
-    /**
-     * @param string | \Zend\Authentication\AuthenticationService $authenticationService
-     */
-    public function setAuthenticationService($authenticationService) {
-        $this->authenticationService = $authenticationService;
-    }
-
-    /**
-     *
-     * @return \Sds\Common\Serializer\SerializerInterface
-     */
-    public function getSerializer() {
-        if (is_string($this->serializer)){
-            $this->serializer = $this->serviceLocator->get($this->serializer);
-        }
-        return $this->serializer;
-    }
-
-    /**
-     *
-     * @param string | \Sds\Common\Serializer\SerializerInterface $serializer
-     */
-    public function setSerializer($serializer) {
-        $this->serializer = $serializer;
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        parent::setServiceLocator($serviceLocator);
+        $this->getOptions()->setServiceLocator($serviceLocator);
     }
 
     /**
@@ -79,18 +53,22 @@ class AuthenticationController extends AbstractJsonRpcController
         );
     }
 
+    public function __construct($options = null) {
+        $this->setOptions($options);
+    }
+
     /**
      *
      * @return object
      */
     public function getIdentity(){
 
-        $authenticationService = $this->getAuthenticationService();
+        $authenticationService = $this->options->getAuthenticationService();
 
         $result = [];
         $result['hasIdentity'] = $authenticationService->hasIdentity();
         if ($result['hasIdentity']){
-            $result['identity'] = $this->getSerializer()->toArray($authenticationService->getIdentity());
+            $result['identity'] = $this->options->getSerializer()->toArray($authenticationService->getIdentity());
         } else {
             $result['identity'] = false;
         }
@@ -104,26 +82,27 @@ class AuthenticationController extends AbstractJsonRpcController
      *
      * @param string $identityName
      * @param string $credential
+     * @param boolean $rememberMe
      * @return object
      * @throws Exception\AlreadyLoggedInException
      * @throws Exception\LoginFailedException
      */
-    public function login($identityName, $credential)
+    public function login($identityName, $credential, $rememberMe = false)
     {
-        $authenticationService = $this->getAuthenticationService();
+        $authenticationService = $this->options->getAuthenticationService();
 
         if($authenticationService->hasIdentity()){
-            $this->getResponse()->setStatusCode(500);
-            throw new Exception\AlreadyLoggedInException('You are aready logged in');
+            $authenticationService->logout();
         }
-        $result = $authenticationService->login($identityName, $credential);
+
+        $result = $authenticationService->login($identityName, $credential, $rememberMe);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
         return array(
-            'identity' => $this->getSerializer()->toArray($result->getIdentity())
+            'identity' => $this->options->getSerializer()->toArray($result->getIdentity())
         );
     }
 
@@ -134,7 +113,7 @@ class AuthenticationController extends AbstractJsonRpcController
      */
     public function logout()
     {
-        $this->getAuthenticationService()->logout();
+        $this->options->getAuthenticationService()->logout();
         return array(
             'identity' => false
         );

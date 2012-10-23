@@ -17,13 +17,13 @@
     "require": {
         "php": ">=5.4",
 		"superdweebie/common"            : "dev-master",
+        "doctrine/doctrine-module"       : "dev-master",
 		"superdweebie/json-controller"   : "dev-master",
         "superdweebie/module-unit-tester": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "suggest": {
-        "doctrine/doctrine-module"          : "The auth adapter in doctrine/doctrine-module is the default configured authentication adapter",
-        "dojo/Sds": "Contains a dojo based js client to consume the services of authenticationModule",
+        "dojo/Sds": "Contains a dojo based js client to consume the services of authenticationModule"
     },
     "autoload": {
         "psr-0": {

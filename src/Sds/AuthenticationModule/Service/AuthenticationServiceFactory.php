@@ -5,6 +5,7 @@
  */
 namespace Sds\AuthenticationModule\Service;
 
+use Sds\AuthenticationModule\Adapter\RememberMeAdapter;
 use Sds\AuthenticationModule\AuthenticationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,20 +25,23 @@ class AuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config')['sds']['authentication'];
+        $optionsArray = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
 
-        if (is_string($config['authenticationStorage'])){
-            $storage = $serviceLocator->get($config['authenticationStorage']);
-        } else {
-            $storage = $config['authenticationStorage'];
+        if (is_string($optionsArray['authenticationStorage'])){
+            $optionsArray['authenticationStorage'] = $serviceLocator->get($optionsArray['authenticationStorage']);
         }
 
-        if (is_string($config['authenticationAdapter'])){
-            $adapter = $serviceLocator->get($config['authenticationAdapter']);
-        } else {
-            $adapter = $config['authenticationAdapter'];
+        if (is_string($optionsArray['authenticationAdapter'])){
+            $optionsArray['authenticationAdapter'] = $serviceLocator->get($optionsArray['authenticationAdapter']);
         }
 
-        return new AuthenticationService($storage, $adapter);
+        if (is_string($optionsArray['rememberMeService'])){
+            $optionsArray['rememberMeService'] = $serviceLocator->get($optionsArray['rememberMeService']);
+        }
+        
+        $return = new AuthenticationService();
+        $return->setOptions($optionsArray);
+
+        return $return;
     }
 }

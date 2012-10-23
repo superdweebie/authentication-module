@@ -26,13 +26,6 @@ class AuthenticationControllerFactory implements FactoryInterface
     {
         $serviceLocator = $serviceLocator->getServiceLocator();
 
-        $config = $serviceLocator->get('Config')['sds']['authentication'];
-
-        $controller = new AuthenticationController;
-
-        $controller->setAuthenticationService('Zend\Authentication\AuthenticationService');
-        $controller->setSerializer($config['serializer']);
-
-        return $controller;
+        return new AuthenticationController($serviceLocator->get('Config')['sds']['authentication']['authenticationControllerOptions']);
     }
 }

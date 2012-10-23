@@ -31,7 +31,7 @@ class RememberMe
      *
      * @ODM\Id(strategy="none")
      */
-    protected $sessionId;
+    protected $series;
 
     /**
      *
@@ -43,14 +43,14 @@ class RememberMe
      *
      * @ODM\String
      */
-    protected $identityId;
+    protected $identityName;
 
-    public function getSessionId() {
-        return $this->sessionId;
+    public function getSeries() {
+        return $this->series;
     }
 
-    public function setSessionId($sessionId) {
-        $this->sessionId = (string) $sessionId;
+    public function setSeries($series) {
+        $this->series = (string) $series;
     }
 
     public function getToken() {
@@ -61,11 +61,17 @@ class RememberMe
         $this->token = (string) $token;
     }
 
-    public function getIdentityId() {
-        return $this->identityId;
+    public function getIdentityName() {
+        return $this->identityName;
     }
 
-    public function setIdentityId($identityId) {
-        $this->identityId = (string) $identityId;
+    public function setIdentityName($identityName) {
+        $this->identityName = (string) $identityName;
+    }
+
+    public function __construct($series, $token, $identityName){
+        $this->setSeries($series);
+        $this->setToken($token);
+        $this->setIdentityName($identityName);
     }
 }
