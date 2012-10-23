@@ -74,9 +74,14 @@ class AuthenticationService extends ZendAuthenticationService
     }
 
     public function getIdentity(){
-
         $return = parent::getIdentity();
-
+        if (!$return && $this->options->getRememberMeEnabled()){
+            $identity = $this->options->getRememberMeService()->getIdentity();
+            if ($identity){
+                $this->getStorage()->write($identity);
+                return $identity;
+            }
+        }
         return $return;
     }
 
