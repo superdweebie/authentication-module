@@ -16,9 +16,9 @@
     ],
     "require": {
         "php": ">=5.4",
-		"superdweebie/common"            : "dev-master",
-        "doctrine/doctrine-module"       : "dev-master",
-		"superdweebie/json-controller"   : "dev-master",
+	"superdweebie/common"            : "dev-master",
+        "doctrine/doctrine-mongo-odm-module" : "dev-master",
+	"superdweebie/json-controller"   : "dev-master",
         "superdweebie/module-unit-tester": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
@@ -27,7 +27,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Sds\\AuthenticationModule": "src/"
+            "Sds\\AuthenticationModule\\": "src/"
         }
     }
 }
