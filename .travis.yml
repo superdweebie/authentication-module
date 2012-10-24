@@ -3,7 +3,13 @@ language: php
 php:
   - 5.4
 
+env:
+  - MONGO_VERSION=1.2.12
+
+services: mongodb
+
 before_script:
+  - pecl -q install mongo-${MONGO_VERSION} && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - cd ..
   - git clone git://github.com/zendframework/ZendSkeletonApplication.git
   - cd ZendSkeletonApplication
