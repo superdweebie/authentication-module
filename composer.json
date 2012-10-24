@@ -16,14 +16,16 @@
     ],
     "require": {
         "php": ">=5.4",
-	"superdweebie/common"            : "dev-master",
-        "doctrine/doctrine-mongo-odm-module" : "dev-master",
-	"superdweebie/json-controller"   : "dev-master",
+        "superdweebie/common"            : "dev-master",
+        "superdweebie/json-controller"   : "dev-master",
         "superdweebie/module-unit-tester": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
     "suggest": {
-        "dojo/Sds": "Contains a dojo based js client to consume the services of authenticationModule"
+        "dojo/Sds": "Contains a dojo based js client to consume the services of authenticationModule",
+        "doctrine/doctrine-mongo-odm-module": "The default RememberMe service is set up to use Doctrine and Mongo",
+        "superdweeibe/doctrine-extensions-module": "The default serializer is defined in this module",
+        "superdweebie/identity-module": "The default identity model is defined in this module"
     },
     "autoload": {
         "psr-0": {

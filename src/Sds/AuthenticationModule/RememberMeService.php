@@ -9,7 +9,7 @@ use Sds\AuthenticationModule\DataModel\RememberMe;
 use Sds\AuthenticationModule\Options\RememberMeService as RememberMeServiceOptions;
 use Zend\Math\Rand;
 
-class RememberMeService
+class RememberMeService implements RememberMeInterface
 {
 
     protected $options;

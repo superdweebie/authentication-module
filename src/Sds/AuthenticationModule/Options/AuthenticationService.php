@@ -5,7 +5,9 @@
  */
 namespace Sds\AuthenticationModule\Options;
 
+use Sds\AuthenticationModule\RememberMeInterface;
 use Zend\Authentication\Adapter\AdapterInterface;
+use Zend\Authentication\Storage\StorageInterface;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -29,7 +31,7 @@ class AuthenticationService extends AbstractOptions
         return $this->authenticationAdapter;
     }
 
-    public function setAuthenticationAdapter($authenticationAdapter) {
+    public function setAuthenticationAdapter(AdapterInterface $authenticationAdapter) {
         $this->authenticationAdapter = $authenticationAdapter;
     }
 
@@ -37,7 +39,7 @@ class AuthenticationService extends AbstractOptions
         return $this->authenticationStorage;
     }
 
-    public function setAuthenticationStorage($authenticationStorage) {
+    public function setAuthenticationStorage(StorageInterface $authenticationStorage) {
         $this->authenticationStorage = $authenticationStorage;
     }
 
@@ -46,15 +48,14 @@ class AuthenticationService extends AbstractOptions
     }
 
     public function setRememberMeEnabled($rememberMeEnabled) {
-        $this->rememberMeEnabled = $rememberMeEnabled;
+        $this->rememberMeEnabled = (boolean) $rememberMeEnabled;
     }
 
     public function getRememberMeService() {
         return $this->rememberMeService;
     }
 
-    public function setRememberMeService($rememberMeService) {
+    public function setRememberMeService(RememberMeInterface $rememberMeService) {
         $this->rememberMeService = $rememberMeService;
     }
-
 }

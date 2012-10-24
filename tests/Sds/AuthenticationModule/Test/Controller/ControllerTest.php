@@ -2,6 +2,7 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
+use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Request;
@@ -18,9 +19,12 @@ class ControllerTest extends AbstractControllerTest{
 
         $identity = new Identity;
         $identity->setIdentityName('toby');
-        $identity->setCredential('password');
+        $identity->setCredential(Hash::hashAndPrependSalt(Hash::getSalt(), 'password'));
 
-        $this->serviceManager->get('Zend\Authentication\AuthenticationService')->getAdapter()->setIdentity($identity);
+        $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
+
+        $this->documentManager->persist($identity);
+        $this->documentManager->flush();
     }
 
     public function testLogout(){
@@ -37,7 +41,7 @@ class ControllerTest extends AbstractControllerTest{
         $this->assertEquals('Sds\AuthenticationModule\Exception\LoginFailedException', $returnArray['error']['type']);
     }
 
-    public function testLoginSuccessAndAlreadyLoggedIn(){
+    public function testLoginSuccess(){
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
         $result = $this->controller->dispatch($this->request, $this->response);
@@ -52,7 +56,6 @@ class ControllerTest extends AbstractControllerTest{
         $returnArray = $result->getVariables();
 
         $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('Sds\AuthenticationModule\Exception\AlreadyLoggedInException', $returnArray['error']['type']);
     }
 
     public function testSecondLogout(){
