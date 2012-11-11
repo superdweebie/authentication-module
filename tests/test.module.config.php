@@ -5,7 +5,7 @@ return array(
             'authenticationServiceOptions' => [
                 'rememberMeEnabled' => false,
             ],
-            'authenticationControllerOptions' => [
+            'authenticatedIdentityControllerOptions' => [
                 'serializer' => 'testSerializer',
             ],
         )

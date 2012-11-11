@@ -6,18 +6,18 @@
 namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
-use Sds\AuthenticationModule\Options\AuthenticationController as AuthenticationControllerOptions;
-use Sds\JsonController\AbstractJsonRpcController;
+use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as AuthenticatedIdentityControllerOptions;
+use Sds\JsonController\AbstractJsonRestfulController;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Controller to handle login and logout actions via json rpc
+ * Controller to handle login and logout actions via json rest
  *
  * @since   1.0
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthenticationController extends AbstractJsonRpcController
+class AuthenticatedIdentityController extends AbstractJsonRestfulController
 {
 
     protected $options;
@@ -27,8 +27,8 @@ class AuthenticationController extends AbstractJsonRpcController
     }
 
     public function setOptions($options) {
-        if (!$options instanceof AuthenticationControllerOptions) {
-            $options = new AuthenticationControllerOptions($options);
+        if (!$options instanceof AuthenticatedIdentityControllerOptions) {
+            $options = new AuthenticatedIdentityControllerOptions($options);
         }
         isset($this->serviceLocator) ? $options->setServiceLocator($this->serviceLocator) : null;
         $this->options = $options;
@@ -40,82 +40,61 @@ class AuthenticationController extends AbstractJsonRpcController
         $this->getOptions()->setServiceLocator($serviceLocator);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public function registerRpcMethods(){
-        return array(
-            'getIdentity',
-            'login',
-            'logout'
-        );
-    }
-
     public function __construct($options = null) {
         $this->setOptions($options);
     }
 
-    /**
-     *
-     * @return object
-     */
-    public function getIdentity(){
-
+    public function getList(){
         $authenticationService = $this->options->getAuthenticationService();
 
-        $result = [];
-        $result['hasIdentity'] = $authenticationService->hasIdentity();
-        if ($result['hasIdentity']){
-            $result['identity'] = $this->options->getSerializer()->toArray($authenticationService->getIdentity());
-        } else {
-            $result['identity'] = false;
+        if ($authenticationService->hasIdentity()){
+            return [$this->options->getSerializer()->toArray($authenticationService->getIdentity())];
         }
+        return null;
+    }
 
-        return $result;
+    public function get($id){
+        $authenticationService = $this->options->getAuthenticationService();
+
+        if ($authenticationService->hasIdentity()){
+            return $this->options->getSerializer()->toArray($authenticationService->getIdentity());
+        }
+        return null;
     }
 
     /**
      * Checks the provided identityName(nomally username) and credential(normally password) against the AuthenticationService and
      * returns the active identity
      *
-     * @param string $identityName
-     * @param string $credential
-     * @param boolean $rememberMe
-     * @return object
-     * @throws Exception\AlreadyLoggedInException
+     * @param type $data
+     * @return type
      * @throws Exception\LoginFailedException
      */
-    public function login($identityName, $credential, $rememberMe = false)
-    {
+    public function create($data){
+
         $authenticationService = $this->options->getAuthenticationService();
 
         if($authenticationService->hasIdentity()){
             $authenticationService->logout();
         }
 
-        $result = $authenticationService->login($identityName, $credential, $rememberMe);
+        $result = $authenticationService->login($data['identityName'], $data['credential'], isset($data['rememberMe']) ? $data['rememberMe']: false);
         if (!$result->isValid()){
             $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
-        return array(
-            'identity' => $this->options->getSerializer()->toArray($result->getIdentity())
-        );
+        return $this->options->getSerializer()->toArray($result->getIdentity());
     }
 
     /**
      * Clears the active identity
-     *
-     * @return object
+     * @param type $id
      */
-    public function logout()
-    {
+    public function delete($id){
         $this->options->getAuthenticationService()->logout();
-        return array(
-            'identity' => false
-        );
+    }
+
+    public function update($id, $data) {
     }
 }

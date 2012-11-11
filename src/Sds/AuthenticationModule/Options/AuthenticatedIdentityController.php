@@ -14,7 +14,7 @@ use Zend\Stdlib\AbstractOptions;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthenticationController extends AbstractOptions
+class AuthenticatedIdentityController extends AbstractOptions
 {
 
     protected $serviceLocator;

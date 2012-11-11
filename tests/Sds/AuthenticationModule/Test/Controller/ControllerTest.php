@@ -13,7 +13,7 @@ class ControllerTest extends AbstractControllerTest{
 
     public function setUp(){
 
-        $this->controllerName = 'Sds\AuthenticationModule\Controller\AuthenticationController';
+        $this->controllerName = 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController';
 
         parent::setUp();
 
@@ -32,30 +32,20 @@ class ControllerTest extends AbstractControllerTest{
     }
 
     public function testLoginFail(){
+        $this->setExpectedException('Sds\AuthenticationModule\Exception\LoginFailedException');
         $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"method": "login", "params": ["toby", "wrong password"], "id": 1}');
-        $result = $this->controller->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
-
-        $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('Sds\AuthenticationModule\Exception\LoginFailedException', $returnArray['error']['type']);
+        $this->request->setContent('{"identityName": "toby", "credential": "wrong password"}');
+        $this->controller->dispatch($this->request, $this->response);
     }
 
     public function testLoginSuccess(){
+
         $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
+        $this->request->setContent('{"identityName": "toby", "credential": "password"}');
         $result = $this->controller->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
-        $this->assertEquals(1, $returnArray['id']);
-        $this->assertEquals('toby', $returnArray['result']['identity']['name']);
-
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"method": "login", "params": ["toby", "password"], "id": 1}');
-        $result = $this->controller->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
-
-        $this->assertEquals(1, $returnArray['id']);
+        $this->assertEquals('toby', $returnArray['name']);
     }
 
     public function testSecondLogout(){
@@ -63,20 +53,11 @@ class ControllerTest extends AbstractControllerTest{
     }
 
     protected function logout(){
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"method": "logout", "id": 1}');
+        $this->routeMatch->setParam('id', -1);
+        $this->request->setMethod(Request::METHOD_DELETE);
         $result = $this->controller->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
-        $this->assertEquals(
-            array(
-                'id' => 1,
-                'result' => array(
-                    'identity' => null
-                ),
-                'error' => null
-           ),
-           $returnArray
-        );
+        $this->assertEquals(0, count($returnArray));
     }
 }
 
