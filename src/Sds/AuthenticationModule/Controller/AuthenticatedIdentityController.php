@@ -50,7 +50,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
         if ($authenticationService->hasIdentity()){
             return [$this->options->getSerializer()->toArray($authenticationService->getIdentity())];
         }
-        return null;
+        return [];
     }
 
     public function get($id){
@@ -59,7 +59,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
         if ($authenticationService->hasIdentity()){
             return $this->options->getSerializer()->toArray($authenticationService->getIdentity());
         }
-        return null;
+        return [];
     }
 
     /**
@@ -93,8 +93,10 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      */
     public function delete($id){
         $this->options->getAuthenticationService()->logout();
+        return [];
     }
 
     public function update($id, $data) {
+        return [];
     }
 }

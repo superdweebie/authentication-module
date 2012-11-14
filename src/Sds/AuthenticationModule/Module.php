@@ -5,6 +5,9 @@
  */
 namespace Sds\AuthenticationModule;
 
+use Sds\JsonController\JsonExceptionStrategy;
+use Zend\Mvc\MvcEvent;
+
 /**
  *
  * @license MIT
@@ -23,20 +26,27 @@ class Module
         return include __DIR__ . '/../../../config/module.config.php';
     }
 
-//    public function onBootstrap(MvcEvent $e) {
-//
-//        $session = new \Zend\Session\Container('zfcuser');
-//        $cookieLogin = $session->offsetGet("cookieLogin");
-//        $cookie = $e->getRequest()->getCookie();
-//
-//        // do autologin only if not done before and cookie is present
-//        if(isset($cookie['remember_me']) && $cookieLogin == false) {
-//            $adapter = $e->getApplication()->getServiceManager()->get('ZfcUser\Authentication\Adapter\AdapterChain');
-//            $adapter->prepareForAuthentication($e->getRequest());
-//            $authService = $e->getApplication()->getServiceManager()->get('zfcuser_auth_service');
-//
-//            $auth = $authService->authenticate($adapter);
-//        }
-//
-//    }
+    /**
+     *
+     * @param \Zend\EventManager\Event $event
+     */
+    public function onBootstrap(MvcEvent $event)
+    {
+
+        $application = $event->getTarget();
+        $serviceManager = $application->getServiceManager();
+        $config = $serviceManager->get('Config');
+
+        // Config json enabled exceptionStrategy
+        $exceptionStrategy = new JsonExceptionStrategy();
+
+        $displayExceptions = false;
+
+        if (isset($config['view_manager']['display_exceptions'])) {
+            $displayExceptions = $config['view_manager']['display_exceptions'];
+        }
+
+        $exceptionStrategy->setDisplayExceptions($displayExceptions);
+        $exceptionStrategy->attach($application->getEventManager());
+    }
 }

@@ -80,12 +80,15 @@ return array(
     'router' => array(
         'routes' => array(
             'Sds\AuthenticationModule\AuthenticatedIdentity' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Zend\Mvc\Router\Http\Segment',
                 'options' => array(
-                    'route'    => '/authenticatedIdentity',
+                    'route'    => '/authenticatedIdentity[/:id]',
                     'defaults' => array(
                         'controller' => 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController',
                     ),
+                    'constraints' => [
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ]
                 ),
             ),
         ),
