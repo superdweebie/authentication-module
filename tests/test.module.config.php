@@ -8,9 +8,17 @@ return array(
             'authenticatedIdentityControllerOptions' => [
                 'serializer' => 'testSerializer',
             ],
+            'rememberMeServiceOptions' => [
+                'identityClass' => 'Sds\AuthenticationModule\Test\TestAsset\Identity',
+            ],
         )
     ),
     'doctrine' => array(
+        'configuration' => array(
+            'odm_default' => array(
+                'default_db' => 'authenticationModuleTest'
+            )
+        ),
         'authentication' => array(
             'odm_default' => array(
                 'identityClass' => 'Sds\AuthenticationModule\Test\TestAsset\Identity',

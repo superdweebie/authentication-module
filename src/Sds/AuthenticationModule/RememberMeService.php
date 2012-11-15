@@ -7,12 +7,17 @@ namespace Sds\AuthenticationModule;
 
 use Sds\AuthenticationModule\DataModel\RememberMe;
 use Sds\AuthenticationModule\Options\RememberMeService as RememberMeServiceOptions;
+use Zend\Http\Header\SetCookie;
 use Zend\Math\Rand;
 
 class RememberMeService implements RememberMeInterface
 {
 
     protected $options;
+
+    protected $requestHeaders;
+
+    protected $responseHeaders;
 
     public function getOptions() {
         return $this->options;
@@ -23,6 +28,22 @@ class RememberMeService implements RememberMeInterface
             $options = new RememberMeServiceOptions($options);
         }
         $this->options = $options;
+    }
+
+    public function getRequestHeaders() {
+        return $this->requestHeaders;
+    }
+
+    public function setRequestHeaders($requestHeaders) {
+        $this->requestHeaders = $requestHeaders;
+    }
+
+    public function getResponseHeaders() {
+        return $this->responseHeaders;
+    }
+
+    public function setResponseHeaders($responseHeaders) {
+        $this->responseHeaders = $responseHeaders;
     }
 
     public function __construct($options) {
@@ -106,32 +127,48 @@ class RememberMeService implements RememberMeInterface
     }
 
     protected function setCookie($series, $token, $identityName){
-        setcookie(
-            $this->options->getCookieName(),
-            "$series\n$token\n$identityName",
-            time() + $this->options->getCookieExpire(),
-            null,
-            null,
-            $this->options->getSecureCookie()
-        );
+
+        $cookie = $this->getCookie($this->responseHeaders, true);
+        $cookie->setName($this->options->getCookieName());
+        $cookie->setValue("$series\n$token\n$identityName");
+        $cookie->setExpires(time() + $this->options->getCookieExpire());
+        $cookie->setSecure($this->options->getSecureCookie());
     }
 
     protected function getCookieValues(){
-        if (!isset($_COOKIE[$this->options->getCookieName()])){
+
+        $cookie = $this->getCookie($this->requestHeaders);
+        if ( ! isset($cookie)){
             return;
         }
-        return explode("\n", $_COOKIE[$this->options->getCookieName()]);
+        return explode("\n", $cookie->getValue());
     }
 
     protected function removeCookie(){
-        setcookie(
-            $this->options->getCookieName(),
-            "",
-            time() - 3600,
-            null,
-            null,
-            $this->options->getSecureCookie()
-        );
+
+        $cookie = $this->getCookie($this->responseHeaders, true);
+        $cookie->setName($this->options->getCookieName());
+        $cookie->setValue('');
+        $cookie->setExpires(time() - 3600);
+        $cookie->setSecure($this->options->getSecureCookie());
+    }
+
+    protected function getCookie($headers, $createIfNotSet = false){
+
+        $cookie = null;
+
+        foreach($headers as $header){
+            if ($header instanceof SetCookie && $header->getName() == $this->options->getCookieName()){
+                $cookie = $header;
+                break;
+            }
+        }
+        if ( ! isset($cookie) && $createIfNotSet){
+            $cookie = new SetCookie();
+            $headers->addHeader($cookie);
+        }
+
+        return $cookie;
     }
 
     protected function removeSeriesRecord(){

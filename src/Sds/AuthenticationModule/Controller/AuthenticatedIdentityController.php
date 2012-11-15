@@ -44,8 +44,15 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
         $this->setOptions($options);
     }
 
-    public function getList(){
+    public function getAuthenticationService(){
         $authenticationService = $this->options->getAuthenticationService();
+        $authenticationService->setRequestHeaders($this->getRequest()->getHeaders());
+        $authenticationService->setResponseHeaders($this->getResponse()->getHeaders());
+        return $authenticationService;
+    }
+
+    public function getList(){
+        $authenticationService = $this->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
             return [$this->options->getSerializer()->toArray($authenticationService->getIdentity())];
@@ -54,7 +61,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
     }
 
     public function get($id){
-        $authenticationService = $this->options->getAuthenticationService();
+        $authenticationService = $this->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
             return $this->options->getSerializer()->toArray($authenticationService->getIdentity());
@@ -72,7 +79,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      */
     public function create($data){
 
-        $authenticationService = $this->options->getAuthenticationService();
+        $authenticationService = $this->getAuthenticationService();
 
         if($authenticationService->hasIdentity()){
             $authenticationService->logout();
@@ -92,7 +99,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      * @param type $id
      */
     public function delete($id){
-        $this->options->getAuthenticationService()->logout();
+        $this->getAuthenticationService()->logout();
         return [];
     }
 
