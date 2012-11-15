@@ -24,10 +24,16 @@ class RememberMeServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+
         $optionsArray = $serviceLocator->get('Config')['sds']['authentication']['rememberMeServiceOptions'];
         if (is_string($optionsArray['documentManager'])){
             $optionsArray['documentManager'] = $serviceLocator->get($optionsArray['documentManager']);
         }
-        return new RememberMeService($optionsArray);
+
+        $rememberMeService =  new RememberMeService($optionsArray);
+        $rememberMeService->setRequestHeaders($serviceLocator->get('request')->getHeaders());
+        $rememberMeService->setResponseHeaders($serviceLocator->get('response')->getHeaders());
+
+        return $rememberMeService;
     }
 }

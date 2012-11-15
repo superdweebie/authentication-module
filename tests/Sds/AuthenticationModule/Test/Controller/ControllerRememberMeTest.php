@@ -47,6 +47,11 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
         $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
 
+        $this->serviceManager->setAllowOverride(true);
+        $this->serviceManager->setService('request', $this->request);
+        $this->serviceManager->setService('response', $this->response);
+        $this->serviceManager->setAllowOverride(false);
+
         $this->controller->getOptions()->getAuthenticationService()->getOptions()->setRememberMeEnabled(true);
     }
 
@@ -55,6 +60,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         //Do the inital login
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
+
         $result = $this->controller->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
@@ -146,6 +152,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         //Do the inital login
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
+
         $result = $this->controller->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 

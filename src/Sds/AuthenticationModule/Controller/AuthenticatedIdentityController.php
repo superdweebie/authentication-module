@@ -8,6 +8,7 @@ namespace Sds\AuthenticationModule\Controller;
 use Sds\AuthenticationModule\Exception;
 use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as AuthenticatedIdentityControllerOptions;
 use Sds\JsonController\AbstractJsonRestfulController;
+use Zend\Http\Headers;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -44,15 +45,8 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
         $this->setOptions($options);
     }
 
-    public function getAuthenticationService(){
-        $authenticationService = $this->options->getAuthenticationService();
-        $authenticationService->setRequestHeaders($this->getRequest()->getHeaders());
-        $authenticationService->setResponseHeaders($this->getResponse()->getHeaders());
-        return $authenticationService;
-    }
-
     public function getList(){
-        $authenticationService = $this->getAuthenticationService();
+        $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
             return [$this->options->getSerializer()->toArray($authenticationService->getIdentity())];
@@ -61,7 +55,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
     }
 
     public function get($id){
-        $authenticationService = $this->getAuthenticationService();
+        $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
             return $this->options->getSerializer()->toArray($authenticationService->getIdentity());
@@ -79,7 +73,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      */
     public function create($data){
 
-        $authenticationService = $this->getAuthenticationService();
+        $authenticationService = $this->options->getAuthenticationService();
 
         if($authenticationService->hasIdentity()){
             $authenticationService->logout();
@@ -99,7 +93,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      * @param type $id
      */
     public function delete($id){
-        $this->getAuthenticationService()->logout();
+        $this->options->getAuthenticationService()->logout();
         return [];
     }
 
