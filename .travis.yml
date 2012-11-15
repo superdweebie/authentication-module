@@ -13,7 +13,6 @@ before_script:
   - cd ..
   - git clone git://github.com/zendframework/ZendSkeletonApplication.git
   - cd ZendSkeletonApplication
-  - mkdir data
   - mkdir data/DoctrineMongoODMModule
   - mkdir data/DoctrineMongoODMModule/Hydrator
   - rm .gitmodules
