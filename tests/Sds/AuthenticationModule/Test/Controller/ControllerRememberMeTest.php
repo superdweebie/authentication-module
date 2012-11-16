@@ -6,7 +6,6 @@ use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Header\SetCookie;
-use Zend\Http\Response;
 use Zend\Http\Request;
 
 class ControllerRememberMeTest extends AbstractControllerTest{
@@ -46,12 +45,6 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         }
 
         $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
-
-        $this->serviceManager->setAllowOverride(true);
-        $this->serviceManager->setService('request', $this->request);
-        $this->serviceManager->setService('response', $this->response);
-        $this->serviceManager->setAllowOverride(false);
-
         $this->controller->getOptions()->getAuthenticationService()->getOptions()->setRememberMeEnabled(true);
     }
 

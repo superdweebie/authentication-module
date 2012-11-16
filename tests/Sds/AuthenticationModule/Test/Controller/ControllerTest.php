@@ -23,11 +23,6 @@ class ControllerTest extends AbstractControllerTest{
 
         $this->documentManager->persist($identity);
         $this->documentManager->flush();
-
-        $this->serviceManager->setAllowOverride(true);
-        $this->serviceManager->setService('request', $this->request);
-        $this->serviceManager->setService('response', $this->response);
-        $this->serviceManager->setAllowOverride(false);
     }
 
     public function testLogoutWithNoAuthenticatedIdentity(){
