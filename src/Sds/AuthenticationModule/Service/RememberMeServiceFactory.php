@@ -6,6 +6,8 @@
 namespace Sds\AuthenticationModule\Service;
 
 use Sds\AuthenticationModule\RememberMeService;
+use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -31,9 +33,14 @@ class RememberMeServiceFactory implements FactoryInterface
         }
 
         $rememberMeService =  new RememberMeService($optionsArray);
-        $rememberMeService->setRequestHeaders($serviceLocator->get('request')->getHeaders());
-        $rememberMeService->setResponseHeaders($serviceLocator->get('response')->getHeaders());
-
+        $request = $serviceLocator->get('request');
+        if ($request instanceof Request){
+            $rememberMeService->setRequestHeaders($request->getHeaders());
+        }
+        $response = $serviceLocator->get('response');
+        if ($response instanceof Response){
+            $rememberMeService->setResponseHeaders($response->getHeaders());
+        }
         return $rememberMeService;
     }
 }

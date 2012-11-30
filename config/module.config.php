@@ -97,7 +97,11 @@ return array(
     'controllers' => array(
         'factories' => array(
             'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController' => function($serviceLocator){
-        return new Sds\AuthenticationModule\Controller\AuthenticatedIdentityController($serviceLocator->getServiceLocator()->get('Config')['sds']['authentication']['authenticatedIdentityControllerOptions']);
+                return new Sds\AuthenticationModule\Controller\AuthenticatedIdentityController(
+                    $serviceLocator
+                        ->getServiceLocator()
+                        ->get('Config')['sds']['authentication']['authenticatedIdentityControllerOptions']
+                );
             }
         ),
     ),

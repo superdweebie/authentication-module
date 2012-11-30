@@ -6,9 +6,8 @@
 namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
-use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as AuthenticatedIdentityControllerOptions;
+use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as Options;
 use Sds\JsonController\AbstractJsonRestfulController;
-use Zend\Http\Headers;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -28,8 +27,8 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
     }
 
     public function setOptions($options) {
-        if (!$options instanceof AuthenticatedIdentityControllerOptions) {
-            $options = new AuthenticatedIdentityControllerOptions($options);
+        if (!$options instanceof Options) {
+            $options = new Options($options);
         }
         isset($this->serviceLocator) ? $options->setServiceLocator($this->serviceLocator) : null;
         $this->options = $options;

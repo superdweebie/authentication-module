@@ -7,6 +7,7 @@ namespace Sds\AuthenticationModule;
 
 use Sds\AuthenticationModule\DataModel\RememberMe;
 use Sds\AuthenticationModule\Options\RememberMeService as RememberMeServiceOptions;
+use Zend\Http\Headers;
 use Zend\Http\Header\SetCookie;
 use Zend\Math\Rand;
 
@@ -34,7 +35,7 @@ class RememberMeService implements RememberMeInterface
         return $this->requestHeaders;
     }
 
-    public function setRequestHeaders($requestHeaders) {
+    public function setRequestHeaders(Headers $requestHeaders) {
         $this->requestHeaders = $requestHeaders;
     }
 
@@ -42,7 +43,7 @@ class RememberMeService implements RememberMeInterface
         return $this->responseHeaders;
     }
 
-    public function setResponseHeaders($responseHeaders) {
+    public function setResponseHeaders(Headers $responseHeaders) {
         $this->responseHeaders = $responseHeaders;
     }
 
@@ -147,15 +148,22 @@ class RememberMeService implements RememberMeInterface
     protected function removeCookie(){
 
         $cookie = $this->getCookie($this->responseHeaders, true);
-        $cookie->setName($this->options->getCookieName());
-        $cookie->setValue('');
-        $cookie->setExpires(time() - 3600);
-        $cookie->setSecure($this->options->getSecureCookie());
+
+        if (isset($cookie)){
+            $cookie->setName($this->options->getCookieName());
+            $cookie->setValue('');
+            $cookie->setExpires(time() - 3600);
+            $cookie->setSecure($this->options->getSecureCookie());
+        }
     }
 
     protected function getCookie($headers, $createIfNotSet = false){
 
         $cookie = null;
+
+        if ( ! $headers instanceof Headers){
+            return $cookie;
+        }
 
         foreach($headers as $header){
             if ($header instanceof SetCookie && $header->getName() == $this->options->getCookieName()){
