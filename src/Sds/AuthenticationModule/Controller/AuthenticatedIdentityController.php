@@ -7,7 +7,7 @@ namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
 use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as Options;
-use Sds\JsonController\AbstractJsonRestfulController;
+use Sds\Zf2ExtensionsModule\Controller\AbstractJsonRestfulController;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

@@ -3,6 +3,7 @@ return array(
     'modules' => array(
         'DoctrineModule',
         'DoctrineMongoODMModule',
+        'Sds\Zf2ExtensionsModule',
         'Sds\AuthenticationModule'
     ),
     'module_listener_options' => array(

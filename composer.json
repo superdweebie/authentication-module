@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.4",
         "superdweebie/common"            : "dev-master",
-        "superdweebie/json-controller"   : "dev-master",
+        "superdweebie/zf2-extensions-module"   : "dev-master",
         "superdweebie/module-unit-tester": "dev-master",
         "zendframework/zendframework": "dev-master"
     },
