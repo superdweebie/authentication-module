@@ -45,7 +45,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         }
 
         $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
-        $this->controller->getOptions()->getAuthenticationService()->getOptions()->setRememberMeEnabled(true);
+        $this->getController()->getOptions()->getAuthenticationService()->getOptions()->setRememberMeEnabled(true);
     }
 
     public function testLoginSuccessWithRememberMe(){
@@ -54,7 +54,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('toby', $returnArray['name']);
@@ -82,7 +82,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $requestCookie->setExpires(time() + 3600);
         $this->request->getHeaders()->addHeader($requestCookie);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('toby', $returnArray[0]['name']);
@@ -110,7 +110,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('toby', $returnArray['name']);
@@ -129,7 +129,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
         $this->request->setMethod(Request::METHOD_GET);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertCount(0, $returnArray);
@@ -146,7 +146,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertEquals('toby', $returnArray['name']);
@@ -174,7 +174,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $requestCookie->setExpires(time() + 3600);
         $this->request->getHeaders()->addHeader($requestCookie);
 
-        $result = $this->controller->dispatch($this->request, $this->response);
+        $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
         $this->assertCount(0, $returnArray);

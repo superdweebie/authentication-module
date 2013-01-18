@@ -16,7 +16,9 @@ return array(
     'doctrine' => array(
         'configuration' => array(
             'odm_default' => array(
-                'default_db' => 'authenticationModuleTest'
+                'default_db' => 'authenticationModuleTest',
+                'proxy_dir'    => __DIR__ . '/Proxy',
+                'hydrator_dir' => __DIR__ . '/Hydrator',
             )
         ),
         'authentication' => array(

@@ -5,16 +5,8 @@
  */
 namespace Sds\AuthenticationModule\DataModel;
 
-use Sds\Common\Identity\CredentialInterface;
-use Sds\Common\Identity\IdentityInterface;
-use Sds\Common\Identity\RoleAwareIdentityInterface;
-use Sds\DoctrineExtensions\Identity\DataModel\CredentialTrait;
-use Sds\DoctrineExtensions\Identity\DataModel\IdentityTrait;
-use Sds\DoctrineExtensions\Identity\DataModel\RoleAwareIdentityTrait;
-
 //Annotation imports
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
 /**
  *
