@@ -48,18 +48,18 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
         $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
-            return [$this->options->getSerializer()->toArray($authenticationService->getIdentity())];
+            return $this->model->setVariables([$this->options->getSerializer()->toArray($authenticationService->getIdentity())]);
         }
-        return [];
+        return $this->model->setVariables([]);
     }
 
     public function get($id){
         $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
-            return $this->options->getSerializer()->toArray($authenticationService->getIdentity());
+            return $this->model->setVariables($this->options->getSerializer()->toArray($authenticationService->getIdentity()));
         }
-        return [];
+        return $this->model->setVariables([]);
     }
 
     /**
@@ -84,7 +84,7 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
 
-        return $this->options->getSerializer()->toArray($result->getIdentity());
+        return $this->model->setVariables($this->options->getSerializer()->toArray($result->getIdentity()));
     }
 
     /**
@@ -93,10 +93,10 @@ class AuthenticatedIdentityController extends AbstractJsonRestfulController
      */
     public function delete($id){
         $this->options->getAuthenticationService()->logout();
-        return [];
+        return $this->model->setVariables([]);
     }
 
     public function update($id, $data) {
-        return [];
+        return $this->model->setVariables([]);
     }
 }
