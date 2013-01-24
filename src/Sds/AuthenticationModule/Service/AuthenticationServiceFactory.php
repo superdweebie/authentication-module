@@ -26,6 +26,10 @@ class AuthenticationServiceFactory implements FactoryInterface
     {
         $optionsArray = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
 
+        if (is_string($optionsArray['guestIdentity'])){
+            $optionsArray['guestIdentity'] = $serviceLocator->get($optionsArray['guestIdentity']);
+        }
+        
         if (is_string($optionsArray['perSessionStorage'])){
             $optionsArray['perSessionStorage'] = $serviceLocator->get($optionsArray['perSessionStorage']);
         }

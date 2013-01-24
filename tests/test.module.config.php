@@ -2,6 +2,11 @@
 return array(
     'sds' => array(
         'authentication' => array(
+            
+            'authenticationServiceOptions' => [
+                'guestIdentity' => 'testGuest',
+            ],
+            
             'authenticatedIdentityControllerOptions' => [
                 'serializer' => 'testSerializer',
             ],
@@ -41,6 +46,7 @@ return array(
     'service_manager' => array(
         'invokables' => array(
             'testSerializer' => 'Sds\AuthenticationModule\Test\TestAsset\Serializer',
+            'testGuest' => 'Sds\AuthenticationModule\Test\TestAsset\GuestIdentity'
         ),
     ),
 );

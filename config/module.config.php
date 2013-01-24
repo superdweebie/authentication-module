@@ -3,7 +3,7 @@ return array(
     'sds' => array(
         'authentication' => array(
             'authenticationServiceOptions' => [
-                //'modes' => ['perRequest', 'perSession', 'rememberMe'],
+                //'modes' => ['perRequest', 'perSession', 'rememberMe', 'guestIdentity'],
                 'perRequestAdapter' => 'Sds\AuthenticationModule\HttpAdapter',
                 'perSessionAdapter' => 'doctrine.authenticationadapter.odm_default',
                 'perSessionStorage' => 'doctrine.authenticationstorage.odm_default',
@@ -23,34 +23,6 @@ return array(
                 'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
                 'documentManager' => 'doctrine.documentmanager.odm_default'
             ],
-
-            'enableAccessControl' => false,
-        ),
-
-        //Only used if sds accessControl is in use
-        'accessControl' => array(
-            'controllers' => array(
-                'authentication' => array(
-                    'jsonRpc' => true,
-                    'methods' => array(
-                        'serviceMap' => array(
-                            'roles' => array(
-                                \Sds\Common\AccessControl\Constant\Role::guest
-                            ),
-                        ),
-                        'login' => array(
-                            'roles' => array(
-                                \Sds\Common\AccessControl\Constant\Role::guest
-                            ),
-                        ),
-                        'logout' => array(
-                            'roles' => array(
-                                \Sds\Common\AccessControl\Constant\Role::user
-                            ),
-                        ),
-                    ),
-                ),
-            ),
         ),
     ),
 
@@ -80,13 +52,13 @@ return array(
 
     'router' => array(
         'routes' => array(
-            'Sds\Zf2Extensions\RestRoute' => array(
-                'options' => array(
-                    'endpointToControllerMap' => [
-                        'authenticatedIdentity' => 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController'
-                    ],
-                ),
-            ),
+//            'Sds\Zf2Extensions\RestRoute' => array(
+//                'options' => array(
+//                    'endpointToControllerMap' => [
+//                        'authenticatedIdentity' => 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController'
+//                    ],
+//                ),
+//            ),
         ),
     ),
 

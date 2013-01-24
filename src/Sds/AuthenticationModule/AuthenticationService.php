@@ -19,7 +19,8 @@ class AuthenticationService extends ZendAuthenticationService
     const PERSESSION = 'perSession';
     const PERREQUEST = 'perRequest';
     const REMEMBERME = 'rememberMe';
-
+    const GUESTIDENTITY      = 'guestIdentity';
+    
     protected $options;
 
     public function getOptions() {
@@ -116,6 +117,13 @@ class AuthenticationService extends ZendAuthenticationService
             }
         }
 
+        //If still no identity, check guest mode
+        if (in_array(self::GUESTIDENTITY, $this->options->getModes())){
+            $this->storage = new NonPersistent;
+            $this->storage->write($this->getOptions()->getGuestIdentity());
+            return true;
+        }
+        
         return false;
     }
 
