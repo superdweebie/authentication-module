@@ -2,9 +2,10 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
+use Sds\AuthenticationModule\AuthenticationService;
+use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
-use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Request;
 
 class ControllerTest extends AbstractControllerTest{
@@ -23,6 +24,11 @@ class ControllerTest extends AbstractControllerTest{
 
         $this->documentManager->persist($identity);
         $this->documentManager->flush();
+
+        $authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
+        $authenticationService->getOptions()->setModes([
+            AuthenticationService::PERSESSION
+        ]);
     }
 
     public function testLogoutWithNoAuthenticatedIdentity(){

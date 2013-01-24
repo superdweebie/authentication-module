@@ -19,36 +19,46 @@ use Zend\Stdlib\AbstractOptions;
 class AuthenticationService extends AbstractOptions
 {
 
-    protected $authenticationAdapter;
+    protected $modes;
 
-    protected $authenticationStorage;
+    protected $perRequestAdapter;
 
-    protected $rememberMeEnabled;
+    protected $perSessionStorage;
+
+    protected $perSessionAdapter;
 
     protected $rememberMeService;
 
-    public function getAuthenticationAdapter() {
-        return $this->authenticationAdapter;
+    public function getModes() {
+        return $this->modes;
     }
 
-    public function setAuthenticationAdapter(AdapterInterface $authenticationAdapter) {
-        $this->authenticationAdapter = $authenticationAdapter;
+    public function setModes(array $modes) {
+        $this->modes = $modes;
     }
 
-    public function getAuthenticationStorage() {
-        return $this->authenticationStorage;
+    public function getPerRequestAdapter() {
+        return $this->perRequestAdapter;
     }
 
-    public function setAuthenticationStorage(StorageInterface $authenticationStorage) {
-        $this->authenticationStorage = $authenticationStorage;
+    public function setPerRequestAdapter(AdapterInterface $perRequestAdapter) {
+        $this->perRequestAdapter = $perRequestAdapter;
     }
 
-    public function getRememberMeEnabled() {
-        return $this->rememberMeEnabled;
+    public function getPerSessionStorage() {
+        return $this->perSessionStorage;
     }
 
-    public function setRememberMeEnabled($rememberMeEnabled) {
-        $this->rememberMeEnabled = (boolean) $rememberMeEnabled;
+    public function setPerSessionStorage(StorageInterface $perSessionStorage) {
+        $this->perSessionStorage = $perSessionStorage;
+    }
+
+    public function getPerSessionAdapter() {
+        return $this->perSessionAdapter;
+    }
+
+    public function setPerSessionAdapter(AdapterInterface $perSessionAdapter) {
+        $this->perSessionAdapter = $perSessionAdapter;
     }
 
     public function getRememberMeService() {

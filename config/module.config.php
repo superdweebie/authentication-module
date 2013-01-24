@@ -3,9 +3,10 @@ return array(
     'sds' => array(
         'authentication' => array(
             'authenticationServiceOptions' => [
-                'authenticationAdapter' => 'doctrine.authenticationadapter.odm_default',
-                'authenticationStorage' => 'doctrine.authenticationstorage.odm_default',
-                'rememberMeEnabled' => true,
+                //'modes' => ['perRequest', 'perSession', 'rememberMe'],
+                'perRequestAdapter' => 'Sds\AuthenticationModule\HttpAdapter',
+                'perSessionAdapter' => 'doctrine.authenticationadapter.odm_default',
+                'perSessionStorage' => 'doctrine.authenticationstorage.odm_default',
                 'rememberMeService' => 'Sds\AuthenticationModule\RememberMeService',
             ],
 
@@ -83,7 +84,7 @@ return array(
                 'options' => array(
                     'endpointToControllerMap' => [
                         'authenticatedIdentity' => 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController'
-                    ],                    
+                    ],
                 ),
             ),
         ),
@@ -110,6 +111,7 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Zend\Authentication\AuthenticationService' => 'Sds\AuthenticationModule\Service\AuthenticationServiceFactory',
+            'Sds\AuthenticationModule\HttpAdapter' => 'Sds\AuthenticationModule\Service\HttpAdapterServiceFactory',
             'Sds\AuthenticationModule\RememberMeService' => 'Sds\AuthenticationModule\Service\RememberMeServiceFactory'
         )
     )

@@ -2,9 +2,6 @@
 return array(
     'sds' => array(
         'authentication' => array(
-            'authenticationServiceOptions' => [
-                'rememberMeEnabled' => false,
-            ],
             'authenticatedIdentityControllerOptions' => [
                 'serializer' => 'testSerializer',
             ],

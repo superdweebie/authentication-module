@@ -2,9 +2,10 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
+use Sds\AuthenticationModule\AuthenticationService;
+use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
-use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Request;
 
@@ -45,7 +46,12 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         }
 
         $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
-        $this->getController()->getOptions()->getAuthenticationService()->getOptions()->setRememberMeEnabled(true);
+
+        $authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
+        $authenticationService->getOptions()->setModes([
+            AuthenticationService::PERSESSION,
+            AuthenticationService::REMEMBERME
+        ]);
     }
 
     public function testLoginSuccessWithRememberMe(){
