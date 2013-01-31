@@ -24,30 +24,50 @@ class AuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $optionsArray = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
+        $options = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
 
-        if (is_string($optionsArray['guestIdentity'])){
-            $optionsArray['guestIdentity'] = $serviceLocator->get($optionsArray['guestIdentity']);
-        }
-        
-        if (is_string($optionsArray['perSessionStorage'])){
-            $optionsArray['perSessionStorage'] = $serviceLocator->get($optionsArray['perSessionStorage']);
-        }
-
-        if (is_string($optionsArray['perSessionAdapter'])){
-            $optionsArray['perSessionAdapter'] = $serviceLocator->get($optionsArray['perSessionAdapter']);
+        if (
+            in_array(AuthenticationService::GUESTIDENTITY, $options['modes']) &&
+            is_string($options['guestIdentity'])
+        ){
+            $options['guestIdentity'] = $serviceLocator->get($options['guestIdentity']);
+        } else {
+            unset($options['guestIdentity']);
         }
 
-        if (is_string($optionsArray['perRequestAdapter'])){
-            $optionsArray['perRequestAdapter'] = $serviceLocator->get($optionsArray['perRequestAdapter']);
+        if (in_array(AuthenticationService::PERSESSION, $options['modes'])){
+            if (is_string($options['perSessionStorage'])){
+                $options['perSessionStorage'] = $serviceLocator->get($options['perSessionStorage']);
+            }
+            if (is_string($options['perSessionAdapter'])){
+                $options['perSessionAdapter'] = $serviceLocator->get($options['perSessionAdapter']);
+            }
+        } else {
+            unset($options['perSessionStorage']);
+            unset($options['perSessionAdapter']);
         }
 
-        if (is_string($optionsArray['rememberMeService'])){
-            $optionsArray['rememberMeService'] = $serviceLocator->get($optionsArray['rememberMeService']);
+        if (
+            in_array(AuthenticationService::PERREQUEST, $options['modes']) &&
+            is_string($options['perRequestAdapter'])
+        ){
+            $options['perRequestAdapter'] = $serviceLocator->get($options['perRequestAdapter']);
+        } else {
+            unset($options['perRequestAdapter']);
+        }
+
+
+        if (
+            in_array(AuthenticationService::REMEMBERME, $options['modes']) &&
+            is_string($options['rememberMeService'])
+        ){
+            $options['rememberMeService'] = $serviceLocator->get($options['rememberMeService']);
+        } else {
+            unset($options['rememberMeService']);
         }
 
         $return = new AuthenticationService();
-        $return->setOptions($optionsArray);
+        $return->setOptions($options);
 
         return $return;
     }

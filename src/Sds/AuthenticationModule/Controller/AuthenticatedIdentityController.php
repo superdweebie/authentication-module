@@ -7,8 +7,9 @@ namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
 use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as Options;
-use Sds\Zf2ExtensionsModule\Controller\AbstractJsonRestfulController;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\Mvc\MvcEvent;
 
 /**
  * Controller to handle login and logout actions via json rest
@@ -17,10 +18,26 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @version $Revision$
  * @author  Tim Roediger <superdweebie@gmail.com>
  */
-class AuthenticatedIdentityController extends AbstractJsonRestfulController
+class AuthenticatedIdentityController extends AbstractRestfulController
 {
 
+    protected $model;
+
+    protected $acceptCriteria = array(
+        'Zend\View\Model\JsonModel' => array(
+            'application/json',
+        ),
+        'Zend\View\Model\ViewModel' => array(
+            '*/*',
+        ),
+    );
+
     protected $options;
+
+    public function onDispatch(MvcEvent $e) {
+        $this->model = $this->acceptableViewModelSelector($this->acceptCriteria);
+        return parent::onDispatch($e);
+    }
 
     public function getOptions() {
         return $this->options;

@@ -3,7 +3,7 @@ return array(
     'sds' => array(
         'authentication' => array(
             'authenticationServiceOptions' => [
-                //'modes' => ['perRequest', 'perSession', 'rememberMe', 'guestIdentity'],
+                'modes' => [], //['perRequest', 'perSession', 'rememberMe', 'guestIdentity'],
                 'perRequestAdapter' => 'Sds\AuthenticationModule\HttpAdapter',
                 'perSessionAdapter' => 'doctrine.authenticationadapter.odm_default',
                 'perSessionStorage' => 'doctrine.authenticationstorage.odm_default',

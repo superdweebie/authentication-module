@@ -7,6 +7,7 @@ use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Header\SetCookie;
+use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
 
 class ControllerRememberMeTest extends AbstractControllerTest{
@@ -59,7 +60,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         //Do the inital login
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
-
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
@@ -116,6 +117,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
         $this->request->setMethod(Request::METHOD_POST);
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
 
@@ -150,6 +152,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
         //Do the inital login
         $this->request->setMethod(Request::METHOD_POST);
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
 
         $result = $this->getController()->dispatch($this->request, $this->response);

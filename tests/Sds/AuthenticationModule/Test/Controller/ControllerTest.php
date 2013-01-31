@@ -6,7 +6,9 @@ use Sds\AuthenticationModule\AuthenticationService;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
 use Sds\ModuleUnitTester\AbstractControllerTest;
+use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
+
 
 class ControllerTest extends AbstractControllerTest{
 
@@ -54,6 +56,7 @@ class ControllerTest extends AbstractControllerTest{
         $this->setExpectedException('Sds\AuthenticationModule\Exception\LoginFailedException');
 
         $this->request->setMethod(Request::METHOD_POST);
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $this->request->setContent('{"identityName": "toby", "credential": "wrong password"}');
         $this->getController()->dispatch($this->request, $this->response);
     }
@@ -61,6 +64,7 @@ class ControllerTest extends AbstractControllerTest{
     public function testLoginSuccess(){
 
         $this->request->setMethod(Request::METHOD_POST);
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $this->request->setContent('{"identityName": "toby", "credential": "password"}');
         $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
@@ -73,6 +77,7 @@ class ControllerTest extends AbstractControllerTest{
         $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
 
         $this->request->setMethod(Request::METHOD_POST);
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $this->request->setContent('{"identityName": "toby", "credential": "password"}');
         $result = $this->getController()->dispatch($this->request, $this->response);
         $returnArray = $result->getVariables();
@@ -86,6 +91,7 @@ class ControllerTest extends AbstractControllerTest{
         $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
 
         $this->request->setMethod(Request::METHOD_POST);
+        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
         $this->request->setContent('{"identityName": "toby", "credential": "wrong password"}');
         $this->getController()->dispatch($this->request, $this->response);
     }
