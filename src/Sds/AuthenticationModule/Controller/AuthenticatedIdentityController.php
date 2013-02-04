@@ -65,18 +65,18 @@ class AuthenticatedIdentityController extends AbstractRestfulController
         $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
-            return $this->model->setVariables([$this->options->getSerializer()->toArray($authenticationService->getIdentity())]);
+            $identity = $authenticationService->getIdentity();
+
+            //don't return the guest identity
+            if ($identity !== $authenticationService->getOptions()->getGuestIdentity()){
+                return $this->model->setVariables([$identity]);
+            }
         }
         return $this->model->setVariables([]);
     }
 
     public function get($id){
-        $authenticationService = $this->options->getAuthenticationService();
-
-        if ($authenticationService->hasIdentity()){
-            return $this->model->setVariables($this->options->getSerializer()->toArray($authenticationService->getIdentity()));
-        }
-        return $this->model->setVariables([]);
+        return $this->getList();
     }
 
     /**
