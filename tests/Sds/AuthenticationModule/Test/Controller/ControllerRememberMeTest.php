@@ -46,13 +46,16 @@ class ControllerRememberMeTest extends AbstractControllerTest{
             static::$dbIdentityCreated = true;
         }
 
-        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
+        $serviceManager = $this->serviceManager;
+        $config = $this->serviceManager->get('config');
+        $config['sds']['authentication']['authenticationServiceOptions']['enablePerSession'] = true;
+        $config['sds']['authentication']['authenticationServiceOptions']['enableRememberMe'] = true;
+        
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('Config', $config);
+        $serviceManager->setAllowOverride(false);
 
-        $authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
-        $authenticationService->getOptions()->setModes([
-            AuthenticationService::PERSESSION,
-            AuthenticationService::REMEMBERME
-        ]);
+        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
     }
 
     public function testLoginSuccessWithRememberMe(){

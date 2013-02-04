@@ -2,11 +2,11 @@
 return array(
     'sds' => array(
         'authentication' => array(
-            
+
             'authenticationServiceOptions' => [
                 'guestIdentity' => 'testGuest',
             ],
-            
+
             'authenticatedIdentityControllerOptions' => [
                 'serializer' => 'testSerializer',
             ],

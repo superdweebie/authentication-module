@@ -27,10 +27,13 @@ class ControllerTest extends AbstractControllerTest{
         $this->documentManager->persist($identity);
         $this->documentManager->flush();
 
-        $authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
-        $authenticationService->getOptions()->setModes([
-            AuthenticationService::PERSESSION
-        ]);
+        $serviceManager = $this->serviceManager;
+        $config = $this->serviceManager->get('config');
+        $config['sds']['authentication']['authenticationServiceOptions']['enablePerSession'] = true;
+
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('Config', $config);
+        $serviceManager->setAllowOverride(false);        
     }
 
     public function testLogoutWithNoAuthenticatedIdentity(){

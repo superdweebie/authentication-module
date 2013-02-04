@@ -16,11 +16,6 @@ use Zend\Authentication\Storage\NonPersistent;
 class AuthenticationService extends ZendAuthenticationService
 {
 
-    const PERSESSION = 'perSession';
-    const PERREQUEST = 'perRequest';
-    const REMEMBERME = 'rememberMe';
-    const GUESTIDENTITY      = 'guestIdentity';
-    
     protected $options;
 
     public function getOptions() {
@@ -43,7 +38,7 @@ class AuthenticationService extends ZendAuthenticationService
      */
     public function login($identityValue, $credentialValue, $rememberMe = false){
 
-        if ( ! in_array(self::PERSESSION, $this->options->getModes())){
+        if ( ! $this->options->getEnablePerSession()){
             throw new Exception\RuntimeException('Login attempted, but options->modes perSession not set');
         }
 
@@ -55,7 +50,7 @@ class AuthenticationService extends ZendAuthenticationService
         $this->adapter->setCredentialValue($credentialValue);
         $result = $this->authenticate();
 
-        if ($result->isValid() && in_array(self::REMEMBERME, $this->options->getModes())){
+        if ($result->isValid() && $this->options->getEnableRememberMe()){
             $this->options->getRememberMeService()->loginSuccess($result->getIdentity(), $rememberMe);
         }
 
@@ -67,7 +62,7 @@ class AuthenticationService extends ZendAuthenticationService
      */
     public function logout(){
 
-        if ( ! in_array(self::PERSESSION, $this->options->getModes())){
+        if ( ! $this->options->getEnablePerSession()){
             throw new Exception\RuntimeException('Logout attempted, but options->modes perSession not set');
         }
 
@@ -78,7 +73,7 @@ class AuthenticationService extends ZendAuthenticationService
         if ($this->hasIdentity()) {
             $this->clearIdentity();
         }
-        if (in_array(self::REMEMBERME, $this->options->getModes())){
+        if ($this->options->getEnableRememberMe()){
             $this->options->getRememberMeService()->logout();
         }
     }
@@ -90,7 +85,7 @@ class AuthenticationService extends ZendAuthenticationService
         }
 
         //Check per session storage first
-        if (in_array(self::PERSESSION, $this->options->getModes())){
+        if ($this->options->getEnablePerSession()){
             $this->storage = $this->options->getPerSessionStorage();
             if (! $this->storage->isEmpty()){
                 return true;
@@ -98,7 +93,7 @@ class AuthenticationService extends ZendAuthenticationService
         }
 
         //If there is no identity, attempt to load one using the remember me service (stateful across sessions)
-        if (in_array(self::REMEMBERME, $this->options->getModes())){
+        if ($this->options->getEnableRememberMe()){
             $identity = $this->options->getRememberMeService()->getIdentity();
             if ($identity){
                 $this->storage->write($identity);
@@ -107,7 +102,7 @@ class AuthenticationService extends ZendAuthenticationService
         }
 
         //If there is still no identity, attempt to auth using stateless service (and use non-persistent storage)
-        if (in_array(self::PERREQUEST, $this->options->getModes())){
+        if ($this->options->getEnablePerRequest()){
             $result = $this->options->getPerRequestAdapter()->authenticate();
             if ($result->isValid()){
                 $identity = $result->getIdentity();
@@ -118,12 +113,12 @@ class AuthenticationService extends ZendAuthenticationService
         }
 
         //If still no identity, check guest mode
-        if (in_array(self::GUESTIDENTITY, $this->options->getModes())){
+        if ($this->options->getEnableGuestIdentity()){
             $this->storage = new NonPersistent;
             $this->storage->write($this->getOptions()->getGuestIdentity());
             return true;
         }
-        
+
         return false;
     }
 
@@ -134,7 +129,7 @@ class AuthenticationService extends ZendAuthenticationService
                 return null;
             }
         }
-        
+
         return $this->storage->read();
     }
 

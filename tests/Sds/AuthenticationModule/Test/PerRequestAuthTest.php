@@ -25,9 +25,13 @@ class PerRequestAuthTest extends AbstractTest{
         $this->request    = new Request();
         $this->response   = new Response();
 
+        $config = $this->serviceManager->get('config');
+        $config['sds']['authentication']['authenticationServiceOptions']['enablePerRequest'] = true;
+
         $this->serviceManager->setAllowOverride(true);
         $this->serviceManager->setService('request', $this->request);
         $this->serviceManager->setService('response', $this->response);
+        $this->serviceManager->setService('Config', $config);
         $this->serviceManager->setAllowOverride(false);
 
         $identity = new Identity;
@@ -40,9 +44,6 @@ class PerRequestAuthTest extends AbstractTest{
         $this->documentManager->flush();
 
         $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
-        $this->authenticationService->getOptions()->setModes([
-            AuthenticationService::PERREQUEST
-        ]);
     }
 
     public function testSucceed(){

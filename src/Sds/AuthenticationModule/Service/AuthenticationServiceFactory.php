@@ -27,7 +27,7 @@ class AuthenticationServiceFactory implements FactoryInterface
         $options = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
 
         if (
-            in_array(AuthenticationService::GUESTIDENTITY, $options['modes']) &&
+            $options['enableGuestIdentity'] &&
             is_string($options['guestIdentity'])
         ){
             $options['guestIdentity'] = $serviceLocator->get($options['guestIdentity']);
@@ -35,7 +35,7 @@ class AuthenticationServiceFactory implements FactoryInterface
             unset($options['guestIdentity']);
         }
 
-        if (in_array(AuthenticationService::PERSESSION, $options['modes'])){
+        if ($options['enablePerSession']){
             if (is_string($options['perSessionStorage'])){
                 $options['perSessionStorage'] = $serviceLocator->get($options['perSessionStorage']);
             }
@@ -48,7 +48,7 @@ class AuthenticationServiceFactory implements FactoryInterface
         }
 
         if (
-            in_array(AuthenticationService::PERREQUEST, $options['modes']) &&
+            $options['enablePerRequest'] &&
             is_string($options['perRequestAdapter'])
         ){
             $options['perRequestAdapter'] = $serviceLocator->get($options['perRequestAdapter']);
@@ -58,7 +58,7 @@ class AuthenticationServiceFactory implements FactoryInterface
 
 
         if (
-            in_array(AuthenticationService::REMEMBERME, $options['modes']) &&
+            $options['enableRememberMe'] &&
             is_string($options['rememberMeService'])
         ){
             $options['rememberMeService'] = $serviceLocator->get($options['rememberMeService']);

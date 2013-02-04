@@ -22,15 +22,16 @@ class GuestIdentityAuthTest extends AbstractTest{
         $this->request    = new Request();
         $this->response   = new Response();
 
+        $config = $this->serviceManager->get('config');
+        $config['sds']['authentication']['authenticationServiceOptions']['enableGuestIdentity'] = true;
+
         $this->serviceManager->setAllowOverride(true);
         $this->serviceManager->setService('request', $this->request);
         $this->serviceManager->setService('response', $this->response);
+        $this->serviceManager->setService('Config', $config);
         $this->serviceManager->setAllowOverride(false);
 
-        $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
-        $this->authenticationService->getOptions()->setModes([
-            AuthenticationService::GUESTIDENTITY
-        ]);
+        $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');   
     }
 
     public function testSucceed(){
