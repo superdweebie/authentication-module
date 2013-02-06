@@ -2,9 +2,9 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
-use Sds\AuthenticationModule\AuthenticationService;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
+use Sds\Common\Crypt\Salt;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
@@ -20,7 +20,7 @@ class ControllerTest extends AbstractControllerTest{
 
         $identity = new Identity;
         $identity->setIdentityName('toby');
-        $identity->setCredential(Hash::hashAndPrependSalt(Hash::getSalt(), 'password'));
+        $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
 
         $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
 
@@ -33,7 +33,7 @@ class ControllerTest extends AbstractControllerTest{
 
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('Config', $config);
-        $serviceManager->setAllowOverride(false);        
+        $serviceManager->setAllowOverride(false);
     }
 
     public function testLogoutWithNoAuthenticatedIdentity(){

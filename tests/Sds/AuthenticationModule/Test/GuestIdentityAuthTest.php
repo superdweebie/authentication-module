@@ -3,7 +3,6 @@
 namespace Sds\AuthenticationModule\Test;
 
 use Sds\ModuleUnitTester\AbstractTest;
-use Sds\AuthenticationModule\AuthenticationService;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
@@ -31,7 +30,7 @@ class GuestIdentityAuthTest extends AbstractTest{
         $this->serviceManager->setService('Config', $config);
         $this->serviceManager->setAllowOverride(false);
 
-        $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');   
+        $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
     }
 
     public function testSucceed(){

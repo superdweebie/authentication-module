@@ -62,6 +62,22 @@ class AuthenticatedIdentityController extends AbstractRestfulController
     }
 
     public function getList(){
+        $identityArray = $this->getIdentityArray();
+        if ($identityArray){
+            return $this->model->setVariables([$identityArray]);
+        }
+        return $this->model->setVariables([]);
+    }
+
+    public function get($id){
+        $identityArray = $this->getIdentityArray();
+        if ($identityArray){
+            return $this->model->setVariables($identityArray);
+        }
+        return null;
+    }
+
+    protected function getIdentityArray(){
         $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
@@ -69,14 +85,10 @@ class AuthenticatedIdentityController extends AbstractRestfulController
 
             //don't return the guest identity
             if ($identity !== $authenticationService->getOptions()->getGuestIdentity()){
-                return $this->model->setVariables([$identity]);
+                return $this->options->getSerializer()->toArray($identity);
             }
         }
-        return $this->model->setVariables([]);
-    }
-
-    public function get($id){
-        return $this->getList();
+        return null;
     }
 
     /**

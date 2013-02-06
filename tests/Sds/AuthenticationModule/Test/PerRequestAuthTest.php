@@ -3,8 +3,8 @@
 namespace Sds\AuthenticationModule\Test;
 
 use Sds\Common\Crypt\Hash;
+use Sds\Common\Crypt\Salt;
 use Sds\ModuleUnitTester\AbstractTest;
-use Sds\AuthenticationModule\AuthenticationService;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
@@ -36,7 +36,7 @@ class PerRequestAuthTest extends AbstractTest{
 
         $identity = new Identity;
         $identity->setIdentityName('toby');
-        $identity->setCredential(Hash::hashAndPrependSalt(Hash::getSalt(), 'password'));
+        $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
 
         $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
 

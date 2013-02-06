@@ -2,9 +2,9 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
-use Sds\AuthenticationModule\AuthenticationService;
 use Sds\AuthenticationModule\Test\TestAsset\Identity;
 use Sds\Common\Crypt\Hash;
+use Sds\Common\Crypt\Salt;
 use Sds\ModuleUnitTester\AbstractControllerTest;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Header\GenericHeader;
@@ -38,7 +38,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
             $identity = new Identity;
             $identity->setIdentityName('toby');
-            $identity->setCredential(Hash::hashAndPrependSalt(Hash::getSalt(), 'password'));
+            $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
 
             $this->documentManager->persist($identity);
             $this->documentManager->flush();
@@ -50,7 +50,7 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $config = $this->serviceManager->get('config');
         $config['sds']['authentication']['authenticationServiceOptions']['enablePerSession'] = true;
         $config['sds']['authentication']['authenticationServiceOptions']['enableRememberMe'] = true;
-        
+
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService('Config', $config);
         $serviceManager->setAllowOverride(false);
