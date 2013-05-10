@@ -27,9 +27,10 @@
         "zendframework/zend-view"            : "~2.1.5"
     },
     "require-dev": {
-        "superdweebie/doctrine-extensions-module" : "~0.3",
-        "superdweebie/identity-module"            : "dev-master",
-        "zendframework/zend-test"                 : "~2.1.5"
+        "superdweebie/common"                     : "dev-develop",
+        "superdweebie/doctrine-extensions-module" : "dev-develop",
+        "superdweebie/identity-module"            : "dev-develop",
+        "zendframework/zendframework"             : "dev-develop"
     },
     "suggest": {
         "superdweebie/sijit": "Contains a dojo based js client to consume the services of authenticationModule",
