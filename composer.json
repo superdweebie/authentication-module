@@ -14,17 +14,26 @@
             "email": "superdweebie@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "superdweebie/common"            : "dev-master",
-        "superdweebie/zf2-extensions-module"   : "dev-master",
-        "superdweebie/module-unit-tester": "dev-master",
-        "zendframework/zendframework": "dev-master"
+        "superdweebie/common"                : "~0.3",
+        "zendframework/zend-authentication"  : "~2.1.5",
+        "zendframework/zend-http"            : "~2.1.5",
+        "zendframework/zend-math"            : "~2.1.5",
+        "zendframework/zend-mvc"             : "~2.1.5",
+        "zendframework/zend-servicemanager"  : "~2.1.5",
+        "zendframework/zend-stdlib"          : "~2.1.5",
+        "zendframework/zend-view"            : "~2.1.5"
+    },
+    "require-dev": {
+        "superdweebie/doctrine-extensions-module" : "~0.3",
+        "superdweebie/identity-module"            : "dev-master",
+        "zendframework/zend-test"                 : "~2.1.5"
     },
     "suggest": {
-        "dojo/Sds": "Contains a dojo based js client to consume the services of authenticationModule",
-        "doctrine/doctrine-mongo-odm-module": "The default RememberMe service is set up to use Doctrine and Mongo",
-        "superdweeibe/doctrine-extensions-module": "The default serializer is defined in this module",
+        "superdweebie/sijit": "Contains a dojo based js client to consume the services of authenticationModule",
+        "superdweeibe/doctrine-extensions-module": "The default RememberMe service is set up to use this module",
         "superdweebie/identity-module": "The default identity model is defined in this module"
     },
     "autoload": {
