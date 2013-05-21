@@ -8,9 +8,6 @@ namespace Sds\AuthenticationModule;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Adapter\Http\ResolverInterface;
 
-/**
- * Authentication service that adds login and logout methods.
- */
 class HttpResolver implements ResolverInterface
 {
 

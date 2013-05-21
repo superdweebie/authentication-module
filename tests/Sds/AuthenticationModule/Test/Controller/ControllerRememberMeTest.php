@@ -2,87 +2,87 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
-use Sds\AuthenticationModule\Test\TestAsset\Identity;
-use Sds\Common\Crypt\Hash;
-use Sds\Common\Crypt\Salt;
-use Sds\ModuleUnitTester\AbstractControllerTest;
+use Sds\AuthenticationModule\Test\TestAsset\TestData;
 use Zend\Http\Header\SetCookie;
-use Zend\Http\Header\GenericHeader;
+use Zend\Http\Header\Accept;
+use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
-class ControllerRememberMeTest extends AbstractControllerTest{
+class ControllerRememberMeTest extends AbstractHttpControllerTestCase{
 
     protected static $staticDcumentManager;
 
-    protected static $dbIdentityCreated = false;
+    protected static $dbDataCreated = false;
 
     public static function tearDownAfterClass(){
-        //Cleanup db after all tests have run
-        $collections = static::$staticDcumentManager->getConnection()->selectDatabase('authenticationModuleTest')->listCollections();
-        foreach ($collections as $collection) {
-            $collection->remove(array(), array('safe' => true));
-        }
+        TestData::remove(static::$staticDcumentManager);
     }
 
     public function setUp(){
 
-        $this->controllerName = 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController';
+        $appConfig = include __DIR__ . '/../../../../test.application.config.php';
+        $appConfig['module_listener_options']['config_glob_paths'][] = __DIR__ . '/../../../../test.module.rememberme.config.php';
+        $this->setApplicationConfig($appConfig);
 
         parent::setUp();
 
-        $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
+        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.odm.documentmanager.default');
         static::$staticDcumentManager = $this->documentManager;
 
-        if ( ! static::$dbIdentityCreated){
-            //Create an indentiy in the db to query against
-
-            $identity = new Identity;
-            $identity->setIdentityName('toby');
-            $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
-
-            $this->documentManager->persist($identity);
-            $this->documentManager->flush();
-
-            static::$dbIdentityCreated = true;
+        if ( ! static::$dbDataCreated){
+            //Create data in the db to query against
+            TestData::create($this->documentManager);
+            static::$dbDataCreated = true;
         }
 
-        $serviceManager = $this->serviceManager;
-        $config = $this->serviceManager->get('config');
-        $config['sds']['authentication']['authenticationServiceOptions']['enablePerSession'] = true;
-        $config['sds']['authentication']['authenticationServiceOptions']['enableRememberMe'] = true;
-
-        $serviceManager->setAllowOverride(true);
-        $serviceManager->setService('Config', $config);
-        $serviceManager->setAllowOverride(false);
-
-        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy([]);
+        //ensure that all tests start in a logged out state
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->logout();
     }
 
     public function testLoginSuccessWithRememberMe(){
 
-        //Do the inital login
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        //Do the login
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray['name']);
-        $this->assertEquals(1, count($this->response->getHeaders()));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "password", "rememberMe": true}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
 
-        $cookie = $this->response->getHeaders()->get('SetCookie')[0];
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+        $this->assertResponseStatusCode(200);
+
+        $this->assertEquals('toby', $result['identityName']);
+
+        $cookie = $response->getHeaders()->get('SetCookie')[0];
         $this->assertEquals('rememberMe', $cookie->getName());
 
         list($series, $token, $identityName) = explode("\n", $cookie->getValue());
         $this->assertNotNull($series);
         $this->assertNotNull($token);
         $this->assertEquals('toby', $identityName);
+        $this->assertEquals('McQueen', $result['lastname']);
     }
 
     public function testGetIdentityWithRememberMe(){
 
-        $this->request->setMethod(Request::METHOD_GET);
+        $authenticationService = $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService');
 
+        //do inital login
+        $authenticationService->login('toby', 'password', true);
+
+        //get the remember me object
+        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+
+        //clear the authentication storage
+        $authenticationService->getOptions()->getPerSessionStorage()->clear();
+
+        //create the remember me request cookie
         $series = $this->rememberMeObject->getSeries();
         $token = $this->rememberMeObject->getToken();
 
@@ -90,15 +90,25 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $requestCookie->setName('rememberMe');
         $requestCookie->setValue("$series\n$token\ntoby");
         $requestCookie->setExpires(time() + 3600);
-        $this->request->getHeaders()->addHeader($requestCookie);
 
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray[0]['name']);
-        $this->assertEquals(1, count($this->response->getHeaders()));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeaders([$accept, $requestCookie]);
 
-        $responseCookie = $this->response->getHeaders()->get('SetCookie')[0];
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+
+        $this->assertEquals('toby', $result['identityName']);
+        $this->assertEquals('McQueen', $result['lastname']);
+
+        $responseCookie = $response->getHeaders()->get('SetCookie')[0];
         $this->assertEquals('rememberMe', $responseCookie->getName());
 
         list($newSeries, $newToken, $newIdentityName) = explode("\n", $responseCookie->getValue());
@@ -109,6 +119,18 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
     public function testReloginWithRememberMeToken(){
 
+        $authenticationService = $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService');
+
+        //do inital login
+        $authenticationService->login('toby', 'password', true);
+
+        //get the remember me object
+        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+
+        //clear the authentication storage
+        $authenticationService->getOptions()->getPerSessionStorage()->clear();
+
+        //create the remember me request cookie
         $series = $this->rememberMeObject->getSeries();
         $token = $this->rememberMeObject->getToken();
 
@@ -116,21 +138,29 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $requestCookie->setName('rememberMe');
         $requestCookie->setValue("$series\n$token\ntoby");
         $requestCookie->setExpires(time() + 3600);
-        $this->request->getHeaders()->addHeader($requestCookie);
 
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray['name']);
-        $this->assertEquals(1, count($this->response->getHeaders()));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "password", "rememberMe": true}')
+            ->getHeaders()->addHeaders([$accept, $requestCookie, ContentType::fromString('Content-type: application/json')]);
 
-        $cookie = $this->response->getHeaders()->get('SetCookie')[0];
-        $this->assertEquals('rememberMe', $cookie->getName());
+        $this->dispatch('/rest/authenticatedIdentity');
 
-        list($newSeries, $newToken, $newIdentityName) = explode("\n", $cookie->getValue());
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+
+        $this->assertEquals('toby', $result['identityName']);
+        $this->assertEquals('McQueen', $result['lastname']);
+
+        $responseCookie = $response->getHeaders()->get('SetCookie')[0];
+        $this->assertEquals('rememberMe', $responseCookie->getName());
+
+        list($newSeries, $newToken, $newIdentityName) = explode("\n", $responseCookie->getValue());
         $this->assertNotEquals($series, $newSeries);
         $this->assertNotEquals($token, $newToken);
         $this->assertEquals('toby', $newIdentityName);
@@ -138,45 +168,40 @@ class ControllerRememberMeTest extends AbstractControllerTest{
 
     public function testGetIdentityWithNoRememberMeToken(){
 
-        $this->request->setMethod(Request::METHOD_GET);
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader($accept);
 
-        $this->assertCount(0, $returnArray);
-        $this->assertEquals(1, count($this->response->getHeaders()));
+        $this->dispatch('/rest/authenticatedIdentity');
 
-        $responseCookie = $this->response->getHeaders()->get('SetCookie')[0];
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $responseCookie = $response->getHeaders()->get('SetCookie')[0];
         $this->assertEquals('rememberMe', $responseCookie->getName());
         $this->assertEquals('', $responseCookie->getValue());
     }
 
-    public function testLoginSuccessWithRememberMe2(){
-
-        //Do the inital login
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $this->request->setContent('{"identityName": "toby", "credential": "password", "rememberMe": ["on"]}');
-
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
-
-        $this->assertEquals('toby', $returnArray['name']);
-        $this->assertEquals(1, count($this->response->getHeaders()));
-
-        $cookie = $this->response->getHeaders()->get('SetCookie')[0];
-        $this->assertEquals('rememberMe', $cookie->getName());
-
-        list($series, $token, $identityName) = explode("\n", $cookie->getValue());
-        $this->assertNotNull($series);
-        $this->assertNotNull($token);
-        $this->assertEquals('toby', $identityName);
-    }
-
     public function testSessionTheftWithRememberMe(){
 
-        $this->request->setMethod(Request::METHOD_GET);
+        $authenticationService = $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService');
 
+        //do inital login
+        $authenticationService->login('toby', 'password', true);
+
+        //get the remember me object
+        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+
+        //clear the authentication storage
+        $authenticationService->getOptions()->getPerSessionStorage()->clear();
+
+        //create the remember me request cookie
         $series = $this->rememberMeObject->getSeries();
         $token = 'wrong token';
 
@@ -184,15 +209,23 @@ class ControllerRememberMeTest extends AbstractControllerTest{
         $requestCookie->setName('rememberMe');
         $requestCookie->setValue("$series\n$token\ntoby");
         $requestCookie->setExpires(time() + 3600);
-        $this->request->getHeaders()->addHeader($requestCookie);
 
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertCount(0, $returnArray);
-        $this->assertEquals(1, count($this->response->getHeaders()));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeaders([$accept, $requestCookie]);
 
-        $responseCookie = $this->response->getHeaders()->get('SetCookie')[0];
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
+
+        $responseCookie = $response->getHeaders()->get('SetCookie')[0];
         $this->assertEquals('rememberMe', $responseCookie->getName());
         $this->assertEquals('', $responseCookie->getValue());
     }

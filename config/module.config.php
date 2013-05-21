@@ -6,15 +6,14 @@ return array(
                 'enablePerRequest'    => false,
                 'enablePerSession'    => false,
                 'enableRememberMe'    => false,
-                'enableGuestIdentity' => false,
                 'perRequestAdapter' => 'Sds\AuthenticationModule\HttpAdapter',
-                'perSessionAdapter' => 'doctrine.authenticationadapter.odm_default',
-                'perSessionStorage' => 'doctrine.authenticationstorage.odm_default',
+                'perSessionAdapter' => 'doctrine.authenticationadapter.default',
+                'perSessionStorage' => 'doctrine.authenticationstorage.default',
                 'rememberMeService' => 'Sds\AuthenticationModule\RememberMeService',
             ],
 
             'authenticatedIdentityControllerOptions' => [
-                'serializer' => 'Sds\DoctrineExtensions\Serializer',
+                'serializer' => 'doctrineExtensions.serializer',
                 'authenticationService' => 'Zend\Authentication\AuthenticationService'
             ],
 
@@ -24,14 +23,28 @@ return array(
                 'secureCookie' => false,
                 'identityProperty' => 'identityName',
                 'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
-                'documentManager' => 'doctrine.documentmanager.odm_default'
+                'documentManager' => 'doctrine.odm.documentmanager.default'
             ],
         ),
+        'exception' => [
+            'exceptionMap' => [
+                'Sds\AuthenticationModule\Exception\LoginFailedException' => [
+                    'describedBy' => 'login-failed',
+                    'title' => 'Login failed',
+                    'statusCode' => 401,
+                ],
+                'Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException' => [
+                    'describedBy' => 'document-not-found',
+                    'title' => 'Document not found',
+                    'statusCode' => 404
+                ],
+            ],
+        ],
     ),
 
     'doctrine' => array(
         'authentication' => array(
-            'odm_default' => array(
+            'default' => array(
                 'identityProperty' => 'identityName',
                 'credentialProperty' => 'credential',
                 'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
@@ -39,7 +52,7 @@ return array(
             )
         ),
         'driver' => array(
-            'odm_default' => array(
+            'default' => array(
                 'drivers' => array(
                     'Sds\AuthenticationModule\DataModel' => 'Sds\AuthenticationModule\DataModel'
                 ),
@@ -53,27 +66,9 @@ return array(
         ),
     ),
 
-    'router' => array(
-        'routes' => array(
-//            'Sds\Zf2Extensions\RestRoute' => array(
-//                'options' => array(
-//                    'endpointToControllerMap' => [
-//                        'authenticatedIdentity' => 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController'
-//                    ],
-//                ),
-//            ),
-        ),
-    ),
-
     'controllers' => array(
         'factories' => array(
-            'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController' => function($serviceLocator){
-                return new Sds\AuthenticationModule\Controller\AuthenticatedIdentityController(
-                    $serviceLocator
-                        ->getServiceLocator()
-                        ->get('Config')['sds']['authentication']['authenticatedIdentityControllerOptions']
-                );
-            }
+            'authenticatedIdentity' => 'Sds\AuthenticationModule\Service\AuthenticatedIdentityControllerFactory'
         ),
     ),
 

@@ -7,6 +7,7 @@ namespace Sds\AuthenticationModule\Controller;
 
 use Sds\AuthenticationModule\Exception;
 use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as Options;
+use Zend\Http\Header\Location;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\Mvc\MvcEvent;
@@ -62,33 +63,18 @@ class AuthenticatedIdentityController extends AbstractRestfulController
     }
 
     public function getList(){
-        $identityArray = $this->getIdentityArray();
-        if ($identityArray){
-            return $this->model->setVariables([$identityArray]);
-        }
-        return $this->model->setVariables([]);
-    }
 
-    public function get($id){
-        $identityArray = $this->getIdentityArray();
-        if ($identityArray){
-            return $this->model->setVariables($identityArray);
-        }
-        return null;
-    }
-
-    protected function getIdentityArray(){
         $authenticationService = $this->options->getAuthenticationService();
 
         if ($authenticationService->hasIdentity()){
-            $identity = $authenticationService->getIdentity();
-
-            //don't return the guest identity
-            if ($identity !== $authenticationService->getOptions()->getGuestIdentity()){
-                return $this->options->getSerializer()->toArray($identity);
-            }
+            return $this->model->setVariables($this->options->getSerializer()->toArray($authenticationService->getIdentity()));
         }
-        return null;
+        $this->response->setStatusCode(204);
+        return $this->response;
+    }
+
+    public function get($id){
+        return $this->getList();
     }
 
     /**
@@ -109,9 +95,12 @@ class AuthenticatedIdentityController extends AbstractRestfulController
 
         $result = $authenticationService->login($data['identityName'], $data['credential'], isset($data['rememberMe']) ? $data['rememberMe']: false);
         if (!$result->isValid()){
-            $this->getResponse()->setStatusCode(500);
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }
+
+        $this->response->getHeaders()->addHeader(Location::fromString(
+            'Location: ' . $this->request->getUri()->getPath()
+        ));
 
         return $this->model->setVariables($this->options->getSerializer()->toArray($result->getIdentity()));
     }
@@ -121,8 +110,14 @@ class AuthenticatedIdentityController extends AbstractRestfulController
      * @param type $id
      */
     public function delete($id){
+        $this->deleteList();
+    }
+
+    public function deleteList()
+    {
         $this->options->getAuthenticationService()->logout();
-        return $this->model->setVariables([]);
+        $this->response->setStatusCode(204);
+        return $this->response;
     }
 
     public function update($id, $data) {

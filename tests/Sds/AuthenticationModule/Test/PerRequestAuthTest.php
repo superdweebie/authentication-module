@@ -2,75 +2,73 @@
 
 namespace Sds\AuthenticationModule\Test;
 
-use Sds\Common\Crypt\Hash;
-use Sds\Common\Crypt\Salt;
-use Sds\ModuleUnitTester\AbstractTest;
-use Sds\AuthenticationModule\Test\TestAsset\Identity;
+use Sds\AuthenticationModule\Test\TestAsset\TestData;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Request;
-use Zend\Http\Response;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
-class PerRequestAuthTest extends AbstractTest{
+class PerRequestAuthTest extends AbstractHttpControllerTestCase{
 
-    protected $request;
+    protected static $staticDcumentManager;
 
-    protected $response;
+    protected static $dbDataCreated = false;
 
-    protected $authenticationService;
+    public static function tearDownAfterClass(){
+        //TestData::remove(static::$staticDcumentManager);
+    }
 
     public function setUp(){
 
+        $appConfig = include __DIR__ . '/../../../test.application.config.php';
+        $appConfig['module_listener_options']['config_glob_paths'][] = __DIR__ . '/../../../test.module.perrequest.config.php';
+        $this->setApplicationConfig($appConfig);
+
         parent::setUp();
 
-        $this->request    = new Request();
-        $this->response   = new Response();
+        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.odm.documentmanager.default');
+        static::$staticDcumentManager = $this->documentManager;
 
-        $config = $this->serviceManager->get('config');
-        $config['sds']['authentication']['authenticationServiceOptions']['enablePerRequest'] = true;
-
-        $this->serviceManager->setAllowOverride(true);
-        $this->serviceManager->setService('request', $this->request);
-        $this->serviceManager->setService('response', $this->response);
-        $this->serviceManager->setService('Config', $config);
-        $this->serviceManager->setAllowOverride(false);
-
-        $identity = new Identity;
-        $identity->setIdentityName('toby');
-        $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
-
-        $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
-
-        $this->documentManager->persist($identity);
-        $this->documentManager->flush();
-
-        $this->authenticationService = $this->serviceManager->get('Zend\Authentication\AuthenticationService');
+        if ( ! static::$dbDataCreated){
+            //Create data in the db to query against
+            TestData::create($this->documentManager);
+            static::$dbDataCreated = true;
+        }
     }
 
     public function testSucceed(){
 
-        $this->request->setUri('https://test.local');
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
 
-        $this->assertTrue($this->authenticationService->hasIdentity());
+        $this->dispatch('https://test.com/test');
 
-        $identity = $this->authenticationService->getIdentity();
-        $this->assertEquals('toby', $identity->getIdentityName());
+        $response = $this->getResponse();
+
+        $this->assertResponseStatusCode(200);
+        $this->assertEquals('true', $response->getContent());
     }
 
     public function testCredentialFail(){
 
-        $this->request->setUri('https://test.local');
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:not password')));
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:not password')));
 
-        $this->assertFalse($this->authenticationService->hasIdentity());
+        $this->dispatch('https://test.com/test');
+
+        $response = $this->getResponse();
+
+        $this->assertResponseStatusCode(200);
+        $this->assertEquals('false', $response->getContent());
     }
-
-    public function testSchemeFail(){
-
-        $this->request->setUri('http://test.local');
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
-
-        $this->assertFalse($this->authenticationService->hasIdentity());
-    }
+//
+//    public function testSchemeFail(){
+//
+//        $this->request->setUri('http://test.local');
+//        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
+//
+//        $this->assertFalse($this->authenticationService->hasIdentity());
+//    }
 }
 

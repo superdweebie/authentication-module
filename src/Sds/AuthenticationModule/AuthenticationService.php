@@ -112,13 +112,6 @@ class AuthenticationService extends ZendAuthenticationService
             }
         }
 
-        //If still no identity, check guest mode
-        if ($this->options->getEnableGuestIdentity()){
-            $this->storage = new NonPersistent;
-            $this->storage->write($this->getOptions()->getGuestIdentity());
-            return true;
-        }
-
         return false;
     }
 

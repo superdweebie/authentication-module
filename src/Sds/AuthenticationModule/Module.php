@@ -5,7 +5,6 @@
  */
 namespace Sds\AuthenticationModule;
 
-use Sds\Zf2ExtensionsModule\JsonExceptionStrategy;
 use Zend\Mvc\MvcEvent;
 
 /**

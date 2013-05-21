@@ -1,52 +1,31 @@
 <?php
-return array(
-    'sds' => array(
-        'authentication' => array(
-
+return [
+    'sds' => [
+        'authentication' => [
             'authenticationServiceOptions' => [
-                'guestIdentity' => 'testGuest',
+                'enablePerSession'    => true,
+            ]
+        ]
+    ],
+    'doctrine' => [
+        'odm' => [
+            'configuration' => [
+                'default' => [
+                    'default_db' => 'authenticationModuleTest',
+                    'proxy_dir'    => __DIR__ . '/Proxy',
+                    'hydrator_dir' => __DIR__ . '/Hydrator',
+                ]
             ],
-
-            'authenticatedIdentityControllerOptions' => [
-                'serializer' => 'testSerializer',
-            ],
-            'rememberMeServiceOptions' => [
-                'identityClass' => 'Sds\AuthenticationModule\Test\TestAsset\Identity',
-            ],
-        )
-    ),
-    'doctrine' => array(
-        'configuration' => array(
-            'odm_default' => array(
-                'default_db' => 'authenticationModuleTest',
-                'proxy_dir'    => __DIR__ . '/Proxy',
-                'hydrator_dir' => __DIR__ . '/Hydrator',
-            )
-        ),
-        'authentication' => array(
-            'odm_default' => array(
-                'identityClass' => 'Sds\AuthenticationModule\Test\TestAsset\Identity',
+        ],
+        'authentication' => [
+            'default' => [
                 'storage' => new \Zend\Authentication\Storage\NonPersistent
-            )
-        ),
-        'driver' => array(
-            'odm_default' => array(
-                'drivers' => array(
-                    'Sds\AuthenticationModule\Test\TestAsset' => 'Sds\AuthenticationModule\Test\TestAsset'
-                ),
-            ),
-            'Sds\AuthenticationModule\Test\TestAsset' => array(
-                'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
-                'paths' => array(
-                    'vendor/superdweebie/authentication-module/tests/Sds/AuthenticationModule/Test/TestAsset'
-                ),
-            ),
-        ),
+            ]
+        ],
+    ],
+
+    'view_manager' => array(
+        'display_not_found_reason' => true,
+        'display_exceptions' => true,
     ),
-    'service_manager' => array(
-        'invokables' => array(
-            'testSerializer' => 'Sds\AuthenticationModule\Test\TestAsset\Serializer',
-            'testGuest' => 'Sds\AuthenticationModule\Test\TestAsset\GuestIdentity'
-        ),
-    ),
-);
+];

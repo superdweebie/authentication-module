@@ -2,121 +2,215 @@
 
 namespace Sds\AuthenticationModule\Test\Controller;
 
-use Sds\AuthenticationModule\Test\TestAsset\Identity;
+use Sds\AuthenticationModule\Test\TestAsset\TestData;
 use Sds\Common\Crypt\Hash;
 use Sds\Common\Crypt\Salt;
-use Sds\ModuleUnitTester\AbstractControllerTest;
-use Zend\Http\Header\GenericHeader;
+use Zend\Http\Header\Accept;
+use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
+use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
+class ControllerTest extends AbstractHttpControllerTestCase{
 
-class ControllerTest extends AbstractControllerTest{
+    protected static $staticDcumentManager;
+
+    protected static $dbDataCreated = false;
+
+    public static function tearDownAfterClass(){
+        TestData::remove(static::$staticDcumentManager);
+    }
 
     public function setUp(){
 
-        $this->controllerName = 'Sds\AuthenticationModule\Controller\AuthenticatedIdentityController';
+        $this->setApplicationConfig(
+            include __DIR__ . '/../../../../test.application.config.php'
+        );
 
         parent::setUp();
 
-        $identity = new Identity;
-        $identity->setIdentityName('toby');
-        $identity->setCredential(Hash::hashAndPrependSalt(Salt::getSalt(), 'password'));
+        $this->documentManager = $this->getApplicationServiceLocator()->get('doctrine.odm.documentmanager.default');
+        static::$staticDcumentManager = $this->documentManager;
 
-        $this->documentManager = $this->serviceManager->get('doctrine.documentmanager.odm_default');
+        if ( ! static::$dbDataCreated){
+            //Create data in the db to query against
+            TestData::create($this->documentManager);
+            static::$dbDataCreated = true;
+        }
 
-        $this->documentManager->persist($identity);
-        $this->documentManager->flush();
-
-        $serviceManager = $this->serviceManager;
-        $config = $this->serviceManager->get('config');
-        $config['sds']['authentication']['authenticationServiceOptions']['enablePerSession'] = true;
-
-        $serviceManager->setAllowOverride(true);
-        $serviceManager->setService('Config', $config);
-        $serviceManager->setAllowOverride(false);
+        //ensure that all tests start in a logged out state
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->logout();
     }
 
     public function testLogoutWithNoAuthenticatedIdentity(){
-        $this->routeMatch->setParam('id', -1);
-        $this->request->setMethod(Request::METHOD_DELETE);
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
-        $this->assertEquals(0, count($returnArray));
+
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod(Request::METHOD_DELETE)
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+        $this->assertFalse(isset($result));
+        $this->assertResponseStatusCode(204);
     }
 
     public function testLogoutWithAuthenticatedIdentity(){
 
-        $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->login('toby', 'password');
 
-        $this->routeMatch->setParam('id', -1);
-        $this->request->setMethod(Request::METHOD_DELETE);
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
-        $this->assertEquals(0, count($returnArray));
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod(Request::METHOD_DELETE)
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+        $this->assertFalse(isset($result));
+        $this->assertResponseStatusCode(204);
     }
 
     public function testLoginFail(){
-        $this->setExpectedException('Sds\AuthenticationModule\Exception\LoginFailedException');
 
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $this->request->setContent('{"identityName": "toby", "credential": "wrong password"}');
-        $this->getController()->dispatch($this->request, $this->response);
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "wrong password"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+
+        $this->assertResponseStatusCode(401);
+        $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
+
+        $this->assertEquals('/exception/login-failed', $result['describedBy']);
+        $this->assertEquals('Login failed', $result['title']);
     }
 
     public function testLoginSuccess(){
 
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $this->request->setContent('{"identityName": "toby", "credential": "password"}');
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray['name']);
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "password"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+        $this->assertEquals('Location: /rest/authenticatedIdentity', $response->getHeaders()->get('Location')->toString());
+
+        $this->assertEquals('toby', $result['identityName']);
+        $this->assertEquals('Toby', $result['firstname']);
+        $this->assertEquals('McQueen', $result['lastname']);
+        $this->assertFalse(isset($result['email']));
     }
 
     public function testLoginSuccessWithAuthenticatedIdentity(){
 
-        $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->login('toby', 'password');
 
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $this->request->setContent('{"identityName": "toby", "credential": "password"}');
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray['name']);
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "password"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+        $this->assertEquals('Location: /rest/authenticatedIdentity', $response->getHeaders()->get('Location')->toString());
+
+        $this->assertEquals('toby', $result['identityName']);
+        $this->assertEquals('Toby', $result['firstname']);
+        $this->assertEquals('McQueen', $result['lastname']);
+        $this->assertFalse(isset($result['email']));
     }
 
     public function testLoginFailWithAuthenticatedIdentity(){
-        $this->setExpectedException('Sds\AuthenticationModule\Exception\LoginFailedException');
 
-        $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->login('toby', 'password');
 
-        $this->request->setMethod(Request::METHOD_POST);
-        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Content-type: application/json'));
-        $this->request->setContent('{"identityName": "toby", "credential": "wrong password"}');
-        $this->getController()->dispatch($this->request, $this->response);
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
+
+        $this->getRequest()
+            ->setMethod(Request::METHOD_POST)
+            ->setContent('{"identityName": "toby", "credential": "wrong password"}')
+            ->getHeaders()->addHeaders([$accept, ContentType::fromString('Content-type: application/json')]);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $result = json_decode($this->getResponse()->getContent(), true);
+
+        $this->assertResponseStatusCode(401);
+        $this->assertEquals('Content-Type: application/api-problem+json', $this->getResponse()->getHeaders()->get('Content-Type')->toString());
+
+        $this->assertEquals('/exception/login-failed', $result['describedBy']);
+        $this->assertEquals('Login failed', $result['title']);
     }
 
     public function testGetWithAuthenticatedIdentity(){
 
-        $this->getController()->getOptions()->getAuthenticationService()->login('toby', 'password');
+        $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->login('toby', 'password');
 
-        $this->request->setMethod(Request::METHOD_GET);
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertEquals('toby', $returnArray[0]['name']);
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(200);
+
+        $this->assertEquals('toby', $result['identityName']);
+        $this->assertEquals('Toby', $result['firstname']);
+        $this->assertEquals('McQueen', $result['lastname']);
+        $this->assertFalse(isset($result['email']));
     }
 
     public function testGetWithoutAuthenticatedIdentity(){
 
-        $this->request->setMethod(Request::METHOD_GET);
-        $result = $this->getController()->dispatch($this->request, $this->response);
-        $returnArray = $result->getVariables();
+        $accept = new Accept;
+        $accept->addMediaType('application/json');
 
-        $this->assertCount(0, $returnArray);
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader($accept);
+
+        $this->dispatch('/rest/authenticatedIdentity');
+
+        $response = $this->getResponse();
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertResponseStatusCode(204);
+        $this->assertFalse(isset($result));
     }
 }
 

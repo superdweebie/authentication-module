@@ -6,7 +6,6 @@
 namespace Sds\AuthenticationModule\Options;
 
 use Sds\AuthenticationModule\RememberMeInterface;
-use Sds\Common\Identity\IdentityInterface;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Storage\StorageInterface;
 use Zend\Stdlib\AbstractOptions;
@@ -25,10 +24,6 @@ class AuthenticationService extends AbstractOptions
     protected $enablePerSession = false;
 
     protected $enableRememberMe = false;
-
-    protected $enableGuestIdentity = false;
-
-    protected $guestIdentity;
 
     protected $perRequestAdapter;
 
@@ -60,23 +55,6 @@ class AuthenticationService extends AbstractOptions
 
     public function setEnableRememberMe($enableRememberMe) {
         $this->enableRememberMe = (Boolean) $enableRememberMe;
-    }
-
-    public function getEnableGuestIdentity() {
-        return $this->enableGuestIdentity;
-    }
-
-    public function setEnableGuestIdentity($enableGuestIdentity) {
-        $this->enableGuestIdentity = (Boolean) $enableGuestIdentity;
-    }
-
-
-    public function getGuestIdentity() {
-        return $this->guestIdentity;
-    }
-
-    public function setGuestIdentity(IdentityInterface $guestIdentity) {
-        $this->guestIdentity = $guestIdentity;
     }
 
     public function getPerRequestAdapter() {

@@ -26,15 +26,6 @@ class AuthenticationServiceFactory implements FactoryInterface
     {
         $options = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
 
-        if (
-            $options['enableGuestIdentity'] &&
-            is_string($options['guestIdentity'])
-        ){
-            $options['guestIdentity'] = $serviceLocator->get($options['guestIdentity']);
-        } else {
-            unset($options['guestIdentity']);
-        }
-
         if ($options['enablePerSession']){
             if (is_string($options['perSessionStorage'])){
                 $options['perSessionStorage'] = $serviceLocator->get($options['perSessionStorage']);
