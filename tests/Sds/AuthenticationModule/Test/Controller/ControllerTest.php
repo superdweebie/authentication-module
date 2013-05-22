@@ -3,8 +3,6 @@
 namespace Sds\AuthenticationModule\Test\Controller;
 
 use Sds\AuthenticationModule\Test\TestAsset\TestData;
-use Sds\Common\Crypt\Hash;
-use Sds\Common\Crypt\Salt;
 use Zend\Http\Header\Accept;
 use Zend\Http\Header\ContentType;
 use Zend\Http\Request;
@@ -50,7 +48,7 @@ class ControllerTest extends AbstractHttpControllerTestCase{
             ->setMethod(Request::METHOD_DELETE)
             ->getHeaders()->addHeader($accept);
 
-        $this->dispatch('/rest/authenticatedIdentity');
+        $this->dispatch('/rest/authenticatedidentity');
 
         $response = $this->getResponse();
         $result = json_decode($response->getContent(), true);

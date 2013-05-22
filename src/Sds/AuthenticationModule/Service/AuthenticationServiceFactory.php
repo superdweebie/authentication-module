@@ -24,37 +24,37 @@ class AuthenticationServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $options = $serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions'];
+        $options = $serviceLocator->get('config')['sds']['authentication']['authentication_service_options'];
 
-        if ($options['enablePerSession']){
-            if (is_string($options['perSessionStorage'])){
-                $options['perSessionStorage'] = $serviceLocator->get($options['perSessionStorage']);
+        if ($options['enable_per_session']){
+            if (is_string($options['per_session_storage'])){
+                $options['per_session_storage'] = $serviceLocator->get($options['per_session_storage']);
             }
-            if (is_string($options['perSessionAdapter'])){
-                $options['perSessionAdapter'] = $serviceLocator->get($options['perSessionAdapter']);
+            if (is_string($options['per_session_adapter'])){
+                $options['per_session_adapter'] = $serviceLocator->get($options['per_session_adapter']);
             }
         } else {
-            unset($options['perSessionStorage']);
-            unset($options['perSessionAdapter']);
+            unset($options['per_session_storage']);
+            unset($options['per_session_adapter']);
         }
 
         if (
-            $options['enablePerRequest'] &&
-            is_string($options['perRequestAdapter'])
+            $options['enable_per_request'] &&
+            is_string($options['per_request_adapter'])
         ){
-            $options['perRequestAdapter'] = $serviceLocator->get($options['perRequestAdapter']);
+            $options['per_request_adapter'] = $serviceLocator->get($options['per_request_adapter']);
         } else {
-            unset($options['perRequestAdapter']);
+            unset($options['per_request_adapter']);
         }
 
 
         if (
-            $options['enableRememberMe'] &&
-            is_string($options['rememberMeService'])
+            $options['enable_remember_me'] &&
+            is_string($options['remember_me_service'])
         ){
-            $options['rememberMeService'] = $serviceLocator->get($options['rememberMeService']);
+            $options['remember_me_service'] = $serviceLocator->get($options['remember_me_service']);
         } else {
-            unset($options['rememberMeService']);
+            unset($options['remember_me_service']);
         }
 
         $return = new AuthenticationService();

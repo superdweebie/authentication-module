@@ -2,8 +2,8 @@
 return [
     'sds' => [
         'authentication' => [
-            'authenticationServiceOptions' => [
-                'enableRememberMe'    => true,
+            'authentication_service_options' => [
+                'enable_remember_me'    => true,
             ]
         ]
     ],

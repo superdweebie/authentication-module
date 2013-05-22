@@ -28,7 +28,7 @@ class AuthenticatedIdentityControllerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
-        $options = new Options($serviceLocator->getServiceLocator()->get('config')['sds']['authentication']['authenticatedIdentityControllerOptions']);
+        $options = new Options($serviceLocator->getServiceLocator()->get('config')['sds']['authentication']['authenticated_identity_controller_options']);
         $options->setServiceLocator($serviceLocator->getServiceLocator());
         $instance = new AuthenticatedIdentityController($options);
         return $instance;

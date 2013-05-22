@@ -33,7 +33,7 @@ class HttpAdapterServiceFactory implements FactoryInterface
         $return->setRequest($serviceLocator->get('request'));
         $return->setResponse($serviceLocator->get('response'));
         $return->setBasicResolver(new HttpResolver(
-            $serviceLocator->get($serviceLocator->get('config')['sds']['authentication']['authenticationServiceOptions']['perSessionAdapter'])
+            $serviceLocator->get($serviceLocator->get('config')['sds']['authentication']['authentication_service_options']['per_session_adapter'])
         ));
 
         return $return;

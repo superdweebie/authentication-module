@@ -2,8 +2,8 @@
 return [
     'sds' => [
         'authentication' => [
-            'authenticationServiceOptions' => [
-                'enablePerRequest'    => true,
+            'authentication_service_options' => [
+                'enable_per_request'    => true,
             ]
         ]
     ],

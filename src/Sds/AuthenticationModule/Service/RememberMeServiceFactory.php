@@ -27,9 +27,9 @@ class RememberMeServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
 
-        $optionsArray = $serviceLocator->get('Config')['sds']['authentication']['rememberMeServiceOptions'];
-        if (is_string($optionsArray['documentManager'])){
-            $optionsArray['documentManager'] = $serviceLocator->get($optionsArray['documentManager']);
+        $optionsArray = $serviceLocator->get('Config')['sds']['authentication']['remember_me_service_options'];
+        if (is_string($optionsArray['document_manager'])){
+            $optionsArray['document_manager'] = $serviceLocator->get($optionsArray['document_manager']);
         }
 
         $rememberMeService =  new RememberMeService($optionsArray);

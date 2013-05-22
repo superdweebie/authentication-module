@@ -27,6 +27,7 @@ class HttpAdapter extends ZendHttpAdapter
         }
 
         if ($this->request->getUri()->getScheme() != 'https') {
+            $this->response->setStatusCode(403);
             return new Result(
                 Result::FAILURE_UNCATEGORIZED,
                 array(),

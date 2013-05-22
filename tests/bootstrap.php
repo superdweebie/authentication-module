@@ -1,16 +1,21 @@
 <?php
 
-$loaderPath = 'vendor/autoload.php';
+ini_set('error_reporting', E_ALL);
 
-// Root if testing independently
-$applicationRoot = __DIR__ . '/../';
+$files = array(
+    __DIR__ . '/../vendor/autoload.php' /*independent testing*/,
+    __DIR__ . '/../../../autoload.php'  /*testing as part of a larger package*/);
 
-if ( ! file_exists($applicationRoot . $loaderPath )) {
-    // Root if testing as part of a larger app
-    $applicationRoot = __DIR__ . '/../../../../';
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        $loader = require $file;
+
+        break;
+    }
 }
 
-chdir($applicationRoot);
+if (! isset($loader)) {
+    throw new RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+}
 
-$loader = require_once($loaderPath);
 $loader->add('Sds\\AuthenticationModule\\Test', __DIR__);

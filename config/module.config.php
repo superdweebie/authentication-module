@@ -2,65 +2,84 @@
 return array(
     'sds' => array(
         'authentication' => array(
-            'authenticationServiceOptions' => [
-                'enablePerRequest'    => false,
-                'enablePerSession'    => false,
-                'enableRememberMe'    => false,
-                'perRequestAdapter' => 'Sds\AuthenticationModule\HttpAdapter',
-                'perSessionAdapter' => 'doctrine.authenticationadapter.default',
-                'perSessionStorage' => 'doctrine.authenticationstorage.default',
-                'rememberMeService' => 'Sds\AuthenticationModule\RememberMeService',
+            'authentication_service_options' => [
+                'enable_per_request'    => false,
+                'enable_per_session'    => false,
+                'enable_remember_me'    => false,
+                'per_request_adapter' => 'Sds\AuthenticationModule\HttpAdapter',
+                'per_session_adapter' => 'doctrine.authentication.adapter.default',
+                'per_session_storage' => 'doctrine.authentication.storage.default',
+                'remember_me_service' => 'Sds\AuthenticationModule\RememberMeService',
             ],
 
-            'authenticatedIdentityControllerOptions' => [
-                'serializer' => 'doctrineExtensions.serializer',
-                'authenticationService' => 'Zend\Authentication\AuthenticationService'
+            'authenticated_identity_controller_options' => [
+                'serializer' => 'doctrineextensions.default.serializer',
+                'authentication_service' => 'Zend\Authentication\AuthenticationService'
             ],
 
-            'rememberMeServiceOptions' => [
-                'cookieName' => 'rememberMe',
-                'cookieExpire' => 60 * 60 * 24 * 14, //14 days
-                'secureCookie' => false,
-                'identityProperty' => 'identityName',
-                'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
-                'documentManager' => 'doctrine.odm.documentmanager.default'
+            'remember_me_service_options' => [
+                'cookie_name' => 'rememberMe',
+                'cookie_expire' => 60 * 60 * 24 * 14, //14 days
+                'secure_cookie' => false,
+                'identity_property' => 'identityName',
+                'identity_class' => 'Sds\IdentityModule\DataModel\Identity',
+                'document_manager' => 'doctrine.odm.documentmanager.default'
             ],
         ),
         'exception' => [
-            'exceptionMap' => [
+            'exception_map' => [
                 'Sds\AuthenticationModule\Exception\LoginFailedException' => [
-                    'describedBy' => 'login-failed',
+                    'described_by' => 'login-failed',
                     'title' => 'Login failed',
-                    'statusCode' => 401,
+                    'status_code' => 401,
                 ],
                 'Sds\DoctrineExtensionsModule\Exception\DocumentNotFoundException' => [
-                    'describedBy' => 'document-not-found',
+                    'described_by' => 'document-not-found',
                     'title' => 'Document not found',
-                    'statusCode' => 404
+                    'status_code' => 404
                 ],
             ],
         ],
+        'doctrineExtensions' => [
+            'manifest' => [
+                'default' => [
+                    'document_manager' => 'doctrine.odm.documentmanager.default',
+                    'extension_configs' => [
+                        'extension.rest' => true,
+                        'extension.serializer' => true,
+                    ],
+                ]
+            ]
+        ]
     ),
 
     'doctrine' => array(
         'authentication' => array(
-            'default' => array(
-                'identityProperty' => 'identityName',
-                'credentialProperty' => 'credential',
-                'identityClass' => 'Sds\IdentityModule\DataModel\Identity',
-                'credentialCallable' => 'Sds\Common\Crypt\Hash::hashCredential'
-            )
+            'adapter' => array(
+                'default' => array(
+                    'identity_class' => 'Sds\IdentityModule\DataModel\Identity',
+                    'credential_callable' => 'Sds\Common\Crypt\Hash::hashCredential',
+                    'identity_property' => 'identityName',
+                    'credential_property' => 'credential'
+                )
+            ),
+            'storage' => array(
+                'default' => array(
+                    'identity_class' => 'Sds\IdentityModule\DataModel\Identity',
+                )
+            ),
         ),
+
         'driver' => array(
             'default' => array(
                 'drivers' => array(
-                    'Sds\AuthenticationModule\DataModel' => 'Sds\AuthenticationModule\DataModel'
+                    'Sds\AuthenticationModule\DataModel' => 'doctrine.driver.authentication'
                 ),
             ),
-            'Sds\AuthenticationModule\DataModel' => array(
+            'authentication' => array(
                 'class' => 'Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver',
                 'paths' => array(
-                    'vendor/superdweebie/authentication-module/src/Sds/AuthenticationModule/DataModel'
+                    __DIR__ . '/../src/Sds/AuthenticationModule/DataModel'
                 ),
             ),
         ),
@@ -68,7 +87,7 @@ return array(
 
     'controllers' => array(
         'factories' => array(
-            'authenticatedIdentity' => 'Sds\AuthenticationModule\Service\AuthenticatedIdentityControllerFactory'
+            'rest.default.authenticatedidentity' => 'Sds\AuthenticationModule\Service\AuthenticatedIdentityControllerFactory'
         ),
     ),
 

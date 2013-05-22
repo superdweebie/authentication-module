@@ -59,16 +59,27 @@ class PerRequestAuthTest extends AbstractHttpControllerTestCase{
 
         $response = $this->getResponse();
 
-        $this->assertResponseStatusCode(200);
+        $this->assertResponseStatusCode(401);
         $this->assertEquals('false', $response->getContent());
     }
-//
-//    public function testSchemeFail(){
-//
+
+    public function testSchemeFail(){
+
+        $this->getRequest()
+            ->setMethod(Request::METHOD_GET)
+            ->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
+
+        $this->dispatch('http://test.com/test');
+
+        $response = $this->getResponse();
+
+        $this->assertResponseStatusCode(403);
+        $this->assertEquals('false', $response->getContent());
+
 //        $this->request->setUri('http://test.local');
 //        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
 //
 //        $this->assertFalse($this->authenticationService->hasIdentity());
-//    }
+    }
 }
 
