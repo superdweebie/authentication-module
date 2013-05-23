@@ -7,7 +7,7 @@
         "doctrine",
         "zf2"
     ],
-    "homepage": "http://github.com/superdweebie/authenticationModule",
+    "homepage": "http://github.com/superdweebie/authentication-module",
     "authors": [
         {
             "name": "Tim Roediger",
@@ -17,24 +17,17 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "superdweebie/common"                : "~0.3",
-        "zendframework/zend-authentication"  : "~2.1.5",
-        "zendframework/zend-http"            : "~2.1.5",
-        "zendframework/zend-math"            : "~2.1.5",
-        "zendframework/zend-mvc"             : "~2.1.5",
-        "zendframework/zend-servicemanager"  : "~2.1.5",
-        "zendframework/zend-stdlib"          : "~2.1.5"
-    },
-    "require-dev": {
-        "superdweebie/common"                     : "dev-develop as 0.3",
-        "superdweebie/doctrine-extensions-module" : "dev-develop as 0.3",
-        "superdweebie/identity-module"            : "dev-develop as 0.3",
-        "zendframework/zendframework"             : "dev-develop as 2.1.5"
+        "superdweebie/doctrine-extensions-module" : "~0.3",
+        "superdweebie/identity-module"            : "~0.3",
+        "zendframework/zend-authentication"       : "~2.2",
+        "zendframework/zend-http"                 : "~2.2",
+        "zendframework/zend-math"                 : "~2.2",
+        "zendframework/zend-mvc"                  : "~2.2",
+        "zendframework/zend-servicemanager"       : "~2.2",
+        "zendframework/zend-stdlib"               : "~2.2"
     },
     "suggest": {
-        "superdweebie/sijit": "Contains a dojo based js client to consume the services of authenticationModule",
-        "superdweeibe/doctrine-extensions-module": "The default RememberMe service is set up to use this module",
-        "superdweebie/identity-module": "The default identity model is defined in this module"
+        "superdweebie/sijit": "Contains a dojo based js client to consume the services of authenticationModule"
     },
     "autoload": {
         "psr-0": {

@@ -8,7 +8,6 @@ namespace Sds\AuthenticationModule\Controller;
 use Sds\AuthenticationModule\Exception;
 use Sds\AuthenticationModule\Options\AuthenticatedIdentityController as Options;
 use Zend\Http\Header\Location;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\Mvc\MvcEvent;
 
@@ -44,21 +43,14 @@ class AuthenticatedIdentityController extends AbstractRestfulController
         return $this->options;
     }
 
-    public function setOptions($options) {
-        if (!$options instanceof Options) {
-            $options = new Options($options);
-        }
-        isset($this->serviceLocator) ? $options->setServiceLocator($this->serviceLocator) : null;
+    public function setOptions(Options $options) {
         $this->options = $options;
     }
 
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        parent::setServiceLocator($serviceLocator);
-        $this->getOptions()->setServiceLocator($serviceLocator);
-    }
-
-    public function __construct($options = null) {
+    public function __construct(Options $options = null) {
+        if (!isset($options)){
+            $options = new Options;
+        }
         $this->setOptions($options);
     }
 
