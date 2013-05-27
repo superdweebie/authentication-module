@@ -31,6 +31,12 @@ class AuthenticatedIdentityController extends AbstractOptions
      */
     protected $serializer;
 
+    protected $dataIdentityKey;
+
+    protected $dataCredentialKey;
+
+    protected $dataRememberMeKey;
+
     public function getServiceLocator() {
         return $this->serviceLocator;
     }
@@ -74,5 +80,29 @@ class AuthenticatedIdentityController extends AbstractOptions
      */
     public function setSerializer($serializer) {
         $this->serializer = $serializer;
+    }
+
+    public function getDataIdentityKey() {
+        return $this->dataIdentityKey;
+    }
+
+    public function setDataIdentityKey($dataIdentityKey) {
+        $this->dataIdentityKey = $dataIdentityKey;
+    }
+
+    public function getDataCredentialKey() {
+        return $this->dataCredentialKey;
+    }
+
+    public function setDataCredentialKey($dataCredentialKey) {
+        $this->dataCredentialKey = $dataCredentialKey;
+    }
+
+    public function getDataRememberMeKey() {
+        return $this->dataRememberMeKey;
+    }
+
+    public function setDataRememberMeKey($dataRememberMeKey) {
+        $this->dataRememberMeKey = $dataRememberMeKey;
     }
 }

@@ -85,7 +85,11 @@ class AuthenticatedIdentityController extends AbstractRestfulController
             $authenticationService->logout();
         }
 
-        $result = $authenticationService->login($data['identityName'], $data['credential'], isset($data['rememberMe']) ? $data['rememberMe']: false);
+        $result = $authenticationService->login(
+            $data[$this->options->getDataIdentityKey()],
+            $data[$this->options->getDataCredentialKey()],
+            isset($data[$this->options->getDataRememberMeKey()]) ? $data[$this->options->getDataRememberMeKey()]: false
+        );
         if (!$result->isValid()){
             throw new Exception\LoginFailedException(implode('. ', $result->getMessages()));
         }

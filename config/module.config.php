@@ -14,7 +14,10 @@ return array(
 
             'authenticated_identity_controller_options' => [
                 'serializer' => 'doctrineextensions.default.serializer',
-                'authentication_service' => 'Zend\Authentication\AuthenticationService'
+                'authentication_service' => 'Zend\Authentication\AuthenticationService',
+                'data_identity_key' => 'identityName',
+                'data_credential_key' => 'credential',
+                'data_rememberme_key' => 'rememberme'
             ],
 
             'remember_me_service_options' => [
