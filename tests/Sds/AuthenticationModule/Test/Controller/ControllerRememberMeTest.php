@@ -77,14 +77,14 @@ class ControllerRememberMeTest extends AbstractHttpControllerTestCase{
         $authenticationService->login('toby', 'password', true);
 
         //get the remember me object
-        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+        $rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
 
         //clear the authentication storage
         $authenticationService->getOptions()->getPerSessionStorage()->clear();
 
         //create the remember me request cookie
-        $series = $this->rememberMeObject->getSeries();
-        $token = $this->rememberMeObject->getToken();
+        $series = $rememberMeObject->getSeries();
+        $token = $rememberMeObject->getToken();
 
         $requestCookie = new SetCookie();
         $requestCookie->setName('rememberMe');
@@ -125,14 +125,14 @@ class ControllerRememberMeTest extends AbstractHttpControllerTestCase{
         $authenticationService->login('toby', 'password', true);
 
         //get the remember me object
-        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+        $rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
 
         //clear the authentication storage
         $authenticationService->getOptions()->getPerSessionStorage()->clear();
 
         //create the remember me request cookie
-        $series = $this->rememberMeObject->getSeries();
-        $token = $this->rememberMeObject->getToken();
+        $series = $rememberMeObject->getSeries();
+        $token = $rememberMeObject->getToken();
 
         $requestCookie = new SetCookie();
         $requestCookie->setName('rememberMe');
@@ -196,13 +196,13 @@ class ControllerRememberMeTest extends AbstractHttpControllerTestCase{
         $authenticationService->login('toby', 'password', true);
 
         //get the remember me object
-        $this->rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
+        $rememberMeObject = $this->documentManager->getRepository('Sds\AuthenticationModule\DataModel\RememberMe')->findOneBy(['identityName' => 'toby']);
 
         //clear the authentication storage
         $authenticationService->getOptions()->getPerSessionStorage()->clear();
 
         //create the remember me request cookie
-        $series = $this->rememberMeObject->getSeries();
+        $series = $rememberMeObject->getSeries();
         $token = 'wrong token';
 
         $requestCookie = new SetCookie();

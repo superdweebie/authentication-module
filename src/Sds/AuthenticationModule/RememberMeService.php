@@ -110,10 +110,10 @@ class RememberMeService implements RememberMeInterface
             $token = $this->createToken();
             $identityName = $identity->{'get' . ucfirst($this->options->getIdentityProperty())}();
 
-            $record = new RememberMe($series, $token, $identityName);
+            $object = new RememberMe($series, $token, $identityName);
 
             $documentManager = $this->options->getDocumentManager();
-            $documentManager->persist($record);
+            $documentManager->persist($object);
             $documentManager->flush();
 
             $this->setCookie($series, $token, $identityName);

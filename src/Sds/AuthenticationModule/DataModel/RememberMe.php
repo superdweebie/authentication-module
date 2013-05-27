@@ -7,6 +7,7 @@ namespace Sds\AuthenticationModule\DataModel;
 
 //Annotation imports
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
 
 /**
  *
@@ -15,6 +16,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  * @author  Tim Roediger <superdweebie@gmail.com>
  *
  * @ODM\Document
+ * @Sds\Permission\Basic(roles="all", allow={"create", "read", "delete"})
  */
 class RememberMe
 {

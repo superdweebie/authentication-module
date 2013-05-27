@@ -33,6 +33,9 @@ class PerRequestAuthTest extends AbstractHttpControllerTestCase{
             TestData::create($this->documentManager);
             static::$dbDataCreated = true;
         }
+
+        //reset status code after setup
+        $this->getResponse()->setStatusCode(200);
     }
 
     public function testSucceed(){
@@ -75,11 +78,6 @@ class PerRequestAuthTest extends AbstractHttpControllerTestCase{
 
         $this->assertResponseStatusCode(403);
         $this->assertEquals('false', $response->getContent());
-
-//        $this->request->setUri('http://test.local');
-//        $this->request->getHeaders()->addHeader(GenericHeader::fromString('Authorization: Basic ' . base64_encode('toby:password')));
-//
-//        $this->assertFalse($this->authenticationService->hasIdentity());
     }
 }
 
