@@ -16,7 +16,9 @@ use Sds\DoctrineExtensions\Annotation\Annotations as Sds;
  * @author  Tim Roediger <superdweebie@gmail.com>
  *
  * @ODM\Document
- * @Sds\Permission\Basic(roles="all", allow={"create", "read", "delete"})
+ * @Sds\AccessControl({
+ *     @Sds\Permission\Basic(roles="*",allow={"create", "read", "delete"})
+ * })
  */
 class RememberMe
 {

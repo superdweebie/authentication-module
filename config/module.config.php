@@ -17,7 +17,7 @@ return array(
                 'authentication_service' => 'Zend\Authentication\AuthenticationService',
                 'data_identity_key' => 'identityName',
                 'data_credential_key' => 'credential',
-                'data_rememberme_key' => 'rememberme'
+                'data_rememberme_key' => 'rememberMe'
             ],
 
             'remember_me_service_options' => [

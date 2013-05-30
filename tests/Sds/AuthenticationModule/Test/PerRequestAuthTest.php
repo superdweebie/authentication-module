@@ -14,7 +14,7 @@ class PerRequestAuthTest extends AbstractHttpControllerTestCase{
     protected static $dbDataCreated = false;
 
     public static function tearDownAfterClass(){
-        //TestData::remove(static::$staticDcumentManager);
+        TestData::remove(static::$staticDcumentManager);
     }
 
     public function setUp(){
