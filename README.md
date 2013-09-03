@@ -1,3 +1,5 @@
+DEPRECIATED See <a href="http://github.com/zoopcommerce/gateway-module">gateway-module</a>
+
 Sds authenticationModule
 ========================
 
